@@ -1,10 +1,14 @@
 import duckdb
+import pandas as pd
+
 
 DB_PATH = r"C:/Información/proyectos/aduana_bi/db/aduana.duckdb"
 con = duckdb.connect(DB_PATH)
 
+# Limpiar FACT
 con.execute("DELETE FROM dw.fact_aduana_item;")
 
+# Cargar FACT
 con.execute("""
 INSERT INTO dw.fact_aduana_item (
     id_fact,
@@ -50,13 +54,13 @@ SELECT
     s.cantidad_estadistica,
     s.kilo_neto,
     s.kilo_bruto,
-    s.fob_usd,
-    s.flete_usd,
-    s.seguro_usd,
-    s.imponible_usd,
+    s.fob_dolar,
+    s.flete_dolar,
+    s.seguro_dolar,
+    s.imponible_dolar,
     s.imponible_gs,
-    s.ajuste_incluir,
-    s.ajuste_deducir,
+    s.ajuste_a_incluir,
+    s.ajuste_a_deducir,
     s.total
 
 FROM dw.stg_aduana s
@@ -72,7 +76,7 @@ LEFT JOIN dw.dim_aduana a
 LEFT JOIN dw.dim_pais po
     ON SPLIT_PART(s.pais_origen, ' - ', 1) = po.codigo_pais
 LEFT JOIN dw.dim_pais pd
-    ON SPLIT_PART(s.pais_destino, ' - ', 1) = pd.codigo_pais
+    ON SPLIT_PART(s.pais_procedenciadestino, ' - ', 1) = pd.codigo_pais
 
 LEFT JOIN dw.dim_producto p
     ON s.posicion = p.posicion_ncm
@@ -84,7 +88,7 @@ LEFT JOIN dw.dim_medio_transporte mt
 LEFT JOIN dw.dim_canal c
     ON s.canal = c.canal
 LEFT JOIN dw.dim_unidad_medida um
-    ON s.unidad_medida_est = um.unidad_medida
+    ON s.unidad_medida_estadistica = um.unidad_medida
 LEFT JOIN dw.dim_acuerdo ac
     ON s.acuerdo = ac.acuerdo
 LEFT JOIN dw.dim_marca m

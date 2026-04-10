@@ -52,7 +52,7 @@ CREATE TABLE IF NOT EXISTS dw.stg_aduana (
 );
 
 CREATE TABLE IF NOT EXISTS dw.dim_operacion (
-    id_operacion INTEGER,
+    id_operacion INTEGER PRIMARY KEY,
     operacion VARCHAR,
     es_importacion BOOLEAN,
     es_exportacion BOOLEAN

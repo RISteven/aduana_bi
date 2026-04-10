@@ -78,14 +78,14 @@ SELECT
     descripcion_pais
 FROM (
     SELECT DISTINCT
-        SPLIT_PART(pais, ' - ', 1) AS codigo_pais,
-        SPLIT_PART(pais, ' - ', 2) AS descripcion_pais
-    FROM (
-        SELECT pais_origen AS pais FROM dw.stg_aduana
-        UNION
-        SELECT pais_destino AS pais FROM dw.stg_aduana
-    ) x
-    WHERE pais IS NOT NULL
+    SPLIT_PART(pais, ' - ', 1) AS codigo_pais,
+    SPLIT_PART(pais, ' - ', 2) AS descripcion_pais
+FROM (
+    SELECT pais_origen AS pais FROM dw.stg_aduana
+    UNION
+    SELECT pais_procedenciadestino AS pais FROM dw.stg_aduana
+) x
+WHERE pais IS NOT NULL
 ) t;
 """)
 
@@ -144,11 +144,11 @@ con.execute("""
 INSERT INTO dw.dim_unidad_medida (id_unidad_medida, unidad_medida)
 SELECT
     ROW_NUMBER() OVER () AS id_unidad_medida,
-    unidad_medida_est
+    unidad_medida_estadistica
 FROM (
-    SELECT DISTINCT unidad_medida_est
+    SELECT DISTINCT unidad_medida_estadistica
     FROM dw.stg_aduana
-    WHERE unidad_medida_est IS NOT NULL
+    WHERE unidad_medida_estadistica IS NOT NULL
 ) t;
 """)
 

@@ -159,6 +159,16 @@ stg_nulls = con.execute("""
 
 print(stg_nulls, "\n")
 
+# -----------------------------
+# 7. Validación del staging
+# -----------------------------
+print("8) Validación de Fecha:\n")
+
+dim_fec = con.execute("""
+SELECT COUNT(*) FROM dw.stg_aduana WHERE oficializacion IS NOT NULL;
+SELECT COUNT(DISTINCT oficializacion) FROM dw.stg_aduana; """).fetchdf()
+
+print(dim_fec, "\n")
 con.close()
 
 print("Verificación completada.\n")

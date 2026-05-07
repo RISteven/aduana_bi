@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python -c \"import json; data = json.load\\(open\\(r'c:\\\\Información\\\\proyectos\\\\aduana_bi\\\\notebooks\\\\06_Analisis_Python.ipynb', encoding='utf-8'\\)\\); cells = data['cells']; code = sum\\(1 for c in cells if c['cell_type']=='code'\\); md = sum\\(1 for c in cells if c['cell_type']=='markdown'\\); print\\(f'JSON válido | Total celdas: {len\\(cells\\)} | Código: {code} | Markdown: {md}'\\)\")",
+      "WebFetch(domain:www.columbia.edu.py)"
+    ]
+  }
+}

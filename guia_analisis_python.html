@@ -1,0 +1,1622 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Análisis de Datos con Python — Aduana BI · Columbia</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <style>
+
+        /* ==========================================================
+           VARIABLES DE COLOR — Extraídas de www.columbia.edu.py
+           ========================================================== */
+        :root {
+            --azul-institucional:  #0053a0;   /* azul principal de la marca */
+            --azul-interactivo:    #0d9ed5;   /* cyan para enlaces y acentos */
+            --verde-teal:          #0b6967;   /* teal secundario institucional */
+            --naranja-acento:      #e87132;   /* naranja para llamadas de atención */
+            --purpura-acento:      #a02b93;   /* púrpura para elementos especiales */
+            --verde-exito:         #196b24;   /* verde para estados positivos */
+            --texto-principal:     #111111;   /* casi negro para texto corrido */
+            --texto-secundario:    #495057;   /* gris medio para descripciones */
+            --texto-suave:         #6c757d;   /* gris suave para metadatos */
+            --fondo-pagina:        #f7f8f8;   /* blanco roto para el fondo general */
+            --fondo-tarjeta:       #ffffff;   /* blanco puro para tarjetas */
+            --borde-suave:         #dee2e6;   /* gris claro para bordes */
+            --azul-palido:         #bacbe6;   /* azul muy claro para elementos pasivos */
+            --fondo-codigo:        #1e2228;   /* casi negro para bloques de código */
+            --fuente-principal:    'Poppins', sans-serif;
+        }
+
+        /* ==========================================================
+           RESET Y BASE TIPOGRÁFICA
+           ========================================================== */
+        *, *::before, *::after {
+            box-sizing:  border-box;
+            margin:      0;
+            padding:     0;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family:  var(--fuente-principal);
+            font-size:    16px;
+            line-height:  1.7;
+            color:        var(--texto-principal);
+            background:   var(--fondo-pagina);
+        }
+
+        /* ==========================================================
+           ENCABEZADO PRINCIPAL
+           ========================================================== */
+        .encabezado-principal {
+            background:    var(--azul-institucional);
+            color:         #ffffff;
+            padding:       3.5rem 2rem 2.5rem;
+            text-align:    center;
+            position:      relative;
+            overflow:      hidden;
+        }
+
+        /* franja decorativa inferior */
+        .encabezado-principal::after {
+            content:    '';
+            position:   absolute;
+            bottom:     0; left:  0; right: 0;
+            height:     5px;
+            background: linear-gradient(90deg, var(--azul-interactivo), var(--verde-teal), var(--naranja-acento));
+        }
+
+        .encabezado-principal .nombre-universidad {
+            font-size:      0.82rem;
+            font-weight:    400;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            opacity:        0.8;
+            margin-bottom:  0.75rem;
+        }
+
+        .encabezado-principal h1 {
+            font-size:      2.4rem;
+            font-weight:    700;
+            margin-bottom:  0.75rem;
+            line-height:    1.2;
+        }
+
+        .encabezado-principal .subtitulo-pagina {
+            font-size:      1.05rem;
+            font-weight:    300;
+            opacity:        0.88;
+            max-width:      580px;
+            margin:         0 auto 1.75rem;
+        }
+
+        .grupo-etiquetas {
+            display:         flex;
+            gap:             0.75rem;
+            justify-content: center;
+            flex-wrap:       wrap;
+        }
+
+        .etiqueta-cabecera {
+            display:       inline-block;
+            background:    rgba(255,255,255,0.15);
+            border:        1px solid rgba(255,255,255,0.35);
+            border-radius: 20px;
+            padding:       0.3rem 1.1rem;
+            font-size:     0.83rem;
+            font-weight:   500;
+        }
+
+        /* ==========================================================
+           BARRA DE NAVEGACIÓN INTERNA
+           ========================================================== */
+        .barra-navegacion {
+            background:      #003d7a;   /* azul ligeramente más oscuro que el institucional */
+            padding:         0.6rem 1.5rem;
+            display:         flex;
+            flex-wrap:       wrap;
+            gap:             0.25rem;
+            justify-content: center;
+            position:        sticky;
+            top:             0;
+            z-index:         100;
+        }
+
+        .barra-navegacion a {
+            color:           rgba(255,255,255,0.78);
+            text-decoration: none;
+            font-size:       0.78rem;
+            font-weight:     500;
+            padding:         0.3rem 0.8rem;
+            border-radius:   4px;
+            transition:      background 0.2s, color 0.2s;
+            white-space:     nowrap;
+        }
+
+        .barra-navegacion a:hover {
+            background: rgba(255,255,255,0.15);
+            color:      #ffffff;
+        }
+
+        /* ==========================================================
+           CONTENEDOR CENTRAL
+           ========================================================== */
+        .contenedor-central {
+            max-width: 1080px;
+            margin:    0 auto;
+            padding:   2.5rem 1.5rem 4rem;
+        }
+
+        /* ==========================================================
+           TARJETA DE INTRODUCCIÓN
+           ========================================================== */
+        .tarjeta-intro {
+            background:   var(--fondo-tarjeta);
+            border:       1px solid var(--borde-suave);
+            border-left:  5px solid var(--azul-interactivo);
+            border-radius: 8px;
+            padding:      2rem 2rem 1.75rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .tarjeta-intro h2 {
+            color:         var(--azul-institucional);
+            font-size:     1.25rem;
+            font-weight:   600;
+            margin-bottom: 0.75rem;
+        }
+
+        .tarjeta-intro p {
+            color:         var(--texto-secundario);
+            margin-bottom: 1.25rem;
+            font-size:     0.95rem;
+        }
+
+        /* Tabla de contenidos */
+        .tabla-resumen {
+            width:           100%;
+            border-collapse: collapse;
+            font-size:       0.875rem;
+            margin-top:      0.5rem;
+        }
+
+        .tabla-resumen thead th {
+            background:   var(--azul-institucional);
+            color:        #ffffff;
+            padding:      0.65rem 1rem;
+            text-align:   left;
+            font-weight:  500;
+        }
+
+        .tabla-resumen thead th:first-child { border-radius: 6px 0 0 0; }
+        .tabla-resumen thead th:last-child  { border-radius: 0 6px 0 0; }
+
+        .tabla-resumen tbody td {
+            padding:      0.55rem 1rem;
+            border-bottom: 1px solid var(--borde-suave);
+            vertical-align: middle;
+            color:        var(--texto-secundario);
+        }
+
+        .tabla-resumen tbody td:first-child {
+            font-weight: 600;
+            color:       var(--azul-institucional);
+        }
+
+        .tabla-resumen tbody tr:nth-child(even) td { background: #f0f5fb; }
+        .tabla-resumen tbody tr:hover td           { background: #e4edf8; }
+
+        /* ==========================================================
+           BADGES DE NIVEL
+           ========================================================== */
+        .nivel {
+            display:        inline-block;
+            padding:        0.18rem 0.65rem;
+            border-radius:  12px;
+            font-size:      0.72rem;
+            font-weight:    600;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+        }
+
+        .nivel-basico     { background: #e6f4ea; color: #1a5c25; }
+        .nivel-intermedio { background: #e3edf8; color: var(--azul-institucional); }
+        .nivel-avanzado   { background: #fce8e6; color: #b71c1c; }
+
+        /* ==========================================================
+           SECCIÓN DE ANÁLISIS
+           ========================================================== */
+        .seccion-analisis {
+            background:    var(--fondo-tarjeta);
+            border:        1px solid var(--borde-suave);
+            border-radius: 10px;
+            margin-bottom: 2.5rem;
+            overflow:      hidden;
+            box-shadow:    0 2px 8px rgba(0,83,160,0.07);
+        }
+
+        /* Cabecera de cada análisis */
+        .cabecera-analisis {
+            background:  linear-gradient(135deg, var(--azul-institucional) 0%, #005fba 100%);
+            color:       #ffffff;
+            padding:     1.3rem 1.75rem;
+            display:     flex;
+            align-items: center;
+            gap:         1.1rem;
+        }
+
+        .numero-circulo {
+            background:     rgba(255,255,255,0.18);
+            border:         2px solid rgba(255,255,255,0.45);
+            border-radius:  50%;
+            min-width:      46px;
+            height:         46px;
+            display:        flex;
+            align-items:    center;
+            justify-content: center;
+            font-size:      1.25rem;
+            font-weight:    700;
+        }
+
+        .cabecera-analisis .datos-titulo { flex: 1; }
+
+        .cabecera-analisis h2 {
+            font-size:     1.2rem;
+            font-weight:   600;
+            margin-bottom: 0.2rem;
+        }
+
+        .cabecera-analisis .linea-tecnica {
+            font-size: 0.8rem;
+            opacity:   0.82;
+        }
+
+        /* Cuerpo del análisis */
+        .cuerpo-analisis {
+            padding: 1.75rem;
+        }
+
+        .descripcion-concepto {
+            color:         var(--texto-secundario);
+            font-size:     0.95rem;
+            margin-bottom: 1.5rem;
+            line-height:   1.75;
+        }
+
+        /* ==========================================================
+           BLOQUES DE CÓDIGO PYTHON
+           ========================================================== */
+        .bloque-codigo {
+            margin-bottom: 1.5rem;
+        }
+
+        .etiqueta-lenguaje {
+            display:        inline-block;
+            background:     var(--azul-institucional);
+            color:          #ffffff;
+            font-size:      0.72rem;
+            font-weight:    600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            padding:        0.32rem 0.9rem;
+            border-radius:  5px 5px 0 0;
+        }
+
+        pre {
+            background:   var(--fondo-codigo);
+            border-radius: 0 6px 6px 6px;
+            padding:      1.5rem 1.6rem;
+            overflow-x:   auto;
+            margin:       0;
+            line-height:  1.75;
+        }
+
+        pre code {
+            font-family: 'Courier New', Courier, monospace;
+            font-size:   0.855rem;
+            color:       #e2e8f0;
+        }
+
+        /* Colores de sintaxis Python sobre fondo oscuro */
+        .py-comentario { color: #718096;  font-style: italic; }   /* gris azulado */
+        .py-palabra    { color: #7ec8e3;  font-weight: 600;   }   /* cyan claro   */
+        .py-cadena     { color: #ffa07a;  }                       /* salmón       */
+        .py-numero     { color: #87d37c;  }                       /* verde claro  */
+        .py-funcion    { color: #c9a6e0;  }                       /* lila suave   */
+        .py-metodo     { color: #93c5fd;  }                       /* azul claro   */
+        .py-parametro  { color: #fbbf7a;  }                       /* naranja suave*/
+        .py-operador   { color: #bacbe6;  }                       /* azul pálido  */
+        .py-sql        { color: #86efac;  font-style: italic; }   /* verde menta  */
+        .py-constante  { color: #f9a8d4;  }                       /* rosa claro   */
+
+        /* ==========================================================
+           CAJAS DE CONCEPTO / LLAMADAS
+           ========================================================== */
+        .caja-concepto {
+            border-left:   4px solid var(--azul-institucional);
+            background:    #eaf1fb;
+            border-radius: 0 8px 8px 0;
+            padding:       1rem 1.25rem;
+            margin-bottom: 1.25rem;
+            font-size:     0.9rem;
+        }
+
+        .caja-concepto .titulo-caja {
+            font-weight:    600;
+            color:          var(--azul-institucional);
+            font-size:      0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-bottom:  0.4rem;
+        }
+
+        .caja-concepto p { color: var(--texto-secundario); margin: 0; }
+
+        .caja-teal    { border-left-color: var(--verde-teal);     background: #e0f2f1; }
+        .caja-teal    .titulo-caja { color: var(--verde-teal); }
+
+        .caja-naranja { border-left-color: var(--naranja-acento); background: #fff3e0; }
+        .caja-naranja .titulo-caja { color: var(--naranja-acento); }
+
+        .caja-purpura { border-left-color: var(--purpura-acento); background: #f3e5f5; }
+        .caja-purpura .titulo-caja { color: var(--purpura-acento); }
+
+        /* ==========================================================
+           GRILLA DE APRENDIZAJE
+           ========================================================== */
+        .grilla-aprendizaje {
+            display:               grid;
+            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+            gap:                   1rem;
+            margin-top:            1.25rem;
+        }
+
+        .item-aprendizaje {
+            background:   var(--fondo-pagina);
+            border:       1px solid var(--borde-suave);
+            border-top:   3px solid var(--azul-interactivo);
+            border-radius: 6px;
+            padding:      1rem 1.1rem;
+            font-size:    0.875rem;
+            color:        var(--texto-secundario);
+        }
+
+        .item-aprendizaje strong {
+            display:       block;
+            color:         var(--azul-institucional);
+            font-size:     0.8rem;
+            margin-bottom: 0.35rem;
+            font-weight:   600;
+        }
+
+        /* ==========================================================
+           FÓRMULA MATEMÁTICA
+           ========================================================== */
+        .formula {
+            background:    #f0f5fb;
+            border:        1px solid var(--azul-palido);
+            border-radius: 6px;
+            padding:       0.85rem 1.25rem;
+            font-family:   'Courier New', Courier, monospace;
+            font-size:     0.92rem;
+            color:         var(--azul-institucional);
+            margin:        1rem 0;
+            text-align:    center;
+        }
+
+        /* ==========================================================
+           PIE DE PÁGINA
+           ========================================================== */
+        .pie-pagina {
+            background:  var(--azul-institucional);
+            color:       rgba(255,255,255,0.82);
+            text-align:  center;
+            padding:     2.25rem 2rem;
+            font-size:   0.875rem;
+        }
+
+        .pie-pagina .nombre-institucion {
+            display:       block;
+            font-size:     1rem;
+            font-weight:   600;
+            color:         #ffffff;
+            margin-bottom: 0.4rem;
+        }
+
+        .pie-pagina .linea-decorativa {
+            display:         flex;
+            align-items:     center;
+            justify-content: center;
+            gap:             0.75rem;
+            margin:          0.75rem auto 0;
+            max-width:       400px;
+        }
+
+        .pie-pagina .linea-decorativa span {
+            height:     2px;
+            flex:       1;
+            background: rgba(255,255,255,0.25);
+        }
+
+        /* ==========================================================
+           SEPARADOR DE SECCIÓN
+           ========================================================== */
+        .titulo-grupo {
+            display:        flex;
+            align-items:    center;
+            gap:            1rem;
+            margin:         2.5rem 0 1.25rem;
+            color:          var(--texto-suave);
+            font-size:      0.78rem;
+            font-weight:    600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+
+        .titulo-grupo::before,
+        .titulo-grupo::after {
+            content:    '';
+            flex:       1;
+            height:     1px;
+            background: var(--borde-suave);
+        }
+
+        /* ==========================================================
+           RESPONSIVE
+           ========================================================== */
+        @media (max-width: 768px) {
+            .encabezado-principal h1   { font-size: 1.7rem; }
+            .barra-navegacion          { gap: 0.2rem; padding: 0.5rem 1rem; }
+            .barra-navegacion a        { font-size: 0.72rem; padding: 0.25rem 0.55rem; }
+            pre                        { font-size: 0.78rem; padding: 1rem; }
+            .grilla-aprendizaje        { grid-template-columns: 1fr; }
+            .cabecera-analisis h2      { font-size: 1.05rem; }
+        }
+
+    </style>
+</head>
+<body>
+
+<!-- ================================================================
+     ENCABEZADO PRINCIPAL
+     ================================================================ -->
+<header class="encabezado-principal">
+    <p class="nombre-universidad">Universidad Columbia del Paraguay</p>
+    <h1>Análisis de Datos con Python</h1>
+    <p class="subtitulo-pagina">
+        Guía didáctica de 9 técnicas de análisis aplicadas a datos reales
+        de comercio exterior paraguayo
+    </p>
+    <div class="grupo-etiquetas">
+        <span class="etiqueta-cabecera">Optativa 4 — Inteligencia de Negocios</span>
+        <span class="etiqueta-cabecera">Proyecto Aduana BI</span>
+        <span class="etiqueta-cabecera">Notebook 06</span>
+    </div>
+</header>
+
+<!-- Navegación rápida por anclas -->
+<nav class="barra-navegacion" aria-label="Navegación de análisis">
+    <a href="#introduccion">Inicio</a>
+    <a href="#a1">1. Vista general</a>
+    <a href="#a2">2. Socios</a>
+    <a href="#a3">3. Pareto</a>
+    <a href="#a4">4. CIF</a>
+    <a href="#a5">5. Tributos</a>
+    <a href="#a6">6. MERCOSUR</a>
+    <a href="#a7">7. Canal</a>
+    <a href="#a8">8. Clustering</a>
+    <a href="#a9">9. Anomalías</a>
+</nav>
+
+<!-- ================================================================
+     CONTENIDO PRINCIPAL
+     ================================================================ -->
+<main class="contenedor-central">
+
+    <!-- ---- INTRODUCCIÓN ----------------------------------------- -->
+    <section id="introduccion" class="tarjeta-intro">
+        <h2>¿Qué hace este notebook?</h2>
+        <p>
+            Conectamos directamente al Data Warehouse construido en los notebooks anteriores
+            (archivo <code style="background:#f0f5fb;padding:0.1rem 0.4rem;border-radius:4px;font-size:0.88rem;color:var(--azul-institucional)">aduana.duckdb</code>)
+            y aplicamos Python para extraer conclusiones que van más allá del dashboard de Power BI:
+            estadística, pruebas de hipótesis y machine learning sobre datos reales de aduana.
+        </p>
+        <table class="tabla-resumen">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Análisis</th>
+                    <th>Técnica principal</th>
+                    <th>Nivel</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>1</td><td>Vista panorámica del comercio exterior</td><td>groupby · barras · líneas de tiempo</td><td><span class="nivel nivel-basico">Básico</span></td></tr>
+                <tr><td>2</td><td>Principales socios comerciales</td><td>Ranking horizontal · heatmap</td><td><span class="nivel nivel-basico">Básico</span></td></tr>
+                <tr><td>3</td><td>Regla del 80/20 — Pareto</td><td>cumsum() · eje doble twinx()</td><td><span class="nivel nivel-intermedio">Intermedio</span></td></tr>
+                <tr><td>4</td><td>¿Cuánto cuesta importar? — CIF</td><td>fillna() · barras apiladas</td><td><span class="nivel nivel-intermedio">Intermedio</span></td></tr>
+                <tr><td>5</td><td>Carga tributaria por rubro</td><td>Tasa efectiva ponderada</td><td><span class="nivel nivel-intermedio">Intermedio</span></td></tr>
+                <tr><td>6</td><td>¿Beneficia el MERCOSUR?</td><td>Test Mann-Whitney · box plot</td><td><span class="nivel nivel-intermedio">Intermedio</span></td></tr>
+                <tr><td>7</td><td>Semáforo aduanero — canal</td><td>map() · box plots · escala log</td><td><span class="nivel nivel-intermedio">Intermedio</span></td></tr>
+                <tr><td>8</td><td>Perfiles de países — clustering</td><td>K-Means · StandardScaler · PCA</td><td><span class="nivel nivel-avanzado">Avanzado</span></td></tr>
+                <tr><td>9</td><td>Detección de valores inusuales</td><td>Método IQR · transform()</td><td><span class="nivel nivel-avanzado">Avanzado</span></td></tr>
+            </tbody>
+        </table>
+    </section>
+
+    <!-- ================================================================
+         ANÁLISIS 1 — Vista panorámica
+         ================================================================ -->
+    <div class="titulo-grupo">Análisis básicos</div>
+
+    <article id="a1" class="seccion-analisis">
+        <div class="cabecera-analisis">
+            <div class="numero-circulo">1</div>
+            <div class="datos-titulo">
+                <h2>Vista panorámica del comercio exterior</h2>
+                <span class="linea-tecnica">groupby · agg · barras comparativas · línea de tiempo</span>
+            </div>
+            <span class="nivel nivel-basico">Básico</span>
+        </div>
+
+        <div class="cuerpo-analisis">
+            <p class="descripcion-concepto">
+                Antes de profundizar, necesitamos una imagen general del dataset: ¿cuánto
+                se importó y exportó? ¿en qué meses hay más actividad? El método
+                <strong>groupby + agg</strong> de pandas es el equivalente Python
+                del <code>GROUP BY ... SUM()</code> de SQL.
+            </p>
+
+            <div class="caja-concepto">
+                <p class="titulo-caja">Concepto clave — groupby + agg</p>
+                <p>
+                    <code>groupby('columna').agg(nueva_col=('col_origen','funcion'))</code>
+                    agrupa filas por el valor de una columna y aplica funciones de resumen
+                    (sum, count, mean, nunique) a las demás columnas.
+                </p>
+            </div>
+
+            <div class="bloque-codigo">
+                <span class="etiqueta-lenguaje">Python — análisis_1_vista_general.py</span>
+<pre><code><span class="py-comentario"># ============================================================
+# Agrupamos la tabla por tipo de operación y calculamos
+# totales para tener una primera vista del dataset
+# ============================================================</span>
+
+resumen_comercio = (
+    tabla_despachos
+    .<span class="py-metodo">groupby</span>(<span class="py-cadena">'operacion'</span>)            <span class="py-comentario"># agrupar por IMPORTACION / EXPORTACION</span>
+    .<span class="py-metodo">agg</span>(
+        total_items        = (<span class="py-cadena">'item'</span>,      <span class="py-cadena">'count'</span>),  <span class="py-comentario"># contar líneas</span>
+        valor_fob_dolares  = (<span class="py-cadena">'fob_dolar'</span>, <span class="py-cadena">'sum'</span>  ),  <span class="py-comentario"># sumar valor FOB</span>
+        peso_total_kg      = (<span class="py-cadena">'kilo_neto'</span>, <span class="py-cadena">'sum'</span>  ),  <span class="py-comentario"># sumar peso neto</span>
+        despachos_unicos   = (<span class="py-cadena">'despacho_cifrado'</span>, <span class="py-cadena">'nunique'</span>),
+    )
+    .<span class="py-metodo">reset_index</span>()
+    .<span class="py-metodo">sort_values</span>(<span class="py-cadena">'valor_fob_dolares'</span>, ascending=<span class="py-constante">False</span>)
+)
+
+<span class="py-comentario"># Convertimos a millones para que los números sean más legibles</span>
+resumen_comercio[<span class="py-cadena">'fob_en_millones'</span>] = (
+    resumen_comercio[<span class="py-cadena">'valor_fob_dolares'</span>] / <span class="py-numero">1_000_000</span>
+)
+
+<span class="py-comentario"># ---- Gráfico con dos paneles lado a lado ----</span>
+figura, (panel_izquierdo, panel_derecho) = plt.<span class="py-funcion">subplots</span>(<span class="py-numero">1</span>, <span class="py-numero">2</span>, figsize=(<span class="py-numero">13</span>, <span class="py-numero">5</span>))
+figura.<span class="py-metodo">suptitle</span>(<span class="py-cadena">'Panorama del Comercio Exterior de Paraguay'</span>, fontweight=<span class="py-cadena">'bold'</span>)
+
+<span class="py-comentario"># Un color diferente para importaciones y exportaciones</span>
+mapa_colores = {<span class="py-cadena">'IMPORTACION'</span>: <span class="py-cadena">'#0053a0'</span>, <span class="py-cadena">'EXPORTACION'</span>: <span class="py-cadena">'#e87132'</span>}
+colores_barras = [mapa_colores[op] <span class="py-palabra">for</span> op <span class="py-palabra">in</span> resumen_comercio[<span class="py-cadena">'operacion'</span>]]
+
+<span class="py-comentario"># Panel izquierdo: cantidad de ítems</span>
+panel_izquierdo.<span class="py-metodo">bar</span>(resumen_comercio[<span class="py-cadena">'operacion'</span>],
+                     resumen_comercio[<span class="py-cadena">'total_items'</span>],
+                     color=colores_barras)
+panel_izquierdo.<span class="py-metodo">set_title</span>(<span class="py-cadena">'Cantidad de ítems registrados'</span>)
+
+<span class="py-comentario"># Panel derecho: valor FOB en millones</span>
+panel_derecho.<span class="py-metodo">bar</span>(resumen_comercio[<span class="py-cadena">'operacion'</span>],
+                    resumen_comercio[<span class="py-cadena">'fob_en_millones'</span>],
+                    color=colores_barras)
+panel_derecho.<span class="py-metodo">set_title</span>(<span class="py-cadena">'Valor FOB total (millones USD)'</span>)
+
+plt.<span class="py-metodo">tight_layout</span>()
+plt.<span class="py-metodo">show</span>()</code></pre>
+            </div>
+
+            <div class="grilla-aprendizaje">
+                <div class="item-aprendizaje">
+                    <strong>groupby + agg</strong>
+                    Agrupar y resumir tablas simultáneamente, equivalente a GROUP BY de SQL.
+                </div>
+                <div class="item-aprendizaje">
+                    <strong>plt.subplots(1, 2)</strong>
+                    Crear dos gráficos lado a lado para comparar variables relacionadas.
+                </div>
+                <div class="item-aprendizaje">
+                    <strong>División por 1_000_000</strong>
+                    Convertir unidades para mejorar la legibilidad de los ejes del gráfico.
+                </div>
+                <div class="item-aprendizaje">
+                    <strong>FOB (Free On Board)</strong>
+                    Valor de la mercadería en el punto de origen, sin flete ni seguro.
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <!-- ================================================================
+         ANÁLISIS 2 — Socios comerciales
+         ================================================================ -->
+    <article id="a2" class="seccion-analisis">
+        <div class="cabecera-analisis">
+            <div class="numero-circulo">2</div>
+            <div class="datos-titulo">
+                <h2>Principales socios comerciales</h2>
+                <span class="linea-tecnica">sort_values · head · barh horizontal · pivot_table · heatmap</span>
+            </div>
+            <span class="nivel nivel-basico">Básico</span>
+        </div>
+
+        <div class="cuerpo-analisis">
+            <p class="descripcion-concepto">
+                Identificamos los países de los que más importa Paraguay y qué aduanas
+                manejan más tráfico por mes. El gráfico de barras <strong>horizontal</strong>
+                (<code>barh</code>) es preferible al vertical cuando los nombres son largos.
+                El <strong>mapa de calor</strong> (heatmap) permite detectar patrones
+                en una matriz de dos dimensiones.
+            </p>
+
+            <div class="caja-concepto caja-teal">
+                <p class="titulo-caja">¿Por qué barras horizontales?</p>
+                <p>
+                    Cuando las etiquetas del eje X son textos largos (nombres de países),
+                    <code>barh()</code> evita la rotación de texto y hace el gráfico más legible.
+                    El orden se invierte con <code>[::-1]</code> para que el mayor quede arriba.
+                </p>
+            </div>
+
+            <div class="bloque-codigo">
+                <span class="etiqueta-lenguaje">Python — análisis_2_socios_comerciales.py</span>
+<pre><code><span class="py-comentario"># ---- Top 10 países de origen por valor FOB importado ----</span>
+solo_importaciones = tabla_despachos[
+    tabla_despachos[<span class="py-cadena">'operacion'</span>] == <span class="py-cadena">'IMPORTACION'</span>
+]
+
+ranking_paises_origen = (
+    solo_importaciones
+    .<span class="py-metodo">dropna</span>(subset=[<span class="py-cadena">'pais_origen'</span>])   <span class="py-comentario"># descartamos filas sin país</span>
+    .<span class="py-metodo">groupby</span>(<span class="py-cadena">'pais_origen'</span>)[<span class="py-cadena">'fob_dolar'</span>]
+    .<span class="py-metodo">sum</span>()
+    .<span class="py-metodo">sort_values</span>(ascending=<span class="py-constante">False</span>)
+    .<span class="py-metodo">head</span>(<span class="py-numero">10</span>)                         <span class="py-comentario"># tomamos solo los 10 mayores</span>
+    .<span class="py-metodo">reset_index</span>()
+)
+ranking_paises_origen[<span class="py-cadena">'fob_millones'</span>] = (
+    ranking_paises_origen[<span class="py-cadena">'fob_dolar'</span>] / <span class="py-numero">1_000_000</span>
+)
+
+figura, eje = plt.<span class="py-funcion">subplots</span>(figsize=(<span class="py-numero">10</span>, <span class="py-numero">6</span>))
+
+<span class="py-comentario"># [::-1] invierte el orden → el país de mayor valor queda en la parte SUPERIOR</span>
+barras = eje.<span class="py-metodo">barh</span>(
+    ranking_paises_origen[<span class="py-cadena">'pais_origen'</span>][<span class="py-operador">::-</span><span class="py-numero">1</span>],
+    ranking_paises_origen[<span class="py-cadena">'fob_millones'</span>][<span class="py-operador">::-</span><span class="py-numero">1</span>],
+    color=<span class="py-cadena">'#0053a0'</span>
+)
+
+<span class="py-comentario"># Etiquetas con el valor al costado de cada barra</span>
+<span class="py-palabra">for</span> barra, valor <span class="py-palabra">in</span> <span class="py-funcion">zip</span>(barras, ranking_paises_origen[<span class="py-cadena">'fob_millones'</span>][<span class="py-operador">::-</span><span class="py-numero">1</span>]):
+    eje.<span class="py-metodo">text</span>(
+        barra.<span class="py-metodo">get_width</span>() + <span class="py-numero">0.05</span>,               <span class="py-comentario"># posición X: a la derecha de la barra</span>
+        barra.<span class="py-metodo">get_y</span>() + barra.<span class="py-metodo">get_height</span>() / <span class="py-numero">2</span>,  <span class="py-comentario"># posición Y: al centro de la barra</span>
+        <span class="py-cadena">f'${valor:.2f}M'</span>,
+        va=<span class="py-cadena">'center'</span>,
+        fontsize=<span class="py-numero">9</span>
+    )
+
+eje.<span class="py-metodo">set_title</span>(<span class="py-cadena">'Top 10 países de origen de importaciones'</span>)
+eje.<span class="py-metodo">set_xlabel</span>(<span class="py-cadena">'Valor FOB (millones USD)'</span>)
+plt.<span class="py-metodo">tight_layout</span>()
+plt.<span class="py-metodo">show</span>()
+
+<span class="py-comentario"># ---- Mapa de calor: aduana por mes ----</span>
+tabla_aduana_mes = solo_importaciones.<span class="py-metodo">pivot_table</span>(
+    index=<span class="py-cadena">'aduana'</span>,       <span class="py-comentario"># filas = cada aduana</span>
+    columns=<span class="py-cadena">'mes'</span>,        <span class="py-comentario"># columnas = cada mes</span>
+    values=<span class="py-cadena">'fob_dolar'</span>,   <span class="py-comentario"># valores = suma del FOB</span>
+    aggfunc=<span class="py-cadena">'sum'</span>,
+    fill_value=<span class="py-numero">0</span>        <span class="py-comentario"># celdas vacías = 0 (no NaN)</span>
+)
+
+sns.<span class="py-funcion">heatmap</span>(
+    tabla_aduana_mes / <span class="py-numero">1_000_000</span>,
+    cmap=<span class="py-cadena">'Blues'</span>,         <span class="py-comentario"># colores más oscuros = mayor valor</span>
+    annot=<span class="py-constante">True</span>,          <span class="py-comentario"># mostrar el número dentro de cada celda</span>
+    fmt=<span class="py-cadena">'.1f'</span>,
+    linewidths=<span class="py-numero">0.5</span>
+)
+plt.<span class="py-metodo">title</span>(<span class="py-cadena">'Valor FOB por aduana y mes (millones USD)'</span>)
+plt.<span class="py-metodo">show</span>()</code></pre>
+            </div>
+
+            <div class="grilla-aprendizaje">
+                <div class="item-aprendizaje">
+                    <strong>dropna(subset=[...])</strong>
+                    Eliminar filas donde una columna específica es nula antes de agrupar.
+                </div>
+                <div class="item-aprendizaje">
+                    <strong>barh() — barras horizontales</strong>
+                    Mejor opción cuando las etiquetas del eje son textos largos.
+                </div>
+                <div class="item-aprendizaje">
+                    <strong>pivot_table()</strong>
+                    Equivalente a la tabla dinámica de Excel: filas × columnas con valores agregados.
+                </div>
+                <div class="item-aprendizaje">
+                    <strong>sns.heatmap()</strong>
+                    Visualiza matrices de datos: colores más intensos = valores más altos.
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <!-- ================================================================
+         ANÁLISIS 3 — Pareto
+         ================================================================ -->
+    <div class="titulo-grupo">Análisis intermedios</div>
+
+    <article id="a3" class="seccion-analisis">
+        <div class="cabecera-analisis">
+            <div class="numero-circulo">3</div>
+            <div class="datos-titulo">
+                <h2>Regla del 80/20 — Principio de Pareto</h2>
+                <span class="linea-tecnica">cumsum() · eje doble twinx() · líneas de referencia</span>
+            </div>
+            <span class="nivel nivel-intermedio">Intermedio</span>
+        </div>
+
+        <div class="cuerpo-analisis">
+            <p class="descripcion-concepto">
+                El economista Vilfredo Pareto observó que el <strong>20% de las causas
+                explican el 80% de los efectos</strong>. En comercio exterior: un grupo
+                pequeño de productos concentra la mayoría del valor comerciado.
+                Este análisis es fundamental para priorizar controles aduaneros y negociaciones.
+            </p>
+
+            <div class="caja-concepto">
+                <p class="titulo-caja">Concepto clave — cumsum()</p>
+                <p>
+                    La suma acumulada (<code>cumsum()</code>) transforma una lista de porcentajes
+                    individuales en una curva que crece de 0 a 100. El punto donde cruza el 80%
+                    nos dice cuántos rubros necesitamos para cubrir la mayor parte del valor.
+                    Ejemplo: <code>[10, 25, 30, 20, 15]</code> → cumsum →
+                    <code>[10, 35, 65, 85, 100]</code>
+                </p>
+            </div>
+
+            <div class="bloque-codigo">
+                <span class="etiqueta-lenguaje">Python — análisis_3_pareto_80_20.py</span>
+<pre><code><span class="py-comentario"># ============================================================
+# Calculamos el valor FOB por rubro y el porcentaje acumulado
+# ============================================================</span>
+fob_agrupado_por_rubro = (
+    solo_importaciones
+    .<span class="py-metodo">dropna</span>(subset=[<span class="py-cadena">'rubro'</span>])
+    .<span class="py-metodo">groupby</span>(<span class="py-cadena">'rubro'</span>)[<span class="py-cadena">'fob_dolar'</span>]
+    .<span class="py-metodo">sum</span>()
+    .<span class="py-metodo">sort_values</span>(ascending=<span class="py-constante">False</span>)   <span class="py-comentario"># mayor a menor es obligatorio para Pareto</span>
+    .<span class="py-metodo">reset_index</span>()
+)
+fob_agrupado_por_rubro.<span class="py-metodo">columns</span> = [<span class="py-cadena">'rubro'</span>, <span class="py-cadena">'fob_total'</span>]
+
+valor_total_general = fob_agrupado_por_rubro[<span class="py-cadena">'fob_total'</span>].<span class="py-metodo">sum</span>()
+
+<span class="py-comentario"># Porcentaje que representa cada rubro sobre el total</span>
+fob_agrupado_por_rubro[<span class="py-cadena">'porcentaje_individual'</span>] = (
+    fob_agrupado_por_rubro[<span class="py-cadena">'fob_total'</span>] / valor_total_general * <span class="py-numero">100</span>
+)
+
+<span class="py-comentario"># cumsum(): suma acumulada → construye la curva de Pareto</span>
+fob_agrupado_por_rubro[<span class="py-cadena">'porcentaje_acumulado'</span>] = (
+    fob_agrupado_por_rubro[<span class="py-cadena">'porcentaje_individual'</span>].<span class="py-metodo">cumsum</span>()
+)
+
+<span class="py-comentario"># ¿Cuántos rubros necesitamos para llegar al 80% del valor?</span>
+cantidad_rubros_para_80_pct = (
+    fob_agrupado_por_rubro[<span class="py-cadena">'porcentaje_acumulado'</span>] &lt;= <span class="py-numero">80</span>
+).<span class="py-metodo">sum</span>() + <span class="py-numero">1</span>
+total_de_rubros = <span class="py-funcion">len</span>(fob_agrupado_por_rubro)
+
+<span class="py-funcion">print</span>(<span class="py-cadena">f'Rubros que concentran el 80% del valor: {cantidad_rubros_para_80_pct}'</span>)
+<span class="py-funcion">print</span>(<span class="py-cadena">f'Total de rubros distintos:              {total_de_rubros}'</span>)
+<span class="py-funcion">print</span>(<span class="py-cadena">f'Concentración: {cantidad_rubros_para_80_pct/total_de_rubros*100:.1f}% de rubros = 80% del valor'</span>)
+
+<span class="py-comentario"># ---- Diagrama de Pareto con eje doble ----
+# twinx() crea un segundo eje Y a la derecha del mismo gráfico</span>
+figura, eje_barras = plt.<span class="py-funcion">subplots</span>(figsize=(<span class="py-numero">14</span>, <span class="py-numero">6</span>))
+eje_curva_acumulada = eje_barras.<span class="py-metodo">twinx</span>()
+
+<span class="py-comentario"># Barras: valor FOB por rubro (eje izquierdo)</span>
+eje_barras.<span class="py-metodo">bar</span>(
+    <span class="py-funcion">range</span>(<span class="py-funcion">len</span>(fob_agrupado_por_rubro)),
+    fob_agrupado_por_rubro[<span class="py-cadena">'fob_total'</span>] / <span class="py-numero">1_000_000</span>,
+    color=<span class="py-cadena">'#0053a0'</span>,
+    alpha=<span class="py-numero">0.75</span>,
+    label=<span class="py-cadena">'FOB por rubro'</span>
+)
+
+<span class="py-comentario"># Línea: porcentaje acumulado (eje derecho)</span>
+eje_curva_acumulada.<span class="py-metodo">plot</span>(
+    <span class="py-funcion">range</span>(<span class="py-funcion">len</span>(fob_agrupado_por_rubro)),
+    fob_agrupado_por_rubro[<span class="py-cadena">'porcentaje_acumulado'</span>],
+    color=<span class="py-cadena">'#e87132'</span>,
+    linewidth=<span class="py-numero">2.5</span>,
+    label=<span class="py-cadena">'% acumulado'</span>
+)
+
+<span class="py-comentario"># Línea punteada de referencia al 80%</span>
+eje_curva_acumulada.<span class="py-metodo">axhline</span>(y=<span class="py-numero">80</span>, color=<span class="py-cadena">'gray'</span>, linestyle=<span class="py-cadena">'--'</span>, linewidth=<span class="py-numero">1.2</span>)
+eje_barras.<span class="py-metodo">axvline</span>(x=cantidad_rubros_para_80_pct - <span class="py-numero">0.5</span>, color=<span class="py-cadena">'gray'</span>, linestyle=<span class="py-cadena">'--'</span>)
+
+eje_barras.<span class="py-metodo">set_title</span>(<span class="py-cadena">'Diagrama de Pareto — Valor FOB por rubro de importación'</span>)
+eje_barras.<span class="py-metodo">set_ylabel</span>(<span class="py-cadena">'Millones de USD'</span>)
+eje_curva_acumulada.<span class="py-metodo">set_ylabel</span>(<span class="py-cadena">'Porcentaje acumulado (%)'</span>)
+eje_curva_acumulada.<span class="py-metodo">set_ylim</span>(<span class="py-numero">0</span>, <span class="py-numero">110</span>)
+plt.<span class="py-metodo">tight_layout</span>()
+plt.<span class="py-metodo">show</span>()</code></pre>
+            </div>
+
+            <div class="grilla-aprendizaje">
+                <div class="item-aprendizaje">
+                    <strong>cumsum()</strong>
+                    Suma acumulada. Transforma valores individuales en una curva creciente de 0 a 100%.
+                </div>
+                <div class="item-aprendizaje">
+                    <strong>twinx()</strong>
+                    Crea un segundo eje Y a la derecha del gráfico para superponer dos escalas distintas.
+                </div>
+                <div class="item-aprendizaje">
+                    <strong>axhline / axvline</strong>
+                    Dibuja líneas de referencia horizontales y verticales sobre el gráfico.
+                </div>
+                <div class="item-aprendizaje">
+                    <strong>Principio de Pareto</strong>
+                    Herramienta de priorización: identificar el grupo pequeño que genera el mayor impacto.
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <!-- ================================================================
+         ANÁLISIS 4 — CIF
+         ================================================================ -->
+    <article id="a4" class="seccion-analisis">
+        <div class="cabecera-analisis">
+            <div class="numero-circulo">4</div>
+            <div class="datos-titulo">
+                <h2>¿Cuánto cuesta realmente importar? — Composición del CIF</h2>
+                <span class="linea-tecnica">fillna(0) · barras apiladas con bottom= · comparación por transporte</span>
+            </div>
+            <span class="nivel nivel-intermedio">Intermedio</span>
+        </div>
+
+        <div class="cuerpo-analisis">
+            <p class="descripcion-concepto">
+                El precio FOB es solo una parte del costo real de una importación.
+                El valor que la aduana usa como base para calcular los tributos es el <strong>CIF</strong>,
+                que incluye el flete y el seguro. Este análisis muestra cómo varía
+                esa composición según el medio de transporte.
+            </p>
+
+            <div class="formula">
+                CIF &nbsp;=&nbsp; FOB &nbsp;+&nbsp; Flete &nbsp;+&nbsp; Seguro
+                &nbsp;&nbsp;|&nbsp;&nbsp;
+                <em>Cost, Insurance and Freight</em>
+            </div>
+
+            <div class="caja-concepto caja-naranja">
+                <p class="titulo-caja">¿Por qué usar fillna(0)?</p>
+                <p>
+                    No todos los despachos declaran flete o seguro. Si sumamos sin tratar los nulos,
+                    <code>NaN + 100 = NaN</code> y perderíamos esa fila.
+                    <code>fillna(0)</code> reemplaza los nulos por cero antes de sumar,
+                    asumiendo que el flete/seguro está incluido en el FOB o no fue declarado.
+                </p>
+            </div>
+
+            <div class="bloque-codigo">
+                <span class="etiqueta-lenguaje">Python — análisis_4_composicion_cif.py</span>
+<pre><code><span class="py-comentario"># ============================================================
+# Calculamos el CIF para cada ítem sumando los tres componentes
+# ============================================================</span>
+tabla_con_cif = solo_importaciones.<span class="py-metodo">copy</span>()
+
+tabla_con_cif[<span class="py-cadena">'valor_cif_dolar'</span>] = (
+    tabla_con_cif[<span class="py-cadena">'fob_dolar'</span>]                  <span class="py-comentario"># valor en origen</span>
+    + tabla_con_cif[<span class="py-cadena">'flete_dolar'</span>].<span class="py-metodo">fillna</span>(<span class="py-numero">0</span>)  <span class="py-comentario"># si no hay flete → 0</span>
+    + tabla_con_cif[<span class="py-cadena">'seguro_dolar'</span>].<span class="py-metodo">fillna</span>(<span class="py-numero">0</span>) <span class="py-comentario"># si no hay seguro → 0</span>
+)
+
+<span class="py-comentario"># Agrupamos los componentes por medio de transporte</span>
+cif_por_medio_transporte = (
+    tabla_con_cif
+    .<span class="py-metodo">dropna</span>(subset=[<span class="py-cadena">'medio_transporte'</span>])
+    .<span class="py-metodo">groupby</span>(<span class="py-cadena">'medio_transporte'</span>)
+    .<span class="py-metodo">agg</span>(
+        monto_fob    = (<span class="py-cadena">'fob_dolar'</span>,    <span class="py-cadena">'sum'</span>),
+        monto_flete  = (<span class="py-cadena">'flete_dolar'</span>,  <span class="py-cadena">'sum'</span>),
+        monto_seguro = (<span class="py-cadena">'seguro_dolar'</span>, <span class="py-cadena">'sum'</span>),
+    )
+    .<span class="py-metodo">reset_index</span>()
+    .<span class="py-metodo">sort_values</span>(<span class="py-cadena">'monto_fob'</span>, ascending=<span class="py-constante">False</span>)
+)
+
+<span class="py-comentario"># Convertimos a millones para el gráfico</span>
+fob_m    = cif_por_medio_transporte[<span class="py-cadena">'monto_fob'</span>]    / <span class="py-numero">1_000_000</span>
+flete_m  = cif_por_medio_transporte[<span class="py-cadena">'monto_flete'</span>]  / <span class="py-numero">1_000_000</span>
+seguro_m = cif_por_medio_transporte[<span class="py-cadena">'monto_seguro'</span>] / <span class="py-numero">1_000_000</span>
+
+figura, eje = plt.<span class="py-funcion">subplots</span>(figsize=(<span class="py-numero">10</span>, <span class="py-numero">5</span>))
+posiciones = <span class="py-funcion">range</span>(<span class="py-funcion">len</span>(cif_por_medio_transporte))
+
+<span class="py-comentario"># Barras APILADAS: cada segmento parte desde donde terminó el anterior
+# El parámetro bottom= indica la altura de la base de cada barra</span>
+eje.<span class="py-metodo">bar</span>(posiciones, fob_m,                           color=<span class="py-cadena">'#0053a0'</span>, label=<span class="py-cadena">'FOB'</span>)
+eje.<span class="py-metodo">bar</span>(posiciones, flete_m,  bottom=fob_m,            color=<span class="py-cadena">'#0d9ed5'</span>, label=<span class="py-cadena">'Flete'</span>)
+eje.<span class="py-metodo">bar</span>(posiciones, seguro_m, bottom=fob_m + flete_m,  color=<span class="py-cadena">'#bacbe6'</span>, label=<span class="py-cadena">'Seguro'</span>)
+
+eje.<span class="py-metodo">set_xticks</span>(posiciones)
+eje.<span class="py-metodo">set_xticklabels</span>(cif_por_medio_transporte[<span class="py-cadena">'medio_transporte'</span>], rotation=<span class="py-numero">15</span>)
+eje.<span class="py-metodo">set_title</span>(<span class="py-cadena">'Composición del valor CIF por medio de transporte'</span>)
+eje.<span class="py-metodo">set_ylabel</span>(<span class="py-cadena">'Millones de USD'</span>)
+eje.<span class="py-metodo">legend</span>()
+plt.<span class="py-metodo">tight_layout</span>()
+plt.<span class="py-metodo">show</span>()</code></pre>
+            </div>
+
+            <div class="grilla-aprendizaje">
+                <div class="item-aprendizaje">
+                    <strong>fillna(0)</strong>
+                    Reemplaza valores nulos por cero. Evita que NaN contamine los resultados de sumas.
+                </div>
+                <div class="item-aprendizaje">
+                    <strong>Barras apiladas (bottom=)</strong>
+                    El parámetro <code>bottom=</code> coloca cada nueva barra sobre la anterior para mostrar composición.
+                </div>
+                <div class="item-aprendizaje">
+                    <strong>CIF vs FOB</strong>
+                    CIF incluye flete y seguro. Es la base tributaria usada por la aduana para calcular impuestos.
+                </div>
+                <div class="item-aprendizaje">
+                    <strong>copy()</strong>
+                    Crear una copia del DataFrame para no modificar el original al agregar columnas nuevas.
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <!-- ================================================================
+         ANÁLISIS 5 — Carga tributaria
+         ================================================================ -->
+    <article id="a5" class="seccion-analisis">
+        <div class="cabecera-analisis">
+            <div class="numero-circulo">5</div>
+            <div class="datos-titulo">
+                <h2>¿Quién paga más impuestos? — Carga tributaria por rubro</h2>
+                <span class="linea-tecnica">Tasa efectiva ponderada · barh con colores condicionales</span>
+            </div>
+            <span class="nivel nivel-intermedio">Intermedio</span>
+        </div>
+
+        <div class="cuerpo-analisis">
+            <p class="descripcion-concepto">
+                No todos los productos pagan la misma proporción de impuestos.
+                Calculamos la <strong>tasa tributaria efectiva</strong> de cada rubro:
+                qué porcentaje del valor imponible se paga en tributos.
+                Este indicador es más representativo que el promedio de tasas individuales
+                porque pondera por el valor de cada ítem.
+            </p>
+
+            <div class="formula">
+                Tasa efectiva (%) &nbsp;=&nbsp;
+                (Derecho + ISC + IVA + Otros) &nbsp;÷&nbsp; Valor Imponible &nbsp;× 100
+            </div>
+
+            <div class="caja-concepto caja-purpura">
+                <p class="titulo-caja">¿Por qué calcular sobre totales y no promediar tasas?</p>
+                <p>
+                    Un ítem de USD 1 con 50% de tasa no debería pesar igual que uno de USD 1.000.000.
+                    Al agrupar primero los montos y recién entonces dividir, los ítems de mayor valor
+                    tienen más influencia en el resultado final. Esto se llama <em>promedio ponderado</em>.
+                </p>
+            </div>
+
+            <div class="bloque-codigo">
+                <span class="etiqueta-lenguaje">Python — análisis_5_carga_tributaria.py</span>
+<pre><code><span class="py-comentario"># Solo analizamos importaciones con valor imponible declarado</span>
+importaciones_gravadas = solo_importaciones[
+    solo_importaciones[<span class="py-cadena">'imponible_dolar'</span>] &gt; <span class="py-numero">0</span>
+].<span class="py-metodo">copy</span>()
+
+<span class="py-comentario"># Sumamos todos los tributos en una sola columna nueva</span>
+importaciones_gravadas[<span class="py-cadena">'total_tributos_pagados'</span>] = (
+    importaciones_gravadas[<span class="py-cadena">'derecho'</span>].<span class="py-metodo">fillna</span>(<span class="py-numero">0</span>) +
+    importaciones_gravadas[<span class="py-cadena">'isc'</span>].<span class="py-metodo">fillna</span>(<span class="py-numero">0</span>)     +
+    importaciones_gravadas[<span class="py-cadena">'iva'</span>].<span class="py-metodo">fillna</span>(<span class="py-numero">0</span>)     +
+    importaciones_gravadas[<span class="py-cadena">'otros'</span>].<span class="py-metodo">fillna</span>(<span class="py-numero">0</span>)
+)
+
+<span class="py-comentario"># Agrupamos por rubro y calculamos los montos totales</span>
+carga_agrupada_por_rubro = (
+    importaciones_gravadas
+    .<span class="py-metodo">dropna</span>(subset=[<span class="py-cadena">'rubro'</span>])
+    .<span class="py-metodo">groupby</span>(<span class="py-cadena">'rubro'</span>)
+    .<span class="py-metodo">agg</span>(
+        base_imponible_total = (<span class="py-cadena">'imponible_dolar'</span>,       <span class="py-cadena">'sum'</span>),
+        tributos_totales     = (<span class="py-cadena">'total_tributos_pagados'</span>, <span class="py-cadena">'sum'</span>),
+        cantidad_items       = (<span class="py-cadena">'item'</span>,                   <span class="py-cadena">'count'</span>),
+    )
+    .<span class="py-metodo">reset_index</span>()
+)
+
+<span class="py-comentario"># La tasa efectiva se calcula sobre los totales del rubro (no promedio de tasas)</span>
+carga_agrupada_por_rubro[<span class="py-cadena">'tasa_efectiva_pct'</span>] = (
+    carga_agrupada_por_rubro[<span class="py-cadena">'tributos_totales'</span>]
+    / carga_agrupada_por_rubro[<span class="py-cadena">'base_imponible_total'</span>]
+    * <span class="py-numero">100</span>
+)
+
+top_15_rubros_mas_gravados = (
+    carga_agrupada_por_rubro
+    .<span class="py-metodo">sort_values</span>(<span class="py-cadena">'tasa_efectiva_pct'</span>, ascending=<span class="py-constante">False</span>)
+    .<span class="py-metodo">head</span>(<span class="py-numero">15</span>)
+)
+
+figura, eje = plt.<span class="py-funcion">subplots</span>(figsize=(<span class="py-numero">10</span>, <span class="py-numero">7</span>))
+
+<span class="py-comentario"># Color condicional: rojo si tasa > 30%, azul si tasa ≤ 30%</span>
+colores_condicionales = [
+    <span class="py-cadena">'#a02b93'</span> <span class="py-palabra">if</span> tasa &gt; <span class="py-numero">30</span> <span class="py-palabra">else</span> <span class="py-cadena">'#0053a0'</span>
+    <span class="py-palabra">for</span> tasa <span class="py-palabra">in</span> top_15_rubros_mas_gravados[<span class="py-cadena">'tasa_efectiva_pct'</span>][<span class="py-operador">::-</span><span class="py-numero">1</span>]
+]
+
+eje.<span class="py-metodo">barh</span>(
+    top_15_rubros_mas_gravados[<span class="py-cadena">'rubro'</span>].<span class="py-metodo">str</span>[:<span class="py-numero">40</span>][<span class="py-operador">::-</span><span class="py-numero">1</span>],
+    top_15_rubros_mas_gravados[<span class="py-cadena">'tasa_efectiva_pct'</span>][<span class="py-operador">::-</span><span class="py-numero">1</span>],
+    color=colores_condicionales
+)
+eje.<span class="py-metodo">set_title</span>(<span class="py-cadena">'Top 15 rubros con mayor carga tributaria efectiva'</span>)
+eje.<span class="py-metodo">set_xlabel</span>(<span class="py-cadena">'Tasa efectiva = tributos / valor imponible (%)'</span>)
+plt.<span class="py-metodo">tight_layout</span>()
+plt.<span class="py-metodo">show</span>()</code></pre>
+            </div>
+
+            <div class="grilla-aprendizaje">
+                <div class="item-aprendizaje">
+                    <strong>Color condicional</strong>
+                    Colorear barras según una condición: <code>'rojo' if tasa &gt; 30 else 'azul'</code> aplicado en una lista por comprensión.
+                </div>
+                <div class="item-aprendizaje">
+                    <strong>Tasa efectiva ponderada</strong>
+                    Más representativa que el promedio de tasas. Refleja el verdadero impacto fiscal del rubro.
+                </div>
+                <div class="item-aprendizaje">
+                    <strong>.str[:40]</strong>
+                    Truncar texto largo en pandas para que las etiquetas quepan en el gráfico.
+                </div>
+                <div class="item-aprendizaje">
+                    <strong>ISC / Derecho / IVA</strong>
+                    Tres tributos principales: arancel aduanero, impuesto selectivo al consumo e IVA.
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <!-- ================================================================
+         ANÁLISIS 6 — MERCOSUR
+         ================================================================ -->
+    <article id="a6" class="seccion-analisis">
+        <div class="cabecera-analisis">
+            <div class="numero-circulo">6</div>
+            <div class="datos-titulo">
+                <h2>¿Beneficia el MERCOSUR a Paraguay? — Test estadístico</h2>
+                <span class="linea-tecnica">scipy.stats.mannwhitneyu · hipótesis nula · box plot comparativo</span>
+            </div>
+            <span class="nivel nivel-intermedio">Intermedio</span>
+        </div>
+
+        <div class="cuerpo-analisis">
+            <p class="descripcion-concepto">
+                Para afirmar que el MERCOSUR reduce las tasas arancelarias con rigor científico,
+                no basta comparar promedios. Necesitamos un <strong>test estadístico</strong>
+                que nos diga si la diferencia observada es real o podría ocurrir por azar.
+                Usamos el test de <strong>Mann-Whitney U</strong> porque las tasas no tienen
+                distribución normal (hay muchos ceros y valores extremos).
+            </p>
+
+            <div class="caja-concepto">
+                <p class="titulo-caja">Hipótesis estadística</p>
+                <p>
+                    <strong>H₀ (nula):</strong> No hay diferencia entre las tasas de MERCOSUR y SIN ACUERDO.<br>
+                    <strong>H₁ (alternativa):</strong> Hay una diferencia significativa entre ambos grupos.<br>
+                    Si el <strong>valor p &lt; 0.05</strong>, rechazamos H₀ y concluimos que la diferencia es real.
+                </p>
+            </div>
+
+            <div class="caja-concepto caja-teal">
+                <p class="titulo-caja">¿Por qué Mann-Whitney y no una prueba T?</p>
+                <p>
+                    La prueba T asume que los datos siguen una distribución normal.
+                    Las tasas arancelarias tienen muchos ceros (productos exentos) y algunos
+                    valores muy altos, por lo que <strong>no son normales</strong>.
+                    Mann-Whitney es un test <em>no paramétrico</em>: compara distribuciones
+                    sin hacer suposiciones sobre su forma.
+                </p>
+            </div>
+
+            <div class="bloque-codigo">
+                <span class="etiqueta-lenguaje">Python — análisis_6_impacto_mercosur.py</span>
+<pre><code><span class="py-palabra">from</span> scipy.stats <span class="py-palabra">import</span> mannwhitneyu
+
+<span class="py-comentario"># Calculamos la tasa de derecho efectiva para cada ítem</span>
+importaciones_con_acuerdo = solo_importaciones[
+    (solo_importaciones[<span class="py-cadena">'imponible_dolar'</span>] &gt; <span class="py-numero">0</span>) &amp;
+    (solo_importaciones[<span class="py-cadena">'acuerdo'</span>].<span class="py-metodo">notna</span>())
+].<span class="py-metodo">copy</span>()
+
+importaciones_con_acuerdo[<span class="py-cadena">'tasa_derecho_pct'</span>] = (
+    importaciones_con_acuerdo[<span class="py-cadena">'derecho'</span>].<span class="py-metodo">fillna</span>(<span class="py-numero">0</span>)
+    / importaciones_con_acuerdo[<span class="py-cadena">'imponible_dolar'</span>]
+    * <span class="py-numero">100</span>
+)
+
+<span class="py-comentario"># Separamos los dos grupos que vamos a comparar</span>
+tasas_grupo_mercosur    = importaciones_con_acuerdo[
+    importaciones_con_acuerdo[<span class="py-cadena">'acuerdo'</span>] == <span class="py-cadena">'MERCOSUR'</span>
+][<span class="py-cadena">'tasa_derecho_pct'</span>].<span class="py-metodo">dropna</span>()
+
+tasas_grupo_sin_acuerdo = importaciones_con_acuerdo[
+    importaciones_con_acuerdo[<span class="py-cadena">'acuerdo'</span>] == <span class="py-cadena">'SIN ACUERDO'</span>
+][<span class="py-cadena">'tasa_derecho_pct'</span>].<span class="py-metodo">dropna</span>()
+
+<span class="py-comentario"># Test Mann-Whitney U: compara las distribuciones de ambos grupos</span>
+estadistico_u, valor_p = <span class="py-funcion">mannwhitneyu</span>(
+    tasas_grupo_mercosur,
+    tasas_grupo_sin_acuerdo,
+    alternative=<span class="py-cadena">'two-sided'</span>   <span class="py-comentario"># comparamos en ambas direcciones</span>
+)
+
+<span class="py-funcion">print</span>(<span class="py-cadena">f'MERCOSUR     → n={len(tasas_grupo_mercosur):,}    mediana={tasas_grupo_mercosur.median():.2f}%'</span>)
+<span class="py-funcion">print</span>(<span class="py-cadena">f'SIN ACUERDO  → n={len(tasas_grupo_sin_acuerdo):,}  mediana={tasas_grupo_sin_acuerdo.median():.2f}%'</span>)
+<span class="py-funcion">print</span>(<span class="py-cadena">f'Estadístico U: {estadistico_u:,.0f}'</span>)
+<span class="py-funcion">print</span>(<span class="py-cadena">f'Valor p:       {valor_p:.6f}'</span>)
+
+<span class="py-palabra">if</span> valor_p &lt; <span class="py-numero">0.05</span>:
+    <span class="py-funcion">print</span>(<span class="py-cadena">'→ Diferencia SIGNIFICATIVA (p &lt; 0.05)'</span>)
+    <span class="py-funcion">print</span>(<span class="py-cadena">'  El MERCOSUR tiene un efecto estadísticamente demostrable.'</span>)
+<span class="py-palabra">else</span>:
+    <span class="py-funcion">print</span>(<span class="py-cadena">'→ Diferencia NO significativa (p ≥ 0.05)'</span>)
+    <span class="py-funcion">print</span>(<span class="py-cadena">'  No hay evidencia suficiente para afirmar efecto del MERCOSUR.'</span>)</code></pre>
+            </div>
+
+            <div class="grilla-aprendizaje">
+                <div class="item-aprendizaje">
+                    <strong>Mann-Whitney U</strong>
+                    Test no paramétrico para comparar dos grupos sin asumir distribución normal.
+                </div>
+                <div class="item-aprendizaje">
+                    <strong>Valor p (p-value)</strong>
+                    Probabilidad de observar esa diferencia por azar. Si p &lt; 0.05, la diferencia es significativa.
+                </div>
+                <div class="item-aprendizaje">
+                    <strong>alternative='two-sided'</strong>
+                    Detecta diferencias en cualquier dirección: A mayor que B, o B mayor que A.
+                </div>
+                <div class="item-aprendizaje">
+                    <strong>scipy.stats</strong>
+                    Módulo de Python para estadística: pruebas de hipótesis, distribuciones, correlaciones.
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <!-- ================================================================
+         ANÁLISIS 7 — Canal
+         ================================================================ -->
+    <article id="a7" class="seccion-analisis">
+        <div class="cabecera-analisis">
+            <div class="numero-circulo">7</div>
+            <div class="datos-titulo">
+                <h2>El semáforo aduanero — Canal de despacho</h2>
+                <span class="linea-tecnica">map() · sns.boxplot · set_yscale('log') · showfliers=False</span>
+            </div>
+            <span class="nivel nivel-intermedio">Intermedio</span>
+        </div>
+
+        <div class="cuerpo-analisis">
+            <p class="descripcion-concepto">
+                Cada despacho recibe un canal que determina el nivel de control aduanero.
+                Canal <strong>V (Verde)</strong> = liberación automática.
+                Canal <strong>R (Rojo)</strong> = revisión física obligatoria.
+                Analizamos si los despachos de cada canal difieren en valor, peso y tributos.
+            </p>
+
+            <div class="caja-concepto caja-teal">
+                <p class="titulo-caja">¿Qué es el box plot y cómo leerlo?</p>
+                <p>
+                    La <strong>caja</strong> contiene el 50% central de los datos (de Q1 a Q3).
+                    La <strong>línea dentro de la caja</strong> es la mediana (valor del 50%).
+                    Los <strong>bigotes</strong> llegan hasta 1.5 × IQR. Los puntos fuera son outliers.
+                    <code>showfliers=False</code> oculta esos puntos extremos para ver mejor la caja.
+                </p>
+            </div>
+
+            <div class="bloque-codigo">
+                <span class="etiqueta-lenguaje">Python — análisis_7_canal_despacho.py</span>
+<pre><code><span class="py-comentario"># Filtramos solo los canales V (Verde) y R (Rojo)</span>
+despachos_por_canal = tabla_despachos[
+    tabla_despachos[<span class="py-cadena">'canal'</span>].<span class="py-metodo">isin</span>([<span class="py-cadena">'V'</span>, <span class="py-cadena">'R'</span>])
+].<span class="py-metodo">copy</span>()
+
+<span class="py-comentario"># map() reemplaza cada código por su descripción legible</span>
+despachos_por_canal[<span class="py-cadena">'nombre_del_canal'</span>] = despachos_por_canal[<span class="py-cadena">'canal'</span>].<span class="py-metodo">map</span>({
+    <span class="py-cadena">'V'</span>: <span class="py-cadena">'Verde (automático)'</span>,
+    <span class="py-cadena">'R'</span>: <span class="py-cadena">'Rojo (revisión física)'</span>
+})
+
+figura, paneles = plt.<span class="py-funcion">subplots</span>(<span class="py-numero">1</span>, <span class="py-numero">3</span>, figsize=(<span class="py-numero">14</span>, <span class="py-numero">5</span>))
+figura.<span class="py-metodo">suptitle</span>(<span class="py-cadena">'Comparación de despachos por canal (Verde vs Rojo)'</span>)
+
+variables_para_comparar = [
+    (<span class="py-cadena">'fob_dolar'</span>,        <span class="py-cadena">'Valor FOB (USD)'</span>),
+    (<span class="py-cadena">'kilo_neto'</span>,        <span class="py-cadena">'Peso neto (kg)'</span>),
+    (<span class="py-cadena">'total_tributos'</span>,    <span class="py-cadena">'Total tributos (USD)'</span>),
+]
+
+colores_canal = {
+    <span class="py-cadena">'Verde (automático)'</span>:    <span class="py-cadena">'#196b24'</span>,
+    <span class="py-cadena">'Rojo (revisión física)'</span>: <span class="py-cadena">'#b71c1c'</span>
+}
+
+<span class="py-palabra">for</span> panel, (nombre_variable, titulo_panel) <span class="py-palabra">in</span> <span class="py-funcion">zip</span>(paneles, variables_para_comparar):
+    datos_positivos = despachos_por_canal[
+        despachos_por_canal[nombre_variable] &gt; <span class="py-numero">0</span>
+    ]
+    sns.<span class="py-funcion">boxplot</span>(
+        data=datos_positivos,
+        x=<span class="py-cadena">'nombre_del_canal'</span>,
+        y=nombre_variable,
+        palette=colores_canal,
+        width=<span class="py-numero">0.45</span>,
+        showfliers=<span class="py-constante">False</span>,   <span class="py-comentario"># oculta outliers extremos para ver la caja</span>
+        ax=panel,
+        order=[<span class="py-cadena">'Verde (automático)'</span>, <span class="py-cadena">'Rojo (revisión física)'</span>]
+    )
+    panel.<span class="py-metodo">set_title</span>(titulo_panel)
+    panel.<span class="py-metodo">set_xlabel</span>(<span class="py-cadena">''</span>)
+    panel.<span class="py-metodo">set_yscale</span>(<span class="py-cadena">'log'</span>)   <span class="py-comentario"># escala log para variables muy asimétricas</span>
+    panel.<span class="py-metodo">tick_params</span>(axis=<span class="py-cadena">'x'</span>, labelrotation=<span class="py-numero">12</span>)
+
+plt.<span class="py-metodo">tight_layout</span>()
+plt.<span class="py-metodo">show</span>()</code></pre>
+            </div>
+
+            <div class="grilla-aprendizaje">
+                <div class="item-aprendizaje">
+                    <strong>map({clave: valor})</strong>
+                    Reemplaza valores de una columna usando un diccionario de equivalencias.
+                </div>
+                <div class="item-aprendizaje">
+                    <strong>set_yscale('log')</strong>
+                    Escala logarítmica para datos con valores muy dispersos (de 1 a 1.000.000+).
+                </div>
+                <div class="item-aprendizaje">
+                    <strong>showfliers=False</strong>
+                    Oculta puntos extremos del box plot para que la caja sea más visible y comparable.
+                </div>
+                <div class="item-aprendizaje">
+                    <strong>Gestión de riesgo aduanero</strong>
+                    Los sistemas reales usan algoritmos similares para asignar automáticamente el canal.
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <!-- ================================================================
+         ANÁLISIS 8 — Clustering
+         ================================================================ -->
+    <div class="titulo-grupo">Análisis avanzados</div>
+
+    <article id="a8" class="seccion-analisis">
+        <div class="cabecera-analisis">
+            <div class="numero-circulo">8</div>
+            <div class="datos-titulo">
+                <h2>Perfiles de países — Agrupamiento K-Means + PCA</h2>
+                <span class="linea-tecnica">StandardScaler · KMeans · PCA · scatter plot etiquetado</span>
+            </div>
+            <span class="nivel nivel-avanzado">Avanzado</span>
+        </div>
+
+        <div class="cuerpo-analisis">
+            <p class="descripcion-concepto">
+                El <strong>clustering</strong> es aprendizaje automático <em>no supervisado</em>:
+                le damos los datos y el algoritmo encuentra grupos similares por sí solo.
+                K-Means agrupa los países según su perfil comercial. Luego usamos
+                <strong>PCA</strong> para reducir 5 variables a 2 dimensiones y poder
+                visualizar los grupos en un plano.
+            </p>
+
+            <div class="caja-concepto">
+                <p class="titulo-caja">¿Por qué normalizar antes de agrupar?</p>
+                <p>
+                    K-Means mide distancias entre puntos. Si no normalizamos, el FOB en
+                    miles de USD dominaría sobre variables pequeñas como <em>diversidad de rubros</em>
+                    (un número entre 1 y 30). <code>StandardScaler</code> lleva todas las variables
+                    a media = 0 y desviación estándar = 1, equiparando su influencia.
+                </p>
+            </div>
+
+            <div class="caja-concepto caja-teal">
+                <p class="titulo-caja">¿Qué es PCA?</p>
+                <p>
+                    El Análisis de Componentes Principales (<em>Principal Component Analysis</em>)
+                    busca las combinaciones lineales de variables que capturan la mayor varianza
+                    posible. Reduce N dimensiones a 2 para poder graficar, preservando
+                    la mayor cantidad de información.
+                </p>
+            </div>
+
+            <div class="bloque-codigo">
+                <span class="etiqueta-lenguaje">Python — análisis_8_clustering_paises.py</span>
+<pre><code><span class="py-palabra">from</span> sklearn.cluster <span class="py-palabra">import</span> KMeans
+<span class="py-palabra">from</span> sklearn.preprocessing <span class="py-palabra">import</span> StandardScaler
+<span class="py-palabra">from</span> sklearn.decomposition <span class="py-palabra">import</span> PCA
+
+<span class="py-comentario"># ---- PASO 1: Construir el perfil de cada país ----</span>
+MIN_ITEMS_POR_PAIS = <span class="py-numero">5</span>   <span class="py-comentario"># excluir países con muy pocos datos</span>
+
+perfil_por_pais = (
+    solo_importaciones
+    .<span class="py-metodo">dropna</span>(subset=[<span class="py-cadena">'pais_origen'</span>])
+    .<span class="py-metodo">groupby</span>(<span class="py-cadena">'pais_origen'</span>)
+    .<span class="py-metodo">agg</span>(
+        total_items          = (<span class="py-cadena">'item'</span>,      <span class="py-cadena">'count'</span>),
+        fob_promedio         = (<span class="py-cadena">'fob_dolar'</span>, <span class="py-cadena">'mean'</span>),
+        peso_promedio_kg     = (<span class="py-cadena">'kilo_neto'</span>, <span class="py-cadena">'mean'</span>),
+        flete_promedio       = (<span class="py-cadena">'flete_dolar'</span>, <span class="py-cadena">'mean'</span>),
+        rubros_distintos     = (<span class="py-cadena">'rubro'</span>,     <span class="py-cadena">'nunique'</span>),
+        porcentaje_mercosur  = (<span class="py-cadena">'acuerdo'</span>,
+                                <span class="py-palabra">lambda</span> x: (x == <span class="py-cadena">'MERCOSUR'</span>).<span class="py-metodo">mean</span>() * <span class="py-numero">100</span>),
+    )
+    .<span class="py-metodo">reset_index</span>()
+)
+perfil_por_pais = perfil_por_pais[
+    perfil_por_pais[<span class="py-cadena">'total_items'</span>] &gt;= MIN_ITEMS_POR_PAIS
+].<span class="py-metodo">copy</span>()
+
+<span class="py-comentario"># ---- PASO 2: Normalizar las variables ----</span>
+columnas_para_clustering = [
+    <span class="py-cadena">'fob_promedio'</span>, <span class="py-cadena">'peso_promedio_kg'</span>, <span class="py-cadena">'flete_promedio'</span>,
+    <span class="py-cadena">'rubros_distintos'</span>, <span class="py-cadena">'porcentaje_mercosur'</span>
+]
+valores_a_normalizar = perfil_por_pais[columnas_para_clustering].<span class="py-metodo">fillna</span>(<span class="py-numero">0</span>).<span class="py-metodo">values</span>
+
+normalizador       = <span class="py-funcion">StandardScaler</span>()   <span class="py-comentario"># media=0, desvío=1 por variable</span>
+valores_normalizados = normalizador.<span class="py-metodo">fit_transform</span>(valores_a_normalizar)
+
+<span class="py-comentario"># ---- PASO 3: K-Means — encontrar grupos de países similares ----</span>
+CANTIDAD_DE_GRUPOS = <span class="py-numero">3</span>   <span class="py-comentario"># elegir según el método del codo</span>
+
+modelo_agrupamiento       = <span class="py-funcion">KMeans</span>(n_clusters=CANTIDAD_DE_GRUPOS, random_state=<span class="py-numero">42</span>, n_init=<span class="py-numero">10</span>)
+perfil_por_pais[<span class="py-cadena">'grupo'</span>]  = modelo_agrupamiento.<span class="py-metodo">fit_predict</span>(valores_normalizados)
+
+<span class="py-comentario"># ---- PASO 4: PCA — reducir a 2 dimensiones para graficar ----</span>
+reductor_a_2d        = <span class="py-funcion">PCA</span>(n_components=<span class="py-numero">2</span>, random_state=<span class="py-numero">42</span>)
+coordenadas_2d       = reductor_a_2d.<span class="py-metodo">fit_transform</span>(valores_normalizados)
+perfil_por_pais[<span class="py-cadena">'eje_x'</span>] = coordenadas_2d[:, <span class="py-numero">0</span>]
+perfil_por_pais[<span class="py-cadena">'eje_y'</span>] = coordenadas_2d[:, <span class="py-numero">1</span>]
+
+varianza_preservada = reductor_a_2d.<span class="py-metodo">explained_variance_ratio_</span>.<span class="py-metodo">sum</span>() * <span class="py-numero">100</span>
+<span class="py-funcion">print</span>(<span class="py-cadena">f'PCA preservó el {varianza_preservada:.1f}% de la información original'</span>)
+
+<span class="py-comentario"># ---- PASO 5: Visualizar los grupos en 2D ----</span>
+paleta_grupos = [<span class="py-cadena">'#0053a0'</span>, <span class="py-cadena">'#e87132'</span>, <span class="py-cadena">'#0b6967'</span>]
+figura, eje = plt.<span class="py-funcion">subplots</span>(figsize=(<span class="py-numero">11</span>, <span class="py-numero">7</span>))
+
+<span class="py-palabra">for</span> numero_grupo <span class="py-palabra">in</span> <span class="py-funcion">range</span>(CANTIDAD_DE_GRUPOS):
+    mascara_grupo = perfil_por_pais[<span class="py-cadena">'grupo'</span>] == numero_grupo
+    datos_grupo   = perfil_por_pais[mascara_grupo]
+    eje.<span class="py-metodo">scatter</span>(
+        datos_grupo[<span class="py-cadena">'eje_x'</span>],
+        datos_grupo[<span class="py-cadena">'eje_y'</span>],
+        s=datos_grupo[<span class="py-cadena">'total_items'</span>] * <span class="py-numero">2</span>,  <span class="py-comentario"># tamaño ∝ volumen del país</span>
+        color=paleta_grupos[numero_grupo],
+        alpha=<span class="py-numero">0.75</span>,
+        label=<span class="py-cadena">f'Grupo {numero_grupo}'</span>
+    )
+
+<span class="py-comentario"># Etiquetamos solo los países de mayor volumen</span>
+paises_mas_importantes = perfil_por_pais.<span class="py-metodo">nlargest</span>(<span class="py-numero">8</span>, <span class="py-cadena">'total_items'</span>)
+<span class="py-palabra">for</span> _, fila <span class="py-palabra">in</span> paises_mas_importantes.<span class="py-metodo">iterrows</span>():
+    eje.<span class="py-metodo">annotate</span>(fila[<span class="py-cadena">'pais_origen'</span>][:<span class="py-numero">20</span>], (fila[<span class="py-cadena">'eje_x'</span>], fila[<span class="py-cadena">'eje_y'</span>]),
+                xytext=(<span class="py-numero">6</span>, <span class="py-numero">4</span>), textcoords=<span class="py-cadena">'offset points'</span>, fontsize=<span class="py-numero">8</span>)
+
+eje.<span class="py-metodo">set_title</span>(
+    <span class="py-cadena">f'Agrupamiento de países por perfil comercial ({CANTIDAD_DE_GRUPOS} grupos)\n'</span>
+    <span class="py-cadena">f'Reducción PCA — {varianza_preservada:.1f}% de información preservada'</span>
+)
+eje.<span class="py-metodo">legend</span>()
+plt.<span class="py-metodo">tight_layout</span>()
+plt.<span class="py-metodo">show</span>()</code></pre>
+            </div>
+
+            <div class="grilla-aprendizaje">
+                <div class="item-aprendizaje">
+                    <strong>StandardScaler</strong>
+                    Normaliza variables a media=0 y desvío=1. Obligatorio antes de K-Means.
+                </div>
+                <div class="item-aprendizaje">
+                    <strong>KMeans.fit_predict()</strong>
+                    Entrena el modelo y asigna un número de grupo a cada fila en un solo paso.
+                </div>
+                <div class="item-aprendizaje">
+                    <strong>PCA(n_components=2)</strong>
+                    Reduce N variables a 2 componentes para poder graficar los grupos en un plano.
+                </div>
+                <div class="item-aprendizaje">
+                    <strong>Método del codo</strong>
+                    Técnica para elegir el número óptimo K: graficar la inercia para K=2 hasta K=8.
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <!-- ================================================================
+         ANÁLISIS 9 — Anomalías
+         ================================================================ -->
+    <article id="a9" class="seccion-analisis">
+        <div class="cabecera-analisis">
+            <div class="numero-circulo">9</div>
+            <div class="datos-titulo">
+                <h2>Detectar valores inusuales — Método IQR</h2>
+                <span class="linea-tecnica">def · quantile() · groupby transform() · detección por rubro</span>
+            </div>
+            <span class="nivel nivel-avanzado">Avanzado</span>
+        </div>
+
+        <div class="cuerpo-analisis">
+            <p class="descripcion-concepto">
+                La <strong>subvaloración</strong> (declarar un precio FOB menor al real)
+                es el principal mecanismo de evasión fiscal aduanera. Una señal de alerta
+                es un precio por kilogramo inusualmente bajo para su rubro.
+                El método <strong>IQR</strong> detecta estos valores sin necesidad de
+                conocer el precio "correcto" de cada mercadería.
+            </p>
+
+            <div class="formula">
+                IQR = Q3 − Q1 &nbsp;|&nbsp;
+                Límite inferior = Q1 − 1.5 × IQR &nbsp;|&nbsp;
+                Límite superior = Q3 + 1.5 × IQR
+            </div>
+
+            <div class="caja-concepto caja-naranja">
+                <p class="titulo-caja">¿Por qué detectar dentro de cada rubro?</p>
+                <p>
+                    El precio por kilogramo de algodón en rama no es comparable con el
+                    de un perfume o un medicamento. Si aplicáramos el IQR al dataset completo,
+                    los precios bajos de materias primas serían marcados como anomalías.
+                    Al aplicarlo <strong>dentro de cada rubro</strong>, comparamos
+                    manzanas con manzanas.
+                </p>
+            </div>
+
+            <div class="bloque-codigo">
+                <span class="etiqueta-lenguaje">Python — análisis_9_deteccion_anomalias.py</span>
+<pre><code><span class="py-comentario"># ============================================================
+# Calculamos el precio por kilogramo como indicador de valoración
+# ============================================================</span>
+importaciones_con_peso = solo_importaciones[
+    (solo_importaciones[<span class="py-cadena">'kilo_neto'</span>]  &gt; <span class="py-numero">0</span>) &amp;
+    (solo_importaciones[<span class="py-cadena">'fob_dolar'</span>]  &gt; <span class="py-numero">0</span>) &amp;
+    (solo_importaciones[<span class="py-cadena">'rubro'</span>].<span class="py-metodo">notna</span>())
+].<span class="py-metodo">copy</span>()
+
+importaciones_con_peso[<span class="py-cadena">'precio_por_kg'</span>] = (
+    importaciones_con_peso[<span class="py-cadena">'fob_dolar'</span>] / importaciones_con_peso[<span class="py-cadena">'kilo_neto'</span>]
+)
+
+<span class="py-comentario"># ---- Definimos la función de detección IQR ----
+# Recibe una serie de precios y devuelve True donde el precio es inusual</span>
+<span class="py-palabra">def</span> <span class="py-funcion">detectar_precio_inusual_iqr</span>(serie_de_precios):
+    cuartil_inferior = serie_de_precios.<span class="py-metodo">quantile</span>(<span class="py-numero">0.25</span>)   <span class="py-comentario"># Q1: el 25% más bajo</span>
+    cuartil_superior = serie_de_precios.<span class="py-metodo">quantile</span>(<span class="py-numero">0.75</span>)   <span class="py-comentario"># Q3: el 75% más bajo</span>
+    rango_intercuartilico = cuartil_superior - cuartil_inferior
+
+    precio_limite_inferior = cuartil_inferior - (<span class="py-numero">1.5</span> * rango_intercuartilico)
+    precio_limite_superior = cuartil_superior + (<span class="py-numero">1.5</span> * rango_intercuartilico)
+
+    <span class="py-comentario"># Retorna True si el precio está FUERA del rango normal</span>
+    <span class="py-palabra">return</span> (
+        (serie_de_precios &lt; precio_limite_inferior) |
+        (serie_de_precios &gt; precio_limite_superior)
+    )
+
+<span class="py-comentario"># ---- Aplicamos la función DENTRO de cada rubro ----
+# transform() aplica una función grupo por grupo y devuelve
+# una serie del mismo tamaño que el DataFrame original</span>
+importaciones_con_peso[<span class="py-cadena">'precio_es_inusual'</span>] = (
+    importaciones_con_peso
+    .<span class="py-metodo">groupby</span>(<span class="py-cadena">'rubro'</span>)[<span class="py-cadena">'precio_por_kg'</span>]
+    .<span class="py-metodo">transform</span>(detectar_precio_inusual_iqr)
+)
+
+total_anomalias  = importaciones_con_peso[<span class="py-cadena">'precio_es_inusual'</span>].<span class="py-metodo">sum</span>()
+porcentaje_total = total_anomalias / <span class="py-funcion">len</span>(importaciones_con_peso) * <span class="py-numero">100</span>
+<span class="py-funcion">print</span>(<span class="py-cadena">f'Ítems con precio inusual: {total_anomalias:,} ({porcentaje_total:.1f}%)'</span>)
+
+<span class="py-comentario"># ---- Los 10 despachos de mayor valor con precio inusual ----
+# Son los más relevantes para una auditoría real</span>
+alertas_ordenadas_por_valor = importaciones_con_peso[
+    importaciones_con_peso[<span class="py-cadena">'precio_es_inusual'</span>]
+].<span class="py-metodo">sort_values</span>(<span class="py-cadena">'fob_dolar'</span>, ascending=<span class="py-constante">False</span>)
+
+columnas_para_reporte = [
+    <span class="py-cadena">'despacho_cifrado'</span>, <span class="py-cadena">'rubro'</span>, <span class="py-cadena">'pais_origen'</span>,
+    <span class="py-cadena">'fob_dolar'</span>, <span class="py-cadena">'kilo_neto'</span>, <span class="py-cadena">'precio_por_kg'</span>, <span class="py-cadena">'aduana'</span>
+]
+<span class="py-funcion">print</span>(alertas_ordenadas_por_valor[columnas_para_reporte].<span class="py-metodo">head</span>(<span class="py-numero">10</span>).<span class="py-metodo">to_string</span>(index=<span class="py-constante">False</span>))</code></pre>
+            </div>
+
+            <div class="caja-concepto caja-purpura">
+                <p class="titulo-caja">Importante — anomalía estadística ≠ fraude confirmado</p>
+                <p>
+                    Un precio inusual es una <em>señal de alerta</em>, no una conclusión definitiva.
+                    Puede deberse a mercadería de calidad excepcional, lotes pequeños, cargamentos
+                    de muestra o errores de tipeo. Es el punto de partida para una revisión
+                    más profunda, no la prueba del delito.
+                </p>
+            </div>
+
+            <div class="grilla-aprendizaje">
+                <div class="item-aprendizaje">
+                    <strong>quantile(0.25) / quantile(0.75)</strong>
+                    Calculan el primer y tercer cuartil (Q1 y Q3) de una serie de pandas.
+                </div>
+                <div class="item-aprendizaje">
+                    <strong>groupby().transform()</strong>
+                    Aplica una función grupo por grupo y devuelve una serie alineada con el DataFrame original.
+                </div>
+                <div class="item-aprendizaje">
+                    <strong>def nombre_función()</strong>
+                    Encapsular lógica reutilizable en una función. Fundamental para código limpio.
+                </div>
+                <div class="item-aprendizaje">
+                    <strong>Gestión de riesgo real</strong>
+                    Los sistemas de inteligencia aduanera usan variantes de este método con datos históricos.
+                </div>
+            </div>
+        </div>
+    </article>
+
+</main><!-- fin contenedor central -->
+
+<!-- ================================================================
+     PIE DE PÁGINA
+     ================================================================ -->
+<footer class="pie-pagina">
+    <span class="nombre-institucion">Universidad Columbia del Paraguay</span>
+    Optativa 4 — Inteligencia de Negocios &nbsp;·&nbsp; Proyecto Aduana BI &nbsp;·&nbsp; 2025
+    <div class="linea-decorativa">
+        <span></span>
+        Notebook 06 — Análisis de Datos con Python
+        <span></span>
+    </div>
+</footer>
+
+</body>
+</html>

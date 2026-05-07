@@ -51,7 +51,7 @@ fk_checks = {
 }
 
 for fk, dim in fk_checks.items():
-    nulls = con.execute(f"""
+    nulls = con.execute(f"""0. 
         SELECT COUNT(*) 
         FROM dw.fact_aduana_item 
         WHERE {fk} IS NULL;

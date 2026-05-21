@@ -2,7 +2,10 @@
   "permissions": {
     "allow": [
       "Bash(python -c \"import json; data = json.load\\(open\\(r'c:\\\\Información\\\\proyectos\\\\aduana_bi\\\\notebooks\\\\06_Analisis_Python.ipynb', encoding='utf-8'\\)\\); cells = data['cells']; code = sum\\(1 for c in cells if c['cell_type']=='code'\\); md = sum\\(1 for c in cells if c['cell_type']=='markdown'\\); print\\(f'JSON válido | Total celdas: {len\\(cells\\)} | Código: {code} | Markdown: {md}'\\)\")",
-      "WebFetch(domain:www.columbia.edu.py)"
+      "WebFetch(domain:www.columbia.edu.py)",
+      "Bash(copy \"c:\\\\Información\\\\proyectos\\\\aduana_bi\\\\data_lake\\\\bronze\\\\Schema.png\" \"c:\\\\Información\\\\proyectos\\\\aduana_bi\\\\notebooks\\\\Docs\\\\Schema.png\")",
+      "Bash(powershell -command \"\\(Get-Item 'c:\\\\Información\\\\proyectos\\\\aduana_bi\\\\notebooks\\\\Docs\\\\index.html'\\).Length\")",
+      "Bash(powershell -command \"Get-ChildItem -Path 'c:\\\\Información\\\\proyectos\\\\aduana_bi' -Recurse -Include '*.png','*.jpg','*.jpeg' | Select-Object FullName\")"
     ]
   }
 }

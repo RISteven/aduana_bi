@@ -1,1148 +1,1604 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data Warehouse Aduana BI - Documentación Completa</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DWH Aduana BI — Guía del Estudiante</title>
+  <style>
+    :root {
+      --navy:    #002060;
+      --blue:    #0055A5;
+      --blue-lt: #1976D2;
+      --gold:    #C8973A;
+      --gold-lt: #F0C060;
+      --light:   #F4F6FA;
+      --white:   #FFFFFF;
+      --text:    #1A1A2E;
+      --muted:   #5A6070;
+      --ok:      #2E7D32;
+      --warn:    #E65100;
+      --border:  #D8E0EE;
+      --code-bg: #0D1117;
+      --code-fg: #C9D1D9;
+      --radius:  8px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin:0; padding:0; }
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
-            color: #333333;
-            background: #f5f5f5;
-        }
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--light);
+      color: var(--text);
+      line-height: 1.65;
+      font-size: 15px;
+    }
 
-        header {
-            background: linear-gradient(135deg, #003366 0%, #1e5f9e 100%);
-            color: white;
-            padding: 2rem 2rem;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
+    /* ── HEADER ───────────────────────────────────────────── */
+    header {
+      background: linear-gradient(135deg, var(--navy) 0%, #003080 60%, var(--blue) 100%);
+      color: var(--white);
+      padding: 1.6rem 2rem 1.3rem;
+      border-bottom: 4px solid var(--gold);
+      display: flex; align-items: center; gap: 1.2rem; flex-wrap: wrap;
+    }
+    .header-logo { font-size: 2.6rem; flex-shrink:0; }
+    header h1 { font-size: 1.85rem; font-weight:700; letter-spacing:-.4px; }
+    header p  { font-size:.9rem; opacity:.85; margin-top:.15rem; }
+    .header-right { margin-left:auto; display:flex; gap:.5rem; flex-wrap:wrap; align-items:flex-start; }
+    .badge {
+      background:rgba(200,151,58,.25); border:1px solid var(--gold-lt);
+      border-radius:20px; padding:.22rem .7rem; font-size:.78rem; white-space:nowrap; color:var(--gold-lt);
+    }
+    .texto-profesor {
+    font-family: 'Helvetica', sans-serif; /* Cambia 'Arial' por la fuente que quieras */
+    color: #d9f67b;                 
+    font-weight: bold;               /* Opcional: para hacer la letra negrita */
+    font-size: 14px;
+    
+}
 
-        header h1 {
-            font-size: 2.5rem;
-            margin-bottom: 0.5rem;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-        }
+    /* ── LAYOUT ───────────────────────────────────────────── */
+    .layout { display:flex; max-width:1400px; margin:0 auto; min-height:calc(100vh - 100px); }
 
-        header p {
-            font-size: 1.1rem;
-            opacity: 0.95;
-        }
+    /* ── SIDEBAR ──────────────────────────────────────────── */
+    .sidebar {
+      width:268px; flex-shrink:0;
+      background:var(--white); border-right:1px solid var(--border);
+      padding:1.2rem 0;
+      position:sticky; top:0; height:100vh; overflow-y:auto;
+    }
+    .sb-title {
+      font-size:.68rem; text-transform:uppercase; letter-spacing:1.4px;
+      color:var(--muted); padding:.4rem 1.4rem .7rem; margin-bottom:.2rem;
+    }
+    .nav-item {
+      display:flex; align-items:center; gap:.55rem;
+      padding:.52rem 1.4rem; cursor:pointer;
+      border-left:3px solid transparent; text-decoration:none;
+      font-size:.88rem; color:var(--text); transition:all .15s;
+    }
+    .nav-item:hover  { background:#EEF4FF; border-left-color:var(--blue); color:var(--blue); }
+    .nav-item.active { background:#E8F0FF; border-left-color:var(--gold); color:var(--navy); font-weight:600; }
+    .nav-num {
+      width:22px; height:22px; border-radius:50%; background:var(--border);
+      color:var(--muted); font-size:.7rem; font-weight:700;
+      display:flex; align-items:center; justify-content:center; flex-shrink:0;
+    }
+    .nav-item.active .nav-num { background:var(--gold); color:var(--navy); }
+    .nav-sep { height:1px; background:var(--border); margin:.4rem 1.4rem; }
 
-        .container {
-            display: flex;
-            max-width: 1400px;
-            margin: 0 auto;
-            gap: 2rem;
-            padding: 2rem;
-        }
+    /* ── MAIN ─────────────────────────────────────────────── */
+    .main { flex:1; padding:1.8rem 2.2rem; overflow-x:hidden; }
+    .section { display:none; animation:fadeUp .22s ease; }
+    .section.active { display:block; }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(7px)} to{opacity:1;transform:none} }
 
-        .sidebar {
-            width: 280px;
-            background: white;
-            padding: 2rem;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            height: fit-content;
-            position: sticky;
-            top: 20px;
-        }
+    /* ── TYPOGRAPHY ───────────────────────────────────────── */
+    h2 { color:var(--navy); font-size:1.55rem; border-bottom:3px solid var(--gold); padding-bottom:.45rem; margin-bottom:1.1rem; }
+    h3 { color:var(--blue); font-size:1.1rem; margin:1.5rem 0 .55rem; }
+    h4 { color:var(--navy); font-size:.98rem; margin:1.1rem 0 .4rem; }
+    p  { margin-bottom:.85rem; }
+    ul,ol { margin:0 0 .9rem 1.5rem; }
+    li { margin-bottom:.3rem; }
+    a  { color:var(--blue); }
 
-        .sidebar h3 {
-            color: #003366;
-            margin-bottom: 1.5rem;
-            font-size: 1.2rem;
-            border-bottom: 2px solid #d4af37;
-            padding-bottom: 0.5rem;
-        }
+    /* ── PHASE STRIP ──────────────────────────────────────── */
+    .phase-strip {
+      display:flex; align-items:center; gap:1rem;
+      background:linear-gradient(90deg, var(--navy), var(--blue));
+      color:var(--white); padding:.85rem 1.3rem;
+      border-radius:var(--radius); margin-bottom:1.4rem;
+    }
+    .phase-strip .icon { font-size:1.9rem; }
+    .phase-strip h2 { color:var(--white); border:none; padding:0; margin:0; font-size:1.25rem; }
+    .phase-strip p  { margin:0; font-size:.83rem; opacity:.85; }
+    .time-badge {
+      margin-left:auto; background:var(--gold); color:var(--navy);
+      padding:.28rem .85rem; border-radius:20px; font-size:.78rem; font-weight:700; white-space:nowrap;
+    }
 
-        .sidebar ul {
-            list-style: none;
-        }
+    /* ── BOXES ────────────────────────────────────────────── */
+    .box { padding:.9rem 1.1rem; border-radius:var(--radius); margin-bottom:.9rem; border-left:4px solid; }
+    .box-info  { background:#E3EEFF; border-color:var(--blue); color:#0A2A60; }
+    .box-ok    { background:#E8F5E9; border-color:#43A047; color:#1B5E20; }
+    .box-warn  { background:#FFF8E1; border-color:#FFA000; color:#7A4200; }
+    .box-error { background:#FFEBEE; border-color:#E53935; color:#7F0000; }
+    .box-tip   { background:#F3E5F5; border-color:#8E24AA; color:#4A148C; }
+    .box strong { display:block; margin-bottom:.35rem; }
 
-        .sidebar li {
-            margin-bottom: 0.8rem;
-        }
+    /* ── STEP CARDS ───────────────────────────────────────── */
+    .step-card { border:1px solid var(--border); border-radius:var(--radius); margin-bottom:1.1rem; overflow:hidden; }
+    .step-head {
+      background:var(--navy); color:var(--white);
+      padding:.65rem 1.1rem; display:flex; align-items:center; gap:.65rem;
+      font-weight:600; font-size:.9rem;
+    }
+    .step-head .num {
+      width:24px; height:24px; border-radius:50%;
+      background:var(--gold); color:var(--navy);
+      font-size:.8rem; font-weight:800;
+      display:flex; align-items:center; justify-content:center; flex-shrink:0;
+    }
+    .step-body { padding:.9rem 1.1rem; background:var(--white); }
 
-        .sidebar a {
-            color: #1e5f9e;
-            text-decoration: none;
-            padding: 0.5rem 0;
-            display: block;
-            transition: all 0.3s ease;
-            border-left: 3px solid transparent;
-            padding-left: 1rem;
-        }
+    /* ── CODE ─────────────────────────────────────────────── */
+    .code-wrap { position:relative; margin-bottom:.9rem; }
+    .code-lang {
+      position:absolute; top:.45rem; right:.45rem;
+      background:rgba(255,255,255,.1); color:#8B949E;
+      font-size:.7rem; padding:.1rem .45rem; border-radius:3px;
+    }
+    .copy-btn {
+      position:absolute; top:.4rem; right:3.2rem;
+      background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.18);
+      color:#C9D1D9; font-size:.7rem; padding:.15rem .55rem;
+      border-radius:3px; cursor:pointer; transition:background .15s;
+    }
+    .copy-btn:hover  { background:rgba(255,255,255,.22); }
+    .copy-btn.copied { background:#2E7D32; border-color:#2E7D32; color:#fff; }
+    pre {
+      background:var(--code-bg); color:var(--code-fg);
+      padding:1.1rem 1rem 1rem; border-radius:var(--radius);
+      overflow-x:auto; font-family:'Cascadia Code','Fira Code',Consolas,monospace;
+      font-size:.83rem; line-height:1.55;
+      border-left:4px solid var(--gold); tab-size:4;
+    }
+    code {
+      background:#EDF0F7; color:#C0392B;
+      padding:.08rem .38rem; border-radius:3px;
+      font-family:'Cascadia Code',Consolas,monospace; font-size:.87em;
+    }
+    pre code { background:none; color:inherit; padding:0; font-size:inherit; }
 
-        .sidebar a:hover {
-            color: #d4af37;
-            border-left-color: #d4af37;
-            padding-left: 1.2rem;
-        }
+    /* ── TABLES ───────────────────────────────────────────── */
+    table { width:100%; border-collapse:collapse; margin-bottom:1.1rem; font-size:.88rem; }
+    th { background:var(--navy); color:var(--white); padding:.6rem .85rem; text-align:left; }
+    td { padding:.55rem .85rem; border-bottom:1px solid var(--border); vertical-align:top; }
+    tr:nth-child(even) td { background:#F8FAFF; }
+    tr:hover td { background:#EEF4FF; }
 
-        .sidebar a.active {
-            color: #d4af37;
-            border-left-color: #d4af37;
-            font-weight: bold;
-        }
+    /* ── STEPPER ──────────────────────────────────────────── */
+    .stepper {
+      display:flex; align-items:flex-start; gap:0;
+      margin-bottom:1.8rem; overflow-x:auto; padding-bottom:.4rem;
+    }
+    .step-item { display:flex; flex-direction:column; align-items:center; flex:1; min-width:75px; }
+    .step-circle {
+      width:34px; height:34px; border-radius:50%;
+      border:2px solid var(--border); background:var(--white);
+      color:var(--muted); font-size:.82rem; font-weight:700;
+      display:flex; align-items:center; justify-content:center;
+      cursor:pointer; transition:all .2s; z-index:1;
+    }
+    .step-circle.done    { background:var(--ok); border-color:var(--ok); color:#fff; }
+    .step-circle.current { background:var(--navy); border-color:var(--navy); color:#fff; box-shadow:0 0 0 4px rgba(0,32,96,.15); }
+    .step-label { font-size:.68rem; color:var(--muted); text-align:center; margin-top:.28rem; max-width:68px; line-height:1.3; }
+    .step-connector { flex:1; height:2px; background:var(--border); margin-top:16px; min-width:18px; }
+    .step-connector.done { background:var(--ok); }
 
-        .content {
-            flex: 1;
-            background: white;
-            padding: 2.5rem;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
+    /* ── CHECKLIST ────────────────────────────────────────── */
+    .checklist { list-style:none; margin-left:0; }
+    .checklist li {
+      display:flex; gap:.55rem; align-items:flex-start;
+      padding:.42rem .55rem; border-radius:5px; cursor:pointer;
+      transition:background .1s; font-size:.88rem;
+    }
+    .checklist li:hover { background:#EEF4FF; }
+    .checklist li input[type=checkbox] { margin-top:.2rem; flex-shrink:0; width:15px; height:15px; accent-color:var(--blue); cursor:pointer; }
+    .checklist li.checked { text-decoration:line-through; color:var(--muted); }
 
-        .section {
-            display: none;
-        }
+    /* ── ACCORDION ────────────────────────────────────────── */
+    .accordion { border:1px solid var(--border); border-radius:var(--radius); margin-bottom:.7rem; overflow:hidden; }
+    .accordion-head {
+      background:#F4F6FA; padding:.75rem 1.1rem; cursor:pointer;
+      display:flex; justify-content:space-between; align-items:center;
+      font-weight:600; font-size:.88rem; color:var(--navy); user-select:none;
+    }
+    .accordion-head:hover { background:#EEF4FF; }
+    .accordion-arrow { transition:transform .2s; font-size:.72rem; }
+    .accordion-body { display:none; padding:.9rem 1.1rem; background:var(--white); font-size:.88rem; }
+    .accordion.open .accordion-arrow { transform:rotate(180deg); }
+    .accordion.open .accordion-body { display:block; }
 
-        .section.active {
-            display: block;
-            animation: fadeIn 0.3s ease-in;
-        }
+    /* ── CARD GRID ────────────────────────────────────────── */
+    .card-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(215px,1fr)); gap:.9rem; margin-bottom:1.4rem; }
+    .card {
+      background:var(--white); border:1px solid var(--border); border-radius:var(--radius);
+      padding:1rem; border-top:3px solid var(--blue);
+      transition:box-shadow .2s,transform .2s; cursor:pointer;
+    }
+    .card:hover { box-shadow:0 4px 14px rgba(0,0,0,.1); transform:translateY(-2px); }
+    .card.gold  { border-top-color:var(--gold); }
+    .card.green { border-top-color:#43A047; }
+    .card h4 { font-size:.92rem; margin:0 0 .28rem; color:var(--navy); }
+    .card .ci { font-size:1.55rem; margin-bottom:.45rem; }
+    .card p  { font-size:.8rem; color:var(--muted); margin:0; }
+    .card .tag { font-size:.7rem; background:#EEF4FF; color:var(--blue); padding:.13rem .45rem; border-radius:10px; display:inline-block; margin-top:.38rem; }
 
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
-        }
+    /* ── DIAGRAM / SCHEMA ─────────────────────────────────── */
+    .diagram {
+      background:#0D1117; color:#E6EDF3;
+      font-family:'Cascadia Code','Fira Code',Consolas,monospace;
+      font-size:.77rem; padding:1.1rem; border-radius:var(--radius);
+      overflow-x:auto; line-height:1.7; margin-bottom:.9rem;
+      border:1px solid #30363D;
+    }
+    .schema-img {
+      width:100%; max-width:820px; display:block;
+      border-radius:var(--radius); border:2px solid var(--border);
+      margin:0 auto 1rem; box-shadow:0 4px 20px rgba(0,0,0,.12);
+    }
+    .infographic-img {
+      width:100%; max-width:900px; display:block;
+      border-radius:var(--radius);
+      margin:1rem auto 1.4rem; box-shadow:0 3px 16px rgba(0,0,0,.14);
+    }
 
-        .section h2 {
-            color: #003366;
-            margin-top: 2rem;
-            margin-bottom: 1rem;
-            border-bottom: 2px solid #d4af37;
-            padding-bottom: 0.5rem;
-        }
+    /* ── FOOTER ───────────────────────────────────────────── */
+    footer {
+      background:var(--navy); color:rgba(255,255,255,.7);
+      text-align:center; padding:1.1rem; font-size:.8rem;
+      border-top:3px solid var(--gold);
+    }
+    footer a { color:var(--gold-lt); }
 
-        .section h3 {
-            color: #1e5f9e;
-            margin-top: 1.5rem;
-            margin-bottom: 0.8rem;
-        }
-
-        .section h4 {
-            color: #333333;
-            margin-top: 1rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .section p {
-            margin-bottom: 1rem;
-            text-align: justify;
-        }
-
-        .section ul, .section ol {
-            margin-left: 2rem;
-            margin-bottom: 1rem;
-        }
-
-        .section li {
-            margin-bottom: 0.5rem;
-        }
-
-        code {
-            background: #f0f0f0;
-            padding: 0.2rem 0.5rem;
-            border-radius: 3px;
-            font-family: 'Courier New', monospace;
-            color: #d63384;
-        }
-
-        pre {
-            background: #1e1e1e;
-            color: #d4d4d4;
-            padding: 1.5rem;
-            border-radius: 5px;
-            overflow-x: auto;
-            margin-bottom: 1rem;
-            border-left: 4px solid #d4af37;
-        }
-
-        pre code {
-            background: none;
-            color: #d4d4d4;
-            padding: 0;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 1rem;
-        }
-
-        table th, table td {
-            border: 1px solid #ddd;
-            padding: 0.8rem;
-            text-align: left;
-        }
-
-        table th {
-            background: #003366;
-            color: white;
-        }
-
-        table tr:nth-child(even) {
-            background: #f9f9f9;
-        }
-
-        .highlight-box {
-            background: #f0f8ff;
-            border-left: 4px solid #1e5f9e;
-            padding: 1rem;
-            margin-bottom: 1rem;
-            border-radius: 4px;
-        }
-
-        .info-box {
-            background: #e7f3ff;
-            border-left: 4px solid #d4af37;
-            padding: 1rem;
-            margin-bottom: 1rem;
-            border-radius: 4px;
-            color: #003366;
-        }
-
-        .warning-box {
-            background: #fff8e1;
-            border-left: 4px solid #ff9800;
-            padding: 1rem;
-            margin-bottom: 1rem;
-            border-radius: 4px;
-            color: #e65100;
-        }
-
-        .success-box {
-            background: #e8f5e9;
-            border-left: 4px solid #4caf50;
-            padding: 1rem;
-            margin-bottom: 1rem;
-            border-radius: 4px;
-            color: #1b5e20;
-        }
-
-        .flow-diagram {
-            background: #f5f5f5;
-            border: 1px solid #ddd;
-            padding: 1rem;
-            margin: 1rem 0;
-            border-radius: 4px;
-            font-family: monospace;
-            overflow-x: auto;
-            font-size: 0.9rem;
-        }
-
-        footer {
-            background: #003366;
-            color: white;
-            text-align: center;
-            padding: 1.5rem;
-            margin-top: 3rem;
-            border-top: 4px solid #d4af37;
-        }
-
-        .btn-group {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 2rem;
-        }
-
-        .btn {
-            padding: 0.7rem 1.5rem;
-            background: #1e5f9e;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 0.9rem;
-        }
-
-        .btn:hover {
-            background: #003366;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-        }
-
-        .btn.active {
-            background: #d4af37;
-            color: #003366;
-        }
-
-        @media (max-width: 1024px) {
-            .container {
-                flex-direction: column;
-            }
-
-            .sidebar {
-                width: 100%;
-                position: static;
-            }
-
-            header h1 {
-                font-size: 1.8rem;
-            }
-        }
-
-        .breadcrumb {
-            color: #999;
-            font-size: 0.9rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .breadcrumb a {
-            color: #1e5f9e;
-            text-decoration: none;
-        }
-
-        .breadcrumb a:hover {
-            text-decoration: underline;
-        }
-    </style>
+    /* ── RESPONSIVE ───────────────────────────────────────── */
+    @media (max-width:900px){
+      .layout { flex-direction:column; }
+      .sidebar { width:100%; height:auto; position:static; display:flex; flex-wrap:wrap; padding:.4rem; gap:.2rem; }
+      .nav-item { padding:.35rem .7rem; font-size:.8rem; border-left:none; border-bottom:2px solid transparent; }
+      .nav-item.active { border-bottom-color:var(--gold); border-left:none; }
+      .main { padding:1rem; }
+      .stepper { display:none; }
+    }
+  </style>
 </head>
 <body>
-    <header>
-        <h1>📚 Data Warehouse Aduana BI</h1>
-        <p>Documentación Completa — Guía del Estudiante</p>
-    </header>
 
-    <div class="container">
-        <aside class="sidebar">
-            <h3>📖 Navegación</h3>
-            <ul>
-                <li><a href="#inicio" class="nav-link active" data-section="inicio">🏠 Inicio</a></li>
-                <li><a href="#paso-a-paso" class="nav-link" data-section="paso-paso">🏗️ Paso a Paso</a></li>
-                <li><a href="#quick-start" class="nav-link" data-section="quick-start">⚡ Quick Start</a></li>
-                <li><a href="#diagramas" class="nav-link" data-section="diagramas">🎨 Diagramas</a></li>
-                <li><a href="#mapa-mental" class="nav-link" data-section="mapa-mental">🗺️ Mapa Mental</a></li>
-                <li><a href="#indice" class="nav-link" data-section="indice">📑 Índice General</a></li>
-                <li><a href="#docente" class="nav-link" data-section="docente">👨‍🏫 Guía Docente</a></li>
-            </ul>
-        </aside>
-
-        <main class="content">
-            <!-- SECCIÓN INICIO -->
-            <div id="inicio" class="section active">
-                <h2>🎯 Bienvenido al Data Warehouse Aduana BI</h2>
-                <p>Esta documentación te guiará paso a paso en la construcción de un Data Warehouse completo, desde los conceptos básicos hasta la conexión final con Power BI.</p>
-
-                <div class="info-box">
-                    <strong>¿Qué aprenderás?</strong><br>
-                    Construirás un Data Warehouse profesional usando Python, DuckDB y Power BI. Aprenderás ETL, diseño de bases de datos, y análisis de datos.
-                </div>
-
-                <h3>⏱️ Tiempo Estimado</h3>
-                <ul>
-                    <li><strong>Lectura completa:</strong> 2-3 horas</li>
-                    <li><strong>Ejecución práctica:</strong> 6-8 horas</li>
-                    <li><strong>Total:</strong> 8-11 horas</li>
-                </ul>
-
-                <h3>📚 Recursos Disponibles</h3>
-                <table>
-                    <tr>
-                        <th>Documento</th>
-                        <th>Descripción</th>
-                        <th>Duración</th>
-                    </tr>
-                    <tr>
-                        <td><strong>Paso a Paso</strong></td>
-                        <td>Guía completa y detallada</td>
-                        <td>2-3 h</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Quick Start</strong></td>
-                        <td>Versión acelerada del flujo</td>
-                        <td>20 min</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Diagramas</strong></td>
-                        <td>Visualización de la arquitectura</td>
-                        <td>30 min</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Mapa Mental</strong></td>
-                        <td>Resumen visual de 1 página</td>
-                        <td>10 min</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Índice General</strong></td>
-                        <td>Navegador maestro y FAQ</td>
-                        <td>Referencia</td>
-                    </tr>
-                </table>
-
-                <h3>🚀 ¿Por dónde empiezo?</h3>
-                <div class="highlight-box">
-                    <p><strong>Si tienes 20 minutos:</strong> Lee el <a href="#" onclick="switchSection('quick-start')">Quick Start</a></p>
-                    <p><strong>Si tienes 2-3 horas:</strong> Lee la <a href="#" onclick="switchSection('paso-paso')">Guía Paso a Paso</a></p>
-                    <p><strong>Si quieres ver diagramas:</strong> Mira los <a href="#" onclick="switchSection('diagramas')">Diagramas</a></p>
-                    <p><strong>Si eres visual:</strong> Consulta el <a href="#" onclick="switchSection('mapa-mental')">Mapa Mental</a></p>
-                </div>
-
-                <h3>✅ Lo que necesitas</h3>
-                <ul>
-                    <li>Python 3.9 o superior</li>
-                    <li>Jupyter Notebook o Jupyter Lab</li>
-                    <li>Power BI Desktop (para la visualización final)</li>
-                    <li>Editor de código (VS Code recomendado)</li>
-                </ul>
-            </div>
-
-            <!-- SECCIÓN PASO A PASO -->
-            <div id="paso-paso" class="section">
-                <h2>🏗️ Armado del Data Warehouse — Guía Paso a Paso</h2>
-                <p><strong>Para:</strong> Analistas, profesores y estudiantes que quieran entender cómo construir un Data Warehouse desde cero</p>
-
-                <div class="info-box">
-                    <strong>Resultado final:</strong> Un Data Warehouse completo listo para conectar a Power BI
-                </div>
-
-                <h3>📋 Tabla de Contenidos</h3>
-                <ol>
-                    <li>Preparación del entorno</li>
-                    <li>Entender el problema y la solución</li>
-                    <li>Crear la estructura de las tablas (Fase 1: Arquitectura)</li>
-                    <li>Cargar y limpiar los datos (Fase 2: Staging)</li>
-                    <li>Crear las dimensiones (Fase 3: Dimensiones)</li>
-                    <li>Crear la tabla de hechos (Fase 4: Fact Table)</li>
-                    <li>Validar la integridad (Fase 5: Validaciones)</li>
-                    <li>Conectar a Power BI (Fase 6: Visualización)</li>
-                </ol>
-
-                <h3>1. Preparación del entorno</h3>
-                <p>Antes de empezar, asegúrate de tener instalado:</p>
-                <ul>
-                    <li><strong>Python 3.9 o superior</strong></li>
-                    <li><strong>Un editor de código</strong> (VS Code recomendado)</li>
-                    <li><strong>Jupyter Notebook o Jupyter Lab</strong> (para ejecutar los notebooks)</li>
-                </ul>
-
-                <h4>Instalar las librerías</h4>
-                <p>Abre tu terminal/PowerShell y ejecuta:</p>
-                <pre><code>pip install duckdb pandas openpyxl jupyterlab</code></pre>
-
-                <h3>2. Entender el problema y la solución</h3>
-                <p><strong>El problema:</strong> Tienes un archivo Excel con 41,342 filas de despachos aduanales que es imposible analizar directamente.</p>
-
-                <div class="warning-box">
-                    <strong>Problemas del Excel original:</strong>
-                    <ul>
-                        <li>❌ Espacios en blanco en nombres de columnas</li>
-                        <li>❌ Fechas escritas como texto</li>
-                        <li>❌ Información repetida (país aparece 10,000 veces)</li>
-                        <li>❌ Lento de procesar</li>
-                    </ul>
-                </div>
-
-                <p><strong>La solución:</strong> Construimos un Data Warehouse: una base de datos especial para análisis.</p>
-
-                <div class="success-box">
-                    <strong>Ventajas del DW:</strong>
-                    <ul>
-                        <li>✅ Datos limpios y organizados</li>
-                        <li>✅ Sin repeticiones innecesarias</li>
-                        <li>✅ Optimizado para análisis</li>
-                        <li>✅ Rápido y confiable</li>
-                    </ul>
-                </div>
-
-                <h3>3. Crear la estructura de las tablas</h3>
-                <p><strong>Notebook a ejecutar:</strong> <code>01_Crear_Estructura_DW.ipynb</code></p>
-                <p>Creamos 15 tablas vacías siguiendo un diseño Star Schema:</p>
-                <ul>
-                    <li>1 tabla de staging</li>
-                    <li>12 tablas de dimensiones</li>
-                    <li>1 tabla de hechos</li>
-                    <li>1 tabla de auditoría</li>
-                </ul>
-
-                <h3>4. Cargar y limpiar los datos</h3>
-                <p><strong>Notebook a ejecutar:</strong> <code>02_Cargar_Staging.ipynb</code></p>
-                <p>Este paso es crucial. Aquí limpiaremos el Excel:</p>
-                <ol>
-                    <li>Quitamos espacios de nombres de columnas</li>
-                    <li>Convertimos fechas de texto a fechas reales</li>
-                    <li>Normalizamos los datos</li>
-                    <li>Guardamos en <code>stg_aduana</code></li>
-                </ol>
-
-                <h3>5. Crear las dimensiones</h3>
-                <p><strong>Notebook a ejecutar:</strong> <code>03_Cargar_Dimensiones.ipynb</code></p>
-                <p>Creamos catálogos únicos (sin repeticiones):</p>
-                <table>
-                    <tr>
-                        <th>Dimensión</th>
-                        <th>Filas aprox.</th>
-                    </tr>
-                    <tr>
-                        <td>dim_operacion</td>
-                        <td>2</td>
-                    </tr>
-                    <tr>
-                        <td>dim_pais</td>
-                        <td>50+</td>
-                    </tr>
-                    <tr>
-                        <td>dim_producto</td>
-                        <td>500+</td>
-                    </tr>
-                    <tr>
-                        <td>dim_fecha</td>
-                        <td>365-730</td>
-                    </tr>
-                </table>
-
-                <h3>6. Crear la tabla de hechos</h3>
-                <p><strong>Notebook a ejecutar:</strong> <code>04_Cargar_Fact_Table.ipynb</code></p>
-                <p>El paso más importante: creamos la tabla central conectando todo mediante 14 JOINs.</p>
-
-                <h3>7. Validar la integridad</h3>
-                <p><strong>Notebook a ejecutar:</strong> <code>05_Validaciones.ipynb</code></p>
-                <p>Asegúrate de que todo está bien:</p>
-                <ul>
-                    <li>✓ No hay claves huérfanas</li>
-                    <li>✓ No hay duplicados</li>
-                    <li>✓ No hay valores negativos absurdos</li>
-                    <li>✓ Las fechas tienen sentido</li>
-                </ul>
-
-                <h3>8. Conectar a Power BI</h3>
-                <p>Finalmente, conectas tu DW a Power BI y creas reportes interactivos.</p>
-
-                <div class="success-box">
-                    <strong>¡Listo!</strong> Tienes un Data Warehouse profesional listo para análisis.
-                </div>
-            </div>
-
-            <!-- SECCIÓN QUICK START -->
-            <div id="quick-start" class="section">
-                <h2>⚡ Quick Start — DWH en 20 minutos</h2>
-                <p><strong>Si no tienes mucho tiempo y quieres entender el flujo rápido...</strong></p>
-
-                <h3>El problema en 30 segundos</h3>
-                <p>Tienes un Excel gigante con datos de aduanas. Quieres analizarlo en Power BI pero está:</p>
-                <ul>
-                    <li>❌ Lleno de espacios y caracteres raros</li>
-                    <li>❌ Datos repetidos (BRASIL aparece 10,000 veces)</li>
-                    <li>❌ Fechas como texto, no como fechas reales</li>
-                    <li>❌ Muy lento de procesar</li>
-                </ul>
-
-                <h3>La solución en 30 segundos</h3>
-                <p>Construimos un <strong>Data Warehouse</strong>: una base de datos especial para análisis donde:</p>
-                <ul>
-                    <li>✅ Todo está limpio y normalizado</li>
-                    <li>✅ No hay repeticiones (BRASIL aparece 1 sola vez)</li>
-                    <li>✅ Las fechas son verdaderas fechas</li>
-                    <li>✅ Es rápido y eficiente</li>
-                </ul>
-
-                <h3>Las 4 fases de construcción</h3>
-                <table>
-                    <tr>
-                        <th>#</th>
-                        <th>Fase</th>
-                        <th>Entrada</th>
-                        <th>Salida</th>
-                        <th>Notebook</th>
-                        <th>Tiempo</th>
-                    </tr>
-                    <tr>
-                        <td>1</td>
-                        <td>Estructura</td>
-                        <td>Nada</td>
-                        <td>15 tablas vacías</td>
-                        <td>01</td>
-                        <td>15 min</td>
-                    </tr>
-                    <tr>
-                        <td>2</td>
-                        <td>Limpieza</td>
-                        <td>Excel</td>
-                        <td>stg_aduana limpio</td>
-                        <td>02</td>
-                        <td>20 min</td>
-                    </tr>
-                    <tr>
-                        <td>3</td>
-                        <td>Dimensiones</td>
-                        <td>stg_aduana</td>
-                        <td>12 catálogos</td>
-                        <td>03</td>
-                        <td>15 min</td>
-                    </tr>
-                    <tr>
-                        <td>4</td>
-                        <td>Hechos</td>
-                        <td>stg + dims</td>
-                        <td>fact_aduana_item</td>
-                        <td>04</td>
-                        <td>20 min</td>
-                    </tr>
-                </table>
-
-                <p><strong>Total: ~1:20 h de ejecución</strong></p>
-
-                <h3>Las 3 ideas clave</h3>
-
-                <h4>1️⃣ ETL: Extraer, Transformar, Cargar</h4>
-                <div class="flow-diagram">
-EXTRAER        TRANSFORMAR       CARGAR
-(del Excel)    (limpiar/unir)    (en DuckDB)
-    ↓              ↓                 ↓
- Lee CSV      Quita espacios    stg_aduana
-              Convierte fechas   dim_*
-              Normaliza          fact_*
-                </div>
-
-                <h4>2️⃣ Star Schema: Una estrella con dimensiones</h4>
-                <div class="flow-diagram">
-              dim_fecha
-              dim_pais
-              dim_producto
-                 │
-         ────────┼────────
-         │                │
-    dim_operacion    fact_aduana_item    dim_aduana
-         │                │
-         ────────┼────────
-                 │
-            dim_regimen
-                </div>
-
-                <h4>3️⃣ Datos sin repetir: IDs en lugar de texto</h4>
-                <div class="highlight-box">
-                    <p><strong>❌ MALO:</strong> "BRASIL" aparece 10,000 veces</p>
-                    <p><strong>✓ BUENO:</strong> El número "5" aparece 10,000 veces</p>
-                    <p>&nbsp;&nbsp;&nbsp;&nbsp;"5" apunta a "BRASIL" en dim_pais</p>
-                </div>
-
-                <h3>Comandos útiles (copiar/pegar)</h3>
-                <pre><code>import duckdb
-
-# Conectar
-con = duckdb.connect('db/aduana.duckdb')
-
-# Ver cuántas filas
-con.query('SELECT COUNT(*) FROM stg_aduana').show()
-con.query('SELECT COUNT(*) FROM fact_aduana_item').show()
-
-# Ver las primeras 5 filas
-con.query('SELECT * FROM dim_pais LIMIT 5').show()
-
-# Análisis rápido
-con.query('''
-SELECT 
-    operacion,
-    COUNT(*) as total,
-    SUM(fob) as total_fob
-FROM fact_aduana_item
-GROUP BY operacion
-''').show()</code></pre>
-
-                <h3>Checklist para saber si funcionó</h3>
-                <ul>
-                    <li>☐ Notebook 01 → Sin errores, 15 tablas creadas</li>
-                    <li>☐ Notebook 02 → Sin errores, 41K filas en stg_aduana</li>
-                    <li>☐ Notebook 03 → Sin errores, 12 tablas con datos</li>
-                    <li>☐ Notebook 04 → Sin errores, 41K filas en fact_aduana_item</li>
-                    <li>☐ Notebook 05 → Todas las pruebas pasaron (✓)</li>
-                    <li>☐ Power BI conectado a DuckDB</li>
-                    <li>☐ 3+ reportes en Power BI</li>
-                </ul>
-            </div>
-
-            <!-- SECCIÓN DIAGRAMAS -->
-            <div id="diagramas" class="section">
-                <h2>🎨 Visualización del DWH — Diagramas y flujos</h2>
-
-                <h3>1. El flujo general (de inicio a fin)</h3>
-                <div class="flow-diagram">
-┌─────────────────────────────────────────────────────────────────┐
-│                        FASE 1: FUENTE                           │
-│  Archivo Excel con datos desordenados (41,342 filas)            │
-│  • Espacios en blanco                                            │
-│  • Fechas como texto                                             │
-│  • Información repetida                                          │
-└────────────────┬────────────────────────────────────────────────┘
-                 │
-                 │ ETL-Cargar-Staging.py (Notebook 02)
-                 ▼
-┌─────────────────────────────────────────────────────────────────┐
-│              FASE 2: LIMPIEZA (STAGING)                         │
-│  Tabla: stg_aduana (41,342 filas × 41 columnas)                 │
-│  • Espacios quitados                                             │
-│  • Fechas convertidas                                            │
-│  • Datos normalizados                                            │
-└────────────────┬────────────────────────────────────────────────┘
-                 │
-                 │ ETL-Dimension.py (Notebook 03)
-                 ▼
-┌─────────────────────────────────────────────────────────────────┐
-│              FASE 3: DIMENSIONES (CATÁLOGOS)                    │
-│  12 tablas de dimensiones sin repeticiones                      │
-│  • dim_operacion, dim_pais, dim_producto, dim_fecha             │
-│  • dim_aduana, dim_regimen, dim_canal, dim_marca                │
-└────────────────┬────────────────────────────────────────────────┘
-                 │
-                 │ ETL-FACT.py (Notebook 04)
-                 │ 14 LEFT JOINs gigantescos
-                 ▼
-┌─────────────────────────────────────────────────────────────────┐
-│            FASE 4: TABLA DE HECHOS (FACT TABLE)                 │
-│  Tabla: fact_aduana_item (41,342 filas × 33 columnas)           │
-│  • Conectada a todas las dimensiones                            │
-│  • Datos limpios y normalizados                                 │
-│  • Optimizada para análisis                                     │
-└────────────────┬────────────────────────────────────────────────┘
-                 │
-                 │ ODBC (Power BI)
-                 ▼
-┌─────────────────────────────────────────────────────────────────┐
-│               FASE 5: VISUALIZACIÓN                             │
-│  Power BI conectado a DuckDB                                    │
-│  • Reportes interactivos                                        │
-│  • Slicers para filtrar                                         │
-│  • Gráficos automáticos                                         │
-└─────────────────────────────────────────────────────────────────┘
-                </div>
-
-                <h3>2. Las 4 capas de datos</h3>
-                <table>
-                    <tr>
-                        <th>Capa</th>
-                        <th>Nombre</th>
-                        <th>Descripción</th>
-                        <th>Uso</th>
-                    </tr>
-                    <tr>
-                        <td>1</td>
-                        <td><strong>Bronze</strong></td>
-                        <td>Datos crudos tal como vienen (Excel, CSV)</td>
-                        <td>Auditoría, trazabilidad</td>
-                    </tr>
-                    <tr>
-                        <td>2</td>
-                        <td><strong>Silver</strong></td>
-                        <td>Datos limpios (staging)</td>
-                        <td>Análisis ad-hoc</td>
-                    </tr>
-                    <tr>
-                        <td>3</td>
-                        <td><strong>Gold</strong></td>
-                        <td>Datos listos para análisis (dimensiones + fact)</td>
-                        <td>Reportes, BI, análisis</td>
-                    </tr>
-                </table>
-
-                <h3>3. Star Schema explicado</h3>
-                <p>El diseño central de nuestro DW:</p>
-                <ul>
-                    <li><strong>Una tabla central (Fact):</strong> fact_aduana_item con 41,342 filas</li>
-                    <li><strong>Tablas de referencia (Dimensions):</strong> 12 tablas sin repeticiones</li>
-                    <li><strong>Relaciones (ForeignKeys):</strong> Conectan fact con cada dimensión</li>
-                </ul>
-
-                <div class="info-box">
-                    <strong>Ventajas del Star Schema:</strong><br>
-                    ✓ Menos repeticiones (base de datos pequeña)<br>
-                    ✓ Consultas rápidas<br>
-                    ✓ Fácil mantenimiento<br>
-                    ✓ Ideal para Power BI
-                </div>
-            </div>
-
-            <!-- SECCIÓN MAPA MENTAL -->
-            <div id="mapa-mental" class="section">
-                <h2>🗺️ Mapa Mental — DWH en una página</h2>
-
-                <h3>El viaje de los datos (izquierda a derecha)</h3>
-                <div class="flow-diagram">
-┌──────────────────────────────────────────────────────────────────────────┐
-│                                                                          │
-│  EXCEL              STAGING              DIMENSIONES          FACT      │
-│  CAÓTICO            LIMPIO               ORGANIZADAS          CONECTADA │
-│                                                                          │
-│  ❌ Espacios        ✓ Sin espacios      ✓ Catálogos          ✓ IDs     │
-│  ❌ Fechas texto    ✓ Fechas reales     ✓ Sin repetir        ✓ Rels    │
-│  ❌ Repetido        ✓ Limpio            ✓ Normalizadas       ✓ Métri   │
-│                     ✓ 41K filas         ✓ 12 tablas          ✓ 41K f   │
-│                                                                          │
-└──────────────────────────────────────────────────────────────────────────┘
-                </div>
-
-                <h3>Las 5 fases en 1 minuto</h3>
-                <table>
-                    <tr>
-                        <th>#</th>
-                        <th>Fase</th>
-                        <th>Entrada</th>
-                        <th>Salida</th>
-                        <th>Tiempo</th>
-                    </tr>
-                    <tr>
-                        <td>1</td>
-                        <td>🏗️ Estructura</td>
-                        <td>Nada</td>
-                        <td>15 tablas vacías</td>
-                        <td>15 min</td>
-                    </tr>
-                    <tr>
-                        <td>2</td>
-                        <td>🧹 Limpieza</td>
-                        <td>Excel</td>
-                        <td>stg_aduana limpio</td>
-                        <td>20 min</td>
-                    </tr>
-                    <tr>
-                        <td>3</td>
-                        <td>📚 Dimensiones</td>
-                        <td>stg_aduana</td>
-                        <td>12 catálogos</td>
-                        <td>15 min</td>
-                    </tr>
-                    <tr>
-                        <td>4</td>
-                        <td>🔗 Fact Table</td>
-                        <td>stg + dims</td>
-                        <td>fact_aduana_item</td>
-                        <td>20 min</td>
-                    </tr>
-                    <tr>
-                        <td>5</td>
-                        <td>✅ Validación</td>
-                        <td>fact_aduana_item</td>
-                        <td>0 errores</td>
-                        <td>10 min</td>
-                    </tr>
-                </table>
-
-                <p><strong>Total: ~1:20 horas de ejecución</strong></p>
-
-                <h3>Conceptos en 10 líneas</h3>
-                <table>
-                    <tr>
-                        <th>Concepto</th>
-                        <th>En una línea</th>
-                    </tr>
-                    <tr>
-                        <td><strong>ETL</strong></td>
-                        <td>Extraer datos, transformarlos, cargarlos en una BD</td>
-                    </tr>
-                    <tr>
-                        <td><strong>DW</strong></td>
-                        <td>Base de datos especial para análisis, no operaciones</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Staging</strong></td>
-                        <td>Tabla de paso con datos limpios pero sin organizar</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Dimensión</strong></td>
-                        <td>Tabla de referencia (catálogo sin repetir)</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Fact</strong></td>
-                        <td>Tabla central con hechos y métricas</td>
-                    </tr>
-                    <tr>
-                        <td><strong>StarSchema</strong></td>
-                        <td>Diseño: tabla central + dimensiones alrededor</td>
-                    </tr>
-                    <tr>
-                        <td><strong>FK</strong></td>
-                        <td>Referencia de una tabla a otra</td>
-                    </tr>
-                    <tr>
-                        <td><strong>JOIN</strong></td>
-                        <td>Unir dos tablas por una clave común</td>
-                    </tr>
-                    <tr>
-                        <td><strong>DuckDB</strong></td>
-                        <td>Base de datos embebida en un archivo</td>
-                    </tr>
-                </table>
-
-                <h3>Regla de oro</h3>
-                <div class="warning-box">
-                    <strong>Recuerda:</strong>
-                    <ul>
-                        <li>✓ No cierres la conexión hasta terminar todo</li>
-                        <li>✓ Ejecuta celda a celda, no todo de una vez</li>
-                        <li>✓ Valida después de cada paso</li>
-                        <li>✓ Documenta cada error que encuentres</li>
-                        <li>✓ Pregunta si algo no tiene sentido</li>
-                    </ul>
-                </div>
-            </div>
-
-            <!-- SECCIÓN ÍNDICE GENERAL -->
-            <div id="indice" class="section">
-                <h2>📑 Índice General</h2>
-
-                <h3>Documentos disponibles</h3>
-                <table>
-                    <tr>
-                        <th>Documento</th>
-                        <th>Propósito</th>
-                        <th>Extensión</th>
-                        <th>Público</th>
-                    </tr>
-                    <tr>
-                        <td><strong>Paso a Paso</strong></td>
-                        <td>Guía completa humanizada</td>
-                        <td>700 líneas</td>
-                        <td>Todos, principiantes</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Quick Start</strong></td>
-                        <td>Versión rápida del flujo</td>
-                        <td>250 líneas</td>
-                        <td>Usuarios con prisa</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Diagramas</strong></td>
-                        <td>Visualización de flujos</td>
-                        <td>500 líneas</td>
-                        <td>Aprendices visuales</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Mapa Mental</strong></td>
-                        <td>Resumen visual 1 página</td>
-                        <td>250 líneas</td>
-                        <td>Todos</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Índice General</strong></td>
-                        <td>Navegación y FAQ</td>
-                        <td>300 líneas</td>
-                        <td>Todos</td>
-                    </tr>
-                </table>
-
-                <h3>Decididor rápido</h3>
-                <ul>
-                    <li>🏠 <strong>¿Qué es un DW?</strong> → Paso a Paso, sección 2</li>
-                    <li>⏱️ <strong>Tengo 20 minutos:</strong> → Quick Start</li>
-                    <li>🎓 <strong>Soy estudiante:</strong> → Paso a Paso (lectura + práctica)</li>
-                    <li>👨‍🏫 <strong>Soy docente:</strong> → Guía Docente</li>
-                    <li>🎨 <strong>Aprendo viendo:</strong> → Diagramas + Mapa Mental</li>
-                    <li>❓ <strong>Tengo una pregunta:</strong> → Índice General (FAQ)</li>
-                </ul>
-
-                <h3>Tiempo estimado total</h3>
-                <table>
-                    <tr>
-                        <th>Actividad</th>
-                        <th>Tiempo</th>
-                        <th>Dificultad</th>
-                    </tr>
-                    <tr>
-                        <td>Instalar dependencias</td>
-                        <td>5 min</td>
-                        <td>⭐ Fácil</td>
-                    </tr>
-                    <tr>
-                        <td>Leer guía completa</td>
-                        <td>1-1.5 h</td>
-                        <td>⭐ Fácil</td>
-                    </tr>
-                    <tr>
-                        <td>Ejecutar notebooks</td>
-                        <td>1-1.5 h</td>
-                        <td>⭐⭐ Intermedio</td>
-                    </tr>
-                    <tr>
-                        <td>Validaciones</td>
-                        <td>15 min</td>
-                        <td>⭐⭐ Intermedio</td>
-                    </tr>
-                    <tr>
-                        <td>Conectar Power BI</td>
-                        <td>30 min</td>
-                        <td>⭐⭐ Intermedio</td>
-                    </tr>
-                    <tr>
-                        <td><strong>TOTAL</strong></td>
-                        <td><strong>3.5-4.5 h</strong></td>
-                        <td><strong>Mixto</strong></td>
-                    </tr>
-                </table>
-
-                <h3>Preguntas frecuentes</h3>
-                <h4>¿Necesito saber SQL?</h4>
-                <p>No, pero ayuda. Los notebooks tienen SQL comentado. Aprenderás mientras lo ejecutas.</p>
-
-                <h4>¿Puedo modificar los datos?</h4>
-                <p>Sí, totalmente. El proyecto está diseñado para ser extensible.</p>
-
-                <h4>¿Funciona en Windows/Mac/Linux?</h4>
-                <p>Sí. Python y DuckDB funcionan en los tres. Power BI solo en Windows/Web.</p>
-
-                <h4>¿Cuánto espacio ocupa?</h4>
-                <p>El archivo aduana.duckdb ocupa ~20-50 MB. Los CSVs originales dependen del tamaño.</p>
-
-                <h4>¿Qué hago si algo falla?</h4>
-                <p>Consulta la sección "Troubleshooting" en la Guía Paso a Paso o el Índice General.</p>
-            </div>
-
-            <!-- SECCIÓN GUÍA DOCENTE -->
-            <div id="docente" class="section">
-                <h2>👨‍🏫 Guía Docente</h2>
-
-                <div class="info-box">
-                    <strong>Para el profesor:</strong> Cómo enseñar este proyecto paso a paso
-                </div>
-
-                <h3>Estructura de la guía</h3>
-                <ul>
-                    <li>Secuencia de clases sugerida</li>
-                    <li>Conceptos clave por clase</li>
-                    <li>Preguntas para los alumnos</li>
-                    <li>Errores comunes y cómo explicarlos</li>
-                </ul>
-
-                <h3>Secuencia de clases sugerida</h3>
-
-                <h4>Clase 1 — Introducción y arquitectura (2 horas)</h4>
-                <p><strong>Objetivo:</strong> que los alumnos entiendan el problema y la solución antes de ver código.</p>
-                <ol>
-                    <li>Mostrar el archivo Excel original — así llegan los datos</li>
-                    <li>Mostrar un dashboard Power BI — así se ven al final</li>
-                    <li>Preguntar: "¿Cómo pasamos de uno al otro?" → discusión</li>
-                    <li>Explicar el concepto de ETL con ejemplo cotidiano (lavar ropa)</li>
-                    <li>Recorrer el notebook 00 celda por celda</li>
-                    <li>Dibujar el Star Schema en la pizarra</li>
-                </ol>
-
-                <h4>Clase 2 — Diseño del Data Warehouse (2 horas)</h4>
-                <p><strong>Objetivo:</strong> entender por qué se diseñan las tablas así.</p>
-                <ol>
-                    <li>Explicar base de datos operacional vs Data Warehouse</li>
-                    <li>Explicar Staging vs Dimensiones vs Fact Table</li>
-                    <li>Ejecutar notebook 01 celda por celda</li>
-                    <li>Discutir: ¿por qué PRIMARY KEY? ¿por qué UNIQUE?</li>
-                </ol>
-
-                <h4>Clases 3-5 — ETL y Ejecución (6 horas)</h4>
-                <p>Ejecutar notebooks 02, 03, 04 en orden, con discusión después de cada paso.</p>
-
-                <h4>Clase 6 — Validación e integridad (1 hora)</h4>
-                <p>Ejecutar notebook 05 y explicar qué significaría si algo falla.</p>
-
-                <h4>Clase 7 — Power BI y cierre (1 hora)</h4>
-                <p>Conectar a Power BI y crear reportes básicos.</p>
-
-                <h3>Preguntas para los alumnos</h3>
-
-                <h4>Conceptuales</h4>
-                <ol>
-                    <li>¿Por qué no guardamos directamente el texto en la fact table?</li>
-                    <li>¿Qué pasaría si alguien cambia el nombre de una aduana en los datos?</li>
-                    <li>¿Por qué dim_pais se usa dos veces en la fact table?</li>
-                    <li>¿Qué ventaja tiene el modelo Star Schema?</li>
-                </ol>
-
-                <h4>Técnicas</h4>
-                <ol>
-                    <li>¿Qué devuelve `SPLIT_PART('BRA - BRASIL', ' - ', 2)`?</li>
-                    <li>¿Diferencia entre `DELETE FROM` y `DROP TABLE`?</li>
-                    <li>¿Qué pasa si hay un valor que no está en la dimensión?</li>
-                    <li>¿Por qué se usa `COALESCE(campo, '')` en el JOIN?</li>
-                </ol>
-
-                <h3>Errores comunes y cómo explicarlos</h3>
-
-                <h4>"Connection already closed!"</h4>
-                <p><strong>Causa:</strong> se llamó `con.close()` y luego se intentó usar `con` de nuevo.</p>
-                <p><strong>Lección:</strong> la conexión es un recurso que hay que abrir y cerrar una sola vez.</p>
-                <p><strong>Analogía:</strong> es como colgar el teléfono y tratar de seguir hablando.</p>
-
-                <h4>"Column not found"</h4>
-                <p><strong>Causa:</strong> el nombre de la columna no existe (quizás tiene espacios o mayúsculas).</p>
-                <p><strong>Solución:</strong> ejecuta `df.columns` para ver los nombres exactos.</p>
-
-                <h4>FK huérfana</h4>
-                <p><strong>Causa:</strong> hay un valor que no existe en la dimensión correspondiente.</p>
-                <p><strong>Lección:</strong> la integridad referencial es importante.</p>
-
-                <h3>Recursos para la clase</h3>
-                <ul>
-                    <li>Data del Excel original (DatosCSV.csv)</li>
-                    <li>Notebooks ejecutables (6 notebooks)</li>
-                    <li>Script de validación</li>
-                    <li>Este archivo (índice + guía)</li>
-                </ul>
-
-                <h3>Evaluación sugerida</h3>
-                <ul>
-                    <li><strong>Entendimiento conceptual (30%):</strong> Examen escrito sobre ETL, DW, Star Schema</li>
-                    <li><strong>Ejecución práctica (40%):</strong> Ejecutar el proyecto completo sin errores</li>
-                    <li><strong>Análisis en Power BI (20%):</strong> Crear 5+ reportes interactivos</li>
-                    <li><strong>Presentación (10%):</strong> Explicar el proyecto a la clase</li>
-                </ul>
-            </div>
-        </main>
+<header>
+  <span class="header-logo">🏛️</span>
+  <div>
+    <h1>Data Warehouse Aduana BI</h1>
+    <p>Guía del Estudiante — Armado completo del DWH desde cero</p>
+    <p class="texto-profesor">Profesor: Richard Steven</p>
+  </div>
+  <div class="header-right">
+    <span class="badge">🐍 Python 3.9+</span>
+    <span class="badge">🦆 DuckDB</span>
+    <span class="badge">📊 Power BI</span>
+    <span class="badge">⏱️ ~3 h</span>
+  </div>
+</header>
+
+<div class="layout">
+  
+
+  <!-- ═══════ SIDEBAR ═══════ -->
+  <nav class="sidebar">
+    <div class="sb-title">Navegación</div>
+    <a class="nav-item active" data-section="inicio"><span class="nav-num">🏠</span> Inicio</a>
+    <a class="nav-item" data-section="prereq"><span class="nav-num">⚙️</span> Prerrequisitos</a>
+
+    <div class="nav-sep"></div>
+    <div class="sb-title" style="padding-top:.5rem">Fases del DWH</div>
+
+    <a class="nav-item" data-section="fase1"><span class="nav-num">1</span> Estructura de tablas</a>
+    <a class="nav-item" data-section="fase2"><span class="nav-num">2</span> Carga Staging</a>
+    <a class="nav-item" data-section="fase3"><span class="nav-num">3</span> Dimensiones</a>
+    <a class="nav-item" data-section="fase4"><span class="nav-num">4</span> Fact Table</a>
+    <a class="nav-item" data-section="fase5"><span class="nav-num">5</span> Validaciones</a>
+    <a class="nav-item" data-section="fase6"><span class="nav-num">6</span> Power BI</a>
+
+    <div class="nav-sep"></div>
+    <a class="nav-item" data-section="glosario"><span class="nav-num">📖</span> Glosario</a>
+    <a class="nav-item" data-section="trouble"><span class="nav-num">🛠️</span> Troubleshooting</a>
+    <a class="nav-item" data-section="docente"><span class="nav-num">👨‍🏫</span> Guía Docente</a>
+  </nav>
+
+  <!-- ═══════ MAIN ═══════ -->
+  <main class="main">
+
+    <!-- STEPPER -->
+    <div class="stepper" id="global-stepper">
+      <div class="step-item"><div class="step-circle" onclick="goSection('fase1')">1</div><div class="step-label">Estructura</div></div>
+      <div class="step-connector" id="conn-1"></div>
+      <div class="step-item"><div class="step-circle" onclick="goSection('fase2')">2</div><div class="step-label">Staging</div></div>
+      <div class="step-connector" id="conn-2"></div>
+      <div class="step-item"><div class="step-circle" onclick="goSection('fase3')">3</div><div class="step-label">Dimensiones</div></div>
+      <div class="step-connector" id="conn-3"></div>
+      <div class="step-item"><div class="step-circle" onclick="goSection('fase4')">4</div><div class="step-label">Fact Table</div></div>
+      <div class="step-connector" id="conn-4"></div>
+      <div class="step-item"><div class="step-circle" onclick="goSection('fase5')">5</div><div class="step-label">Validaciones</div></div>
+      <div class="step-connector" id="conn-5"></div>
+      <div class="step-item"><div class="step-circle" onclick="goSection('fase6')">6</div><div class="step-label">Power BI</div></div>
     </div>
 
-    <footer>
-        <p>📚 <strong>Data Warehouse Aduana BI</strong> — Documentación de Estudiantes</p>
-        <p>Última actualización: 21 de mayo de 2026 | © Universidad Columbia del Paraguay</p>
-        <p style="margin-top: 1rem; font-size: 0.9rem;">Colores inspirados en <a href="https://www.columbia.edu.py" style="color:#d4af37; text-decoration:none;">www.columbia.edu.py</a></p>
-    </footer>
+    <!-- ══════════ INICIO ══════════ -->
+    <section id="inicio" class="section active">
+      <h2>🎯 Bienvenido al Proyecto Aduana BI</h2>
 
-    <script>
-        // Navegación
-        document.querySelectorAll('.nav-link').forEach(link => {
-            link.addEventListener('click', function(e) {
-                e.preventDefault();
-                const section = this.dataset.section;
-                switchSection(section);
-            });
-        });
+      <div class="box box-info">
+        <strong>¿Qué construirás?</strong>
+        Un <em>Data Warehouse</em> profesional a partir de datos reales de despachos aduaneros.
+        Usarás Python, DuckDB y Power BI. Al terminar tendrás un sistema de BI completo con
+        una base de datos en esquema <code>dw</code> lista para análisis y reportes interactivos.
+      </div>
 
-        function switchSection(sectionId) {
-            // Ocultar todas las secciones
-            document.querySelectorAll('.section').forEach(section => {
-                section.classList.remove('active');
-            });
+      <h3>El problema y la solución</h3>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.9rem;margin-bottom:1.1rem;">
+        <div class="box box-error" style="border-left-width:4px;">
+          <strong>❌ Sin DWH — Excel caótico</strong>
+          <ul style="margin-top:.35rem;font-size:.86rem;">
+            <li>Columnas con mayúsculas y espacios (<code>PAIS ORIGEN</code>)</li>
+            <li>Fechas guardadas como texto (<code>'15/03/2024'</code>)</li>
+            <li><code>BRASIL</code> repetido miles de veces</li>
+            <li>Reportes lentos e imprecisos en Power BI</li>
+          </ul>
+        </div>
+        <div class="box box-ok" style="border-left-width:4px;">
+          <strong>✅ Con DWH — Star Schema en DuckDB</strong>
+          <ul style="margin-top:.35rem;font-size:.86rem;">
+            <li>Datos limpios y normalizados en esquema <code>dw</code></li>
+            <li>Fechas reales en <code>oficializacion</code> y <code>cancelacion</code></li>
+            <li><code>BRASIL</code> en 1 sola fila de <code>dw.dim_pais</code></li>
+            <li>Reportes rápidos y confiables en Power BI</li>
+          </ul>
+        </div>
+      </div>
 
-            // Ocultar todos los links
-            document.querySelectorAll('.nav-link').forEach(link => {
-                link.classList.remove('active');
-            });
+      <h3>Flujo general del proyecto</h3>
+      <div class="diagram">
+FUENTE (Bronze)       ETL → Silver          ETL → Gold              BI
+────────────────      ────────────────      ──────────────────      ──────────────
+DatosXLSX.xlsx   →   dw.stg_aduana    →    dw.dim_operacion   →    Power BI
+LISTADO_DEST.xlsx →  dw.stg_dest.     →    dw.dim_pais        →    Reportes
+                                           dw.dim_producto         Análisis
+                                           … (12 dims) …
+                                           dw.fact_aduana_item
+      </div>
 
-            // Mostrar sección seleccionada
-            const section = document.getElementById(sectionId);
-            if (section) {
-                section.classList.add('active');
-                
-                // Marcar link como activo
-                const activeLink = document.querySelector(`[data-section="${sectionId}"]`);
-                if (activeLink) {
-                    activeLink.classList.add('active');
-                }
+      <h3>Los 6 notebooks que ejecutarás en orden</h3>
+      <div class="card-grid">
+        <div class="card" onclick="goSection('prereq')"><div class="ci">⚙️</div><h4>00 — Arquitectura</h4><p>Leer conceptos antes de ejecutar</p><span class="tag">Solo lectura</span></div>
+        <div class="card" onclick="goSection('fase1')"><div class="ci">🏗️</div><h4>01 — Estructura</h4><p>Crea el esquema <code>dw</code> y 15 tablas vacías</p><span class="tag">15 min</span></div>
+        <div class="card" onclick="goSection('fase2')"><div class="ci">🧹</div><h4>02 — Staging</h4><p>Lee Excel, limpia y carga <code>dw.stg_aduana</code></p><span class="tag">20 min</span></div>
+        <div class="card gold" onclick="goSection('fase3')"><div class="ci">📚</div><h4>03 — Dimensiones</h4><p>Genera 12 catálogos únicos en <code>dw.dim_*</code></p><span class="tag">15 min</span></div>
+        <div class="card gold" onclick="goSection('fase4')"><div class="ci">🔗</div><h4>04 — Fact Table</h4><p>14 LEFT JOINs → <code>dw.fact_aduana_item</code></p><span class="tag">20 min</span></div>
+        <div class="card green" onclick="goSection('fase5')"><div class="ci">✅</div><h4>05 — Validaciones</h4><p>8 validaciones de integridad del DWH</p><span class="tag">10 min</span></div>
+      </div>
 
-                // Scroll al top
-                window.scrollTo(0, 0);
-            }
-        }
+      <h3>Tiempo total estimado</h3>
+      <table>
+        <tr><th>Actividad</th><th>Tiempo</th><th>Dificultad</th></tr>
+        <tr><td>Instalar dependencias</td><td>5 min</td><td>⭐ Fácil</td></tr>
+        <tr><td>Leer NB 00 — Conceptos</td><td>20 min</td><td>⭐ Fácil</td></tr>
+        <tr><td>NB 01 — Estructura (<code>dw</code> + 15 tablas)</td><td>15 min</td><td>⭐ Fácil</td></tr>
+        <tr><td>NB 02 — Staging (Excel → <code>dw.stg_aduana</code>)</td><td>20 min</td><td>⭐ Fácil</td></tr>
+        <tr><td>NB 03 — Dimensiones (12 <code>dw.dim_*</code>)</td><td>15 min</td><td>⭐⭐ Intermedio</td></tr>
+        <tr><td>NB 04 — Fact Table (14 JOINs)</td><td>20 min</td><td>⭐⭐⭐ Avanzado</td></tr>
+        <tr><td>NB 05 — Validaciones (8 checks)</td><td>10 min</td><td>⭐⭐ Intermedio</td></tr>
+        <tr><td>Conectar Power BI</td><td>30 min</td><td>⭐⭐ Intermedio</td></tr>
+        <tr><td><strong>TOTAL</strong></td><td><strong>~2:35 h</strong></td><td>Mixto</td></tr>
+      </table>
+      <div class="box box-tip"><strong>Regla clave:</strong> ejecuta cada notebook <strong>celda por celda</strong> (Shift+Enter). Lee el resultado antes de avanzar. No cierres la conexión DuckDB hasta terminar el notebook completo.</div>
+    </section>
 
-        // Permitir navegación con botones internos
-        window.switchSection = switchSection;
-    </script>
+    <!-- ══════════ PRERREQUISITOS ══════════ -->
+    <section id="prereq" class="section">
+      <h2>⚙️ Prerrequisitos — Preparar el entorno</h2>
+
+      <h3>Herramientas necesarias</h3>
+      <table>
+        <tr><th>Herramienta</th><th>Versión mín.</th><th>Propósito</th></tr>
+        <tr><td><strong>Python</strong></td><td>3.9+</td><td>Lenguaje principal del proyecto</td></tr>
+        <tr><td><strong>Jupyter Lab</strong></td><td>Última</td><td>Ejecutar los notebooks <code>.ipynb</code></td></tr>
+        <tr><td><strong>DuckDB</strong></td><td>Última</td><td>Base de datos del DWH (archivo único <code>.duckdb</code>)</td></tr>
+        <tr><td><strong>Pandas</strong></td><td>1.5+</td><td>Leer y transformar el Excel</td></tr>
+        <tr><td><strong>OpenPyXL</strong></td><td>Última</td><td>Soporte para archivos <code>.xlsx</code></td></tr>
+        <tr><td><strong>Power BI Desktop</strong></td><td>2023+</td><td>Visualización final (solo Windows)</td></tr>
+      </table>
+
+      <div class="step-card">
+        <div class="step-head"><span class="num">1</span> Instalar las librerías Python</div>
+        <div class="step-body">
+          <div class="code-wrap">
+            <button class="copy-btn" onclick="copyCode(this)">Copiar</button><span class="code-lang">bash</span>
+            <pre>pip install duckdb pandas openpyxl jupyterlab</pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="step-card">
+        <div class="step-head"><span class="num">2</span> Verificar la instalación</div>
+        <div class="step-body">
+          <div class="code-wrap">
+            <button class="copy-btn" onclick="copyCode(this)">Copiar</button><span class="code-lang">python</span>
+            <pre>import importlib
+for lib in ['duckdb', 'pandas', 'openpyxl']:
+    ok = 'OK' if importlib.util.find_spec(lib) else 'FALTA — pip install ' + lib
+    print(f'{lib}: {ok}')</pre>
+          </div>
+          <div class="box box-ok">Si los tres dicen <strong>OK</strong>, el entorno está listo.</div>
+        </div>
+      </div>
+
+      <div class="step-card">
+        <div class="step-head"><span class="num">3</span> Clonar el proyecto y abrir Jupyter Lab</div>
+        <div class="step-body">
+          <div class="code-wrap">
+            <button class="copy-btn" onclick="copyCode(this)">Copiar</button><span class="code-lang">bash</span>
+            <pre>git clone https://github.com/RISteven/aduana_bi.git
+cd aduana_bi
+jupyter lab</pre>
+          </div>
+          <p>Navega a la carpeta <code>notebooks/</code> y abre los <code>.ipynb</code> en orden.</p>
+        </div>
+      </div>
+
+      <h3>Estructura de carpetas del proyecto</h3>
+      <div class="diagram">
+aduana_bi/
+├── notebooks/                        ← EJECUTA ESTOS EN ORDEN
+│   ├── 00_Arquitectura_y_Conceptos.ipynb   (leer, no ejecutar)
+│   ├── 01_Crear_Estructura_DW.ipynb        (Fase 1)
+│   ├── 02_Cargar_Staging.ipynb             (Fase 2)
+│   ├── 03_Cargar_Dimensiones.ipynb         (Fase 3)
+│   ├── 04_Cargar_Fact_Table.ipynb          (Fase 4)
+│   └── 05_Validaciones.ipynb               (Fase 5)
+│
+├── db/
+│   └── aduana.duckdb               ← SE CREA AUTOMÁTICAMENTE (esquema 'dw' adentro)
+│
+├── data_lake/
+│   └── bronze/
+│       ├── DatosXLSX.xlsx          ← DATOS ORIGINALES (despachos)
+│       └── LISTADO_DE_DESTINACIONES.xlsx  ← CATÁLOGO de regímenes
+│
+├── etl/                            ← Scripts Python de referencia
+└── sql/                            ← Scripts SQL de referencia
+      </div>
+
+      <h3>Checklist de inicio</h3>
+      <ul class="checklist">
+        <li><input type="checkbox"> Python 3.9+ instalado y en el PATH</li>
+        <li><input type="checkbox"> Librerías instaladas: duckdb, pandas, openpyxl, jupyterlab</li>
+        <li><input type="checkbox"> Proyecto descargado/clonado en tu equipo</li>
+        <li><input type="checkbox"> Jupyter Lab abre correctamente</li>
+        <li><input type="checkbox"> Notebook 00 leído (conceptos ETL, Star Schema, DuckDB)</li>
+      </ul>
+    </section>
+
+    <!-- ══════════ FASE 1 ══════════ -->
+    <section id="fase1" class="section">
+      <div class="phase-strip">
+        <span class="icon">🏗️</span>
+        <div><h2>Fase 1 — Crear la Estructura del DW</h2><p>Notebook: <strong>01_Crear_Estructura_DW.ipynb</strong></p></div>
+        <span class="time-badge">⏱️ 15 min</span>
+      </div>
+
+      <div class="box box-info">
+        <strong>¿Qué harás aquí?</strong>
+        Crear el esquema <code>dw</code> dentro del archivo <code>aduana.duckdb</code>
+        y generar las <strong>15 tablas vacías</strong>: 2 staging, 12 dimensiones, 1 fact table.
+        Es como construir las habitaciones de una casa antes de traer los muebles.
+      </div>
+
+      <h3>El modelo Star Schema del proyecto</h3>
+      <img src="Schema.png" alt="Star Schema — Modelo Aduana BI" class="schema-img"
+           onerror="this.style.display='none';document.getElementById('schema-fallback').style.display='block'">
+      <div id="schema-fallback" style="display:none;" class="diagram">
+                    dim_fecha (oficializacion + cancelacion)
+                           │
+          dim_pais ────────┤──── dim_producto ──── dim_marca
+          (origen+dest)    │
+                    ★ fact_aduana_item ★
+                           │
+         dim_operacion ────┼──── dim_destinacion
+                           │
+         dim_aduana ───────┼──── dim_regimen
+                           │
+         dim_canal ────────┼──── dim_medio_transporte
+                           │
+         dim_unidad_medida─┘──── dim_acuerdo
+      </div>
+
+      <h3>Las 15 tablas que se crearán</h3>
+      <table>
+        <tr><th>Tabla</th><th>Tipo</th><th>Descripción</th></tr>
+        <tr><td><code>dw.stg_aduana</code></td><td>Staging</td><td>41 columnas — réplica limpia del Excel de despachos</td></tr>
+        <tr><td><code>dw.stg_destinaciones</code></td><td>Staging</td><td>4 columnas — catálogo de códigos de destinación</td></tr>
+        <tr><td><code>dw.fact_aduana_item</code></td><td>Fact</td><td>Tabla central: 2 IDs de fecha + 12 FKs + 17 métricas numéricas</td></tr>
+        <tr><td><code>dw.dim_operacion</code></td><td>Dimensión</td><td>IMPORTACION / EXPORTACION (+ flags booleanos)</td></tr>
+        <tr><td><code>dw.dim_destinacion</code></td><td>Dimensión</td><td>Regímenes aduaneros con descripción del catálogo</td></tr>
+        <tr><td><code>dw.dim_regimen</code></td><td>Dimensión</td><td>Tipos generales de régimen</td></tr>
+        <tr><td><code>dw.dim_aduana</code></td><td>Dimensión</td><td>Aduanas físicas del país</td></tr>
+        <tr><td><code>dw.dim_pais</code></td><td>Dimensión</td><td>Países (origen y destino usan la misma tabla)</td></tr>
+        <tr><td><code>dw.dim_producto</code></td><td>Dimensión</td><td>Clave compuesta: posicion NCM + 5 descripciones</td></tr>
+        <tr><td><code>dw.dim_medio_transporte</code></td><td>Dimensión</td><td>TERRESTRE, AEREO, MARITIMO…</td></tr>
+        <tr><td><code>dw.dim_canal</code></td><td>Dimensión</td><td>ROJO / VERDE / AMARILLO</td></tr>
+        <tr><td><code>dw.dim_unidad_medida</code></td><td>Dimensión</td><td>KG, LT, UN, M2…</td></tr>
+        <tr><td><code>dw.dim_acuerdo</code></td><td>Dimensión</td><td>Acuerdos comerciales (MERCOSUR, ACE…)</td></tr>
+        <tr><td><code>dw.dim_marca</code></td><td>Dimensión</td><td>Marcas de productos</td></tr>
+        <tr><td><code>dw.dim_fecha</code></td><td>Dimensión</td><td>Calendario derivado de <code>oficializacion</code> y <code>cancelacion</code></td></tr>
+      </table>
+
+      <div class="step-card">
+        <div class="step-head"><span class="num">1</span> Conectar (o crear) el archivo DuckDB</div>
+        <div class="step-body">
+          <div class="code-wrap">
+            <button class="copy-btn" onclick="copyCode(this)">Copiar</button><span class="code-lang">python</span>
+            <pre>import duckdb, os
+
+DB_PATH = r"C:\Información\proyectos\aduana_bi\db\aduana.duckdb"
+os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)
+
+con = duckdb.connect(DB_PATH)
+print(f"Conectado a: {DB_PATH}")</pre>
+          </div>
+          <div class="box box-tip"><strong>DuckDB no necesita servidor.</strong> Todo el Data Warehouse vive en un único archivo <code>.duckdb</code>.</div>
+        </div>
+      </div>
+
+      <div class="step-card">
+        <div class="step-head"><span class="num">2</span> Crear el esquema <code>dw</code></div>
+        <div class="step-body">
+          <div class="code-wrap">
+            <button class="copy-btn" onclick="copyCode(this)">Copiar</button><span class="code-lang">python</span>
+            <pre>con.execute("CREATE SCHEMA IF NOT EXISTS dw;")
+print("Esquema 'dw' creado (o ya existía).")</pre>
+          </div>
+          <p>Un <strong>esquema</strong> es como una carpeta que agrupa las tablas. Separar con <code>dw.</code> permite diferenciar nuestras tablas de posibles auxiliares.</p>
+        </div>
+      </div>
+
+      <div class="step-card">
+        <div class="step-head"><span class="num">3</span> Borrar tablas anteriores (idempotencia)</div>
+        <div class="step-body">
+          <div class="code-wrap">
+            <button class="copy-btn" onclick="copyCode(this)">Copiar</button><span class="code-lang">python</span>
+            <pre>tablas = [
+    "dw.fact_aduana_item",
+    "dw.dim_operacion", "dw.dim_destinacion", "dw.dim_regimen",
+    "dw.dim_aduana", "dw.dim_pais", "dw.dim_producto",
+    "dw.dim_medio_transporte", "dw.dim_canal", "dw.dim_unidad_medida",
+    "dw.dim_acuerdo", "dw.dim_marca", "dw.dim_fecha",
+    "dw.stg_destinaciones", "dw.stg_aduana"
+]
+for t in tablas:
+    con.execute(f"DROP TABLE IF EXISTS {t};")
+    print(f"  {t} eliminada (o no existía).")</pre>
+          </div>
+          <div class="box box-warn"><strong>¿Por qué borrar primero?</strong> Permite ejecutar el script N veces y siempre obtener el mismo resultado. Esto se llama <em>idempotencia</em>.</div>
+        </div>
+      </div>
+
+      <div class="step-card">
+        <div class="step-head"><span class="num">4</span> Verificar las 15 tablas creadas</div>
+        <div class="step-body">
+          <div class="code-wrap">
+            <button class="copy-btn" onclick="copyCode(this)">Copiar</button><span class="code-lang">python</span>
+            <pre>tablas = con.execute("""
+    SELECT table_name
+    FROM information_schema.tables
+    WHERE table_schema = 'dw'
+    ORDER BY table_name
+""").fetchall()
+
+print(f"Tablas en el esquema 'dw': {len(tablas)}")
+for t in tablas:
+    print(f"  ✓ {t[0]}")
+con.close()</pre>
+          </div>
+          <div class="box box-ok"><strong>Resultado esperado:</strong> exactamente <strong>15 tablas</strong>, todas con 0 filas.</div>
+        </div>
+      </div>
+
+      <h3>Checklist Fase 1</h3>
+      <ul class="checklist">
+        <li><input type="checkbox"> Notebook 01 ejecutado sin errores</li>
+        <li><input type="checkbox"> Esquema <code>dw</code> creado en DuckDB</li>
+        <li><input type="checkbox"> Verificado: 15 tablas listadas</li>
+        <li><input type="checkbox"> El archivo <code>db/aduana.duckdb</code> existe en disco</li>
+      </ul>
+    </section>
+
+    <!-- ══════════ FASE 2 ══════════ -->
+    <section id="fase2" class="section">
+      <div class="phase-strip">
+        <span class="icon">🧹</span>
+        <div><h2>Fase 2 — Cargar el Staging (Bronze → Silver)</h2><p>Notebook: <strong>02_Cargar_Staging.ipynb</strong></p></div>
+        <span class="time-badge">⏱️ 20 min</span>
+      </div>
+
+      <div class="box box-info">
+        <strong>¿Qué harás aquí?</strong>
+        Leer <code>DatosXLSX.xlsx</code> con Pandas, convertir fechas de texto a tipo <code>DATE</code>,
+        renombrar las 41 columnas al estándar del DW, y cargar el resultado en <code>dw.stg_aduana</code>.
+      </div>
+
+      <img src="ETL_Staging.png" alt="Mejorando la estructura de datos: de Excel a Staging" class="infographic-img"
+           onerror="this.style.display='none'">
+
+      <h3>Transformaciones que aplica el notebook</h3>
+      <div class="diagram">
+ANTES — Excel original                      DESPUÉS — dw.stg_aduana
+────────────────────────                    ───────────────────────────
+'DESPACHO CIFRADO'   →   despacho_cifrado   (VARCHAR)
+'OFICIALIZACION'     →   oficializacion     (DATE real, no texto)
+'CANCELACION'        →   cancelacion        (DATE real, no texto)
+'PAIS ORIGEN'        →   pais_origen        (VARCHAR, con TRIM)
+'PAIS PROCEDENCIA/DESTINO' → pais_procedencia_destino (VARCHAR)
+'FOB DOLAR'          →   fob_dolar          (DOUBLE)
+'KILO NETO'          →   kilo_neto          (DOUBLE)
+'KILO BRUTO'         →   kilo_bruto         (DOUBLE)
+'MARCA ITEM'         →   marca_item         (VARCHAR)
+... (41 columnas en total)
+      </div>
+
+      <div class="step-card">
+        <div class="step-head"><span class="num">1</span> Leer el Excel y convertir fechas</div>
+        <div class="step-body">
+          <div class="code-wrap">
+            <button class="copy-btn" onclick="copyCode(this)">Copiar</button><span class="code-lang">python</span>
+            <pre>import duckdb, pandas as pd, os
+
+DB_PATH   = r"C:\Información\proyectos\aduana_bi\db\aduana.duckdb"
+XLSX_PATH = r"C:\Información\proyectos\aduana_bi\data_lake\bronze\DatosXLSX.xlsx"
+
+df = pd.read_excel(XLSX_PATH)
+print(f"Filas: {len(df)}  |  Columnas: {len(df.columns)}")
+
+# Fechas vienen como texto '15/03/2024' → convertir a DATE real
+df['OFICIALIZACION'] = pd.to_datetime(
+    df['OFICIALIZACION'], format='%d/%m/%Y', errors='coerce'
+).dt.date
+df['CANCELACION'] = pd.to_datetime(
+    df['CANCELACION'], format='%d/%m/%Y', errors='coerce'
+).dt.date
+
+nulls = df['OFICIALIZACION'].isna().sum()
+print(f"Fechas OFICIALIZACION NULL: {nulls}")
+if nulls == len(df):
+    raise ValueError("100% de fechas son NULL. Verificar formato del Excel.")</pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="step-card">
+        <div class="step-head"><span class="num">2</span> Renombrar las 41 columnas</div>
+        <div class="step-body">
+          <div class="code-wrap">
+            <button class="copy-btn" onclick="copyCode(this)">Copiar</button><span class="code-lang">python</span>
+            <pre>df = df.rename(columns={
+    'DESPACHO CIFRADO'          : 'despacho_cifrado',
+    'OPERACION'                 : 'operacion',
+    'DESTINACION'               : 'destinacion',
+    'REGIMEN'                   : 'regimen',
+    'OFICIALIZACION'            : 'oficializacion',
+    'CANCELACION'               : 'cancelacion',
+    'AÑO'                       : 'anio',
+    'MES'                       : 'mes',
+    'ADUANA'                    : 'aduana',
+    'COTIZACION'                : 'cotizacion',
+    'MEDIO TRANSPORTE'          : 'medio_transporte',
+    'CANAL'                     : 'canal',
+    'ITEM'                      : 'item',
+    'PAIS ORIGEN'               : 'pais_origen',
+    'PAIS PROCEDENCIA/DESTINO'  : 'pais_procedencia_destino',
+    'USO'                       : 'uso',
+    'UNIDAD MEDIDA ESTADISTICA' : 'unidad_medida_estadistica',
+    'CANTIDAD ESTADISTICA'      : 'cantidad_estadistica',
+    'KILO NETO'                 : 'kilo_neto',
+    'KILO BRUTO'                : 'kilo_bruto',
+    'FOB DOLAR'                 : 'fob_dolar',
+    'FLETE DOLAR'               : 'flete_dolar',
+    'SEGURO DOLAR'              : 'seguro_dolar',
+    'IMPONIBLE DOLAR'           : 'imponible_dolar',
+    'IMPONIBLE GS'              : 'imponible_gs',
+    # ... (las 41 columnas completas en el notebook)
+    'TOTAL'                     : 'total',
+})
+print("Primeras 5 columnas:", list(df.columns[:5]))</pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="step-card">
+        <div class="step-head"><span class="num">3</span> Insertar en <code>dw.stg_aduana</code> con CAST</div>
+        <div class="step-body">
+          <div class="code-wrap">
+            <button class="copy-btn" onclick="copyCode(this)">Copiar</button><span class="code-lang">python</span>
+            <pre>con = duckdb.connect(DB_PATH)
+con.execute("DELETE FROM dw.stg_aduana;")  # idempotencia
+
+con.register('df_stg', df)  # DataFrame visible como tabla temporal SQL
+
+con.execute("""
+INSERT INTO dw.stg_aduana
+SELECT
+    CAST(despacho_cifrado          AS VARCHAR),
+    CAST(operacion                 AS VARCHAR),
+    CAST(destinacion               AS VARCHAR),
+    CAST(regimen                   AS VARCHAR),
+    CAST(oficializacion            AS DATE),
+    CAST(cancelacion               AS DATE),
+    CAST(anio                      AS INTEGER),
+    CAST(mes                       AS VARCHAR),
+    CAST(aduana                    AS VARCHAR),
+    CAST(cotizacion                AS DOUBLE),
+    CAST(medio_transporte          AS VARCHAR),
+    CAST(canal                     AS VARCHAR),
+    CAST(item                      AS INTEGER),
+    CAST(pais_origen               AS VARCHAR),
+    CAST(pais_procedencia_destino  AS VARCHAR),
+    -- ... (41 columnas con CAST explícito)
+    CAST(total                     AS DOUBLE)
+FROM df_stg;
+""")
+
+n = con.execute("SELECT COUNT(*) FROM dw.stg_aduana").fetchone()[0]
+print(f"dw.stg_aduana cargada: {n} filas")
+con.close()</pre>
+          </div>
+          <div class="box box-ok"><strong>Resultado esperado:</strong> N filas (igual al Excel fuente), 41 columnas, 0 errores críticos de fecha.</div>
+        </div>
+      </div>
+
+      <h3>Checklist Fase 2</h3>
+      <ul class="checklist">
+        <li><input type="checkbox"> Notebook 02 ejecutado sin errores</li>
+        <li><input type="checkbox"> <code>dw.stg_aduana</code> tiene las mismas filas que el Excel</li>
+        <li><input type="checkbox"> Columnas renombradas (verificado con <code>df.columns.tolist()</code>)</li>
+        <li><input type="checkbox"> <code>oficializacion</code> y <code>cancelacion</code> son tipo DATE (no texto)</li>
+        <li><input type="checkbox"> <code>dw.stg_destinaciones</code> cargada con el catálogo de regímenes</li>
+      </ul>
+    </section>
+
+    <!-- ══════════ FASE 3 ══════════ -->
+    <section id="fase3" class="section">
+      <div class="phase-strip">
+        <span class="icon">📚</span>
+        <div><h2>Fase 3 — Crear las Dimensiones (Silver → Gold)</h2><p>Notebook: <strong>03_Cargar_Dimensiones.ipynb</strong></p></div>
+        <span class="time-badge">⏱️ 15 min</span>
+      </div>
+
+      <div class="box box-info">
+        <strong>¿Qué harás aquí?</strong>
+        Extraer valores únicos de cada columna de <code>dw.stg_aduana</code> y
+        crear catálogos sin repetición, cada uno con un ID surrogate generado por <code>ROW_NUMBER()</code>.
+      </div>
+
+      <img src="Dimensiones.png" alt="El porqué de las dimensiones en un modelo de datos" class="infographic-img"
+           onerror="this.style.display='none'">
+
+      <h3>Patrón estándar de cada dimensión</h3>
+      <div class="code-wrap">
+        <button class="copy-btn" onclick="copyCode(this)">Copiar</button><span class="code-lang">sql</span>
+        <pre>-- Patrón: limpiar → insertar valores únicos → asignar ID
+DELETE FROM dw.dim_xxx;
+
+INSERT INTO dw.dim_xxx (id_xxx, campo)
+SELECT
+    ROW_NUMBER() OVER (ORDER BY campo) AS id_xxx,  -- surrogate: 1, 2, 3...
+    campo
+FROM (
+    SELECT DISTINCT campo
+    FROM dw.stg_aduana
+    WHERE campo IS NOT NULL AND TRIM(campo) &lt;&gt; ''
+) t;</pre>
+      </div>
+
+      <h3>Dimensiones especiales</h3>
+
+      <div class="step-card">
+        <div class="step-head"><span class="num">dim_operacion</span> Con flags booleanos</div>
+        <div class="step-body">
+          <div class="code-wrap">
+            <button class="copy-btn" onclick="copyCode(this)">Copiar</button><span class="code-lang">python</span>
+            <pre>con.execute("DELETE FROM dw.dim_operacion;")
+con.execute("""
+INSERT INTO dw.dim_operacion (id_operacion, operacion, es_importacion, es_exportacion)
+SELECT
+    ROW_NUMBER() OVER (ORDER BY operacion) AS id_operacion,
+    operacion,
+    UPPER(TRIM(operacion)) = 'IMPORTACION' AS es_importacion,
+    UPPER(TRIM(operacion)) = 'EXPORTACION' AS es_exportacion
+FROM (
+    SELECT DISTINCT operacion FROM dw.stg_aduana
+    WHERE operacion IS NOT NULL AND TRIM(operacion) &lt;&gt; ''
+) t;
+""")
+print(con.execute("SELECT * FROM dw.dim_operacion").fetchdf().to_string())</pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="step-card">
+        <div class="step-head"><span class="num">dim_pais</span> Con SPLIT_PART y UNION (origen + destino)</div>
+        <div class="step-body">
+          <p>Los países vienen en formato <code>'ARG - ARGENTINA'</code>. Se separan con <code>SPLIT_PART</code>
+          y se combinan origen + destino con <code>UNION</code> (sin ALL para eliminar duplicados).</p>
+          <div class="code-wrap">
+            <button class="copy-btn" onclick="copyCode(this)">Copiar</button><span class="code-lang">sql</span>
+            <pre>INSERT INTO dw.dim_pais (id_pais, codigo_pais, descripcion_pais)
+SELECT
+    ROW_NUMBER() OVER (ORDER BY codigo_pais, descripcion_pais) AS id_pais,
+    codigo_pais,
+    descripcion_pais
+FROM (
+    SELECT DISTINCT
+        TRIM(SPLIT_PART(pais, ' - ', 1)) AS codigo_pais,       -- 'ARG'
+        TRIM(SPLIT_PART(pais, ' - ', 2)) AS descripcion_pais   -- 'ARGENTINA'
+    FROM (
+        SELECT pais_origen               AS pais FROM dw.stg_aduana
+        UNION   -- UNION sin ALL: elimina duplicados entre origen y destino
+        SELECT pais_procedencia_destino  AS pais FROM dw.stg_aduana
+    ) x
+    WHERE pais IS NOT NULL AND TRIM(pais) &lt;&gt; ''
+) t
+WHERE codigo_pais IS NOT NULL AND TRIM(codigo_pais) &lt;&gt; '';</pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="step-card">
+        <div class="step-head"><span class="num">dim_producto</span> Clave compuesta de 6 campos</div>
+        <div class="step-body">
+          <p>Un producto no se identifica solo por el código NCM, sino por la combinación de 6 columnas.</p>
+          <div class="code-wrap">
+            <button class="copy-btn" onclick="copyCode(this)">Copiar</button><span class="code-lang">sql</span>
+            <pre>INSERT INTO dw.dim_producto (
+    id_producto, posicion_ncm, rubro, desc_capitulo,
+    desc_posicion, desc_partida, mercaderia
+)
+SELECT
+    ROW_NUMBER() OVER (
+        ORDER BY COALESCE(posicion,''), COALESCE(rubro,''),
+                 COALESCE(desc_capitulo,''), COALESCE(desc_posicion,''),
+                 COALESCE(desc_partida,''), COALESCE(mercaderia,'')
+    ) AS id_producto,
+    posicion AS posicion_ncm,
+    rubro, desc_capitulo, desc_posicion, desc_partida, mercaderia
+FROM (
+    SELECT DISTINCT posicion, rubro, desc_capitulo,
+                    desc_posicion, desc_partida, mercaderia
+    FROM dw.stg_aduana
+) t;</pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="step-card">
+        <div class="step-head"><span class="num">dim_fecha</span> CTE con fechas combinadas</div>
+        <div class="step-body">
+          <p><code>dim_fecha</code> se usa <strong>dos veces</strong> en la fact table: una para <code>oficializacion</code> y otra para <code>cancelacion</code>.</p>
+          <div class="code-wrap">
+            <button class="copy-btn" onclick="copyCode(this)">Copiar</button><span class="code-lang">sql</span>
+            <pre>INSERT INTO dw.dim_fecha (
+    id_fecha, fecha, anio, mes_numero, mes_nombre, trimestre, anio_mes
+)
+WITH fechas AS (
+    SELECT oficializacion AS f FROM dw.stg_aduana WHERE oficializacion IS NOT NULL
+    UNION
+    SELECT cancelacion    FROM dw.stg_aduana WHERE cancelacion    IS NOT NULL
+)
+SELECT
+    ROW_NUMBER() OVER (ORDER BY f)                                  AS id_fecha,
+    f                                                               AS fecha,
+    EXTRACT(YEAR  FROM f),
+    EXTRACT(MONTH FROM f),
+    STRFTIME(f, '%B'),                                              -- 'March'
+    CAST(FLOOR((EXTRACT(MONTH FROM f) - 1) / 3) + 1 AS INTEGER),  -- trimestre
+    STRFTIME(f, '%Y-%m')                                            -- '2024-03'
+FROM fechas;</pre>
+          </div>
+        </div>
+      </div>
+
+      <h3>Verificación del NB 03</h3>
+      <div class="code-wrap">
+        <button class="copy-btn" onclick="copyCode(this)">Copiar</button><span class="code-lang">python</span>
+        <pre>dims = ["dim_operacion","dim_destinacion","dim_regimen","dim_aduana",
+        "dim_pais","dim_producto","dim_medio_transporte","dim_canal",
+        "dim_unidad_medida","dim_acuerdo","dim_marca","dim_fecha"]
+
+print(f"{'Dimensión':<30} {'Filas':>8}")
+print("-" * 40)
+for d in dims:
+    n = con.execute(f"SELECT COUNT(*) FROM dw.{d}").fetchone()[0]
+    print(f"  {d:<28} {n:>8}")
+con.close()</pre>
+      </div>
+
+      <h3>Checklist Fase 3</h3>
+      <ul class="checklist">
+        <li><input type="checkbox"> Notebook 03 ejecutado sin errores</li>
+        <li><input type="checkbox"> <code>dw.dim_operacion</code> tiene exactamente 2 filas</li>
+        <li><input type="checkbox"> <code>dw.dim_pais</code> tiene 40+ filas (origen + destino combinados)</li>
+        <li><input type="checkbox"> <code>dw.dim_producto</code> tiene filas por cada combinación NCM única</li>
+        <li><input type="checkbox"> <code>dw.dim_fecha</code> tiene una fila por cada fecha única de los despachos</li>
+      </ul>
+    </section>
+
+    <!-- ══════════ FASE 4 ══════════ -->
+    <section id="fase4" class="section">
+      <div class="phase-strip">
+        <span class="icon">🔗</span>
+        <div><h2>Fase 4 — Crear la Fact Table (14 JOINs)</h2><p>Notebook: <strong>04_Cargar_Fact_Table.ipynb</strong></p></div>
+        <span class="time-badge">⏱️ 20 min</span>
+      </div>
+
+      <div class="box box-info">
+        <strong>¿Qué harás aquí?</strong>
+        Construir <code>dw.fact_aduana_item</code>: la tabla central del DWH.
+        Cada fila del staging se convierte en una fila de la fact table,
+        pero en lugar de texto descriptivo, tiene solo los <strong>IDs numéricos</strong> de cada dimensión.
+      </div>
+
+      <img src="LeftJoin.png" alt="¿Qué es un LEFT JOIN y por qué 14?" class="infographic-img"
+           onerror="this.style.display='none'">
+
+      <h3>Lógica de la consulta central</h3>
+      <div class="diagram">
+stg_aduana (texto)           →     fact_aduana_item (IDs + métricas)
+──────────────────────────────────────────────────────────────────────
+operacion  = 'IMPORTACION'   →     id_operacion = 1
+aduana     = 'ASUNCION'      →     id_aduana = 2
+pais_origen = 'BRA - BRASIL' →     id_pais_origen = 7   ← SPLIT_PART por código
+oficializacion = 2024-03-15  →     id_fecha_oficializacion = 108
+cancelacion    = 2024-03-28  →     id_fecha_cancelacion   = 121
+fob_dolar  = 1 500.00        →     fob_dolar = 1 500.00  (sin cambio)
+      </div>
+
+      <div class="step-card">
+        <div class="step-head"><span class="num">1</span> La consulta completa (14 LEFT JOINs)</div>
+        <div class="step-body">
+          <div class="code-wrap">
+            <button class="copy-btn" onclick="copyCode(this)">Copiar</button><span class="code-lang">sql</span>
+            <pre>DELETE FROM dw.fact_aduana_item;
+
+INSERT INTO dw.fact_aduana_item (
+    id_fact, despacho_cifrado, item,
+    id_operacion, id_destinacion, id_regimen, id_aduana,
+    id_pais_origen, id_pais_destino, id_producto,
+    id_medio_transporte, id_canal, id_unidad_medida,
+    id_acuerdo, id_marca,
+    id_fecha_oficializacion, id_fecha_cancelacion,
+    uso, cantidad_estadistica, kilo_neto, kilo_bruto,
+    fob_dolar, flete_dolar, seguro_dolar,
+    imponible_dolar, imponible_gs,
+    ajuste_a_incluir, ajuste_a_deducir,
+    derecho, isc, servicio, renta, iva, otros, total
+)
+SELECT
+    ROW_NUMBER() OVER (
+        ORDER BY COALESCE(s.despacho_cifrado,''), COALESCE(s.item,0)
+    ) AS id_fact,
+
+    s.despacho_cifrado, s.item,
+
+    -- IDs de dimensiones (resolución por LEFT JOIN)
+    o.id_operacion,
+    d.id_destinacion,
+    r.id_regimen,
+    a.id_aduana,
+    po.id_pais  AS id_pais_origen,   -- dim_pais alias 'po'
+    pd.id_pais  AS id_pais_destino,  -- dim_pais alias 'pd'
+    p.id_producto,
+    mt.id_medio_transporte,
+    c.id_canal,
+    um.id_unidad_medida,
+    ac.id_acuerdo,
+    m.id_marca,
+    fo.id_fecha AS id_fecha_oficializacion,  -- dim_fecha alias 'fo'
+    fc.id_fecha AS id_fecha_cancelacion,     -- dim_fecha alias 'fc'
+
+    s.uso,
+
+    -- Métricas numéricas (directo del staging)
+    s.cantidad_estadistica, s.kilo_neto, s.kilo_bruto,
+    s.fob_dolar, s.flete_dolar, s.seguro_dolar,
+    s.imponible_dolar, s.imponible_gs,
+    s.ajuste_a_incluir, s.ajuste_a_deducir,
+    s.derecho, s.isc, s.servicio, s.renta, s.iva, s.otros, s.total
+
+FROM dw.stg_aduana s
+
+-- JOINs simples por texto (con TRIM para eliminar espacios)
+LEFT JOIN dw.dim_operacion o   ON TRIM(s.operacion)  = TRIM(o.operacion)
+LEFT JOIN dw.dim_destinacion d ON TRIM(s.destinacion)= TRIM(d.cod_destinacion)
+LEFT JOIN dw.dim_regimen r     ON TRIM(s.regimen)    = TRIM(r.regimen)
+LEFT JOIN dw.dim_aduana a      ON TRIM(s.aduana)     = TRIM(a.aduana)
+
+-- JOIN por código de país (parte 1 del formato 'COD - DESC')
+LEFT JOIN dw.dim_pais po
+    ON TRIM(SPLIT_PART(s.pais_origen, ' - ', 1)) = TRIM(po.codigo_pais)
+LEFT JOIN dw.dim_pais pd
+    ON TRIM(SPLIT_PART(s.pais_procedencia_destino, ' - ', 1)) = TRIM(pd.codigo_pais)
+
+-- JOIN por 6 campos combinados (clave compuesta de dim_producto)
+LEFT JOIN dw.dim_producto p
+    ON COALESCE(TRIM(s.posicion),      '') = COALESCE(TRIM(p.posicion_ncm),  '')
+   AND COALESCE(TRIM(s.rubro),         '') = COALESCE(TRIM(p.rubro),          '')
+   AND COALESCE(TRIM(s.desc_capitulo), '') = COALESCE(TRIM(p.desc_capitulo), '')
+   AND COALESCE(TRIM(s.desc_posicion), '') = COALESCE(TRIM(p.desc_posicion), '')
+   AND COALESCE(TRIM(s.desc_partida),  '') = COALESCE(TRIM(p.desc_partida),  '')
+   AND COALESCE(TRIM(s.mercaderia),    '') = COALESCE(TRIM(p.mercaderia),     '')
+
+-- JOINs simples restantes
+LEFT JOIN dw.dim_medio_transporte mt ON TRIM(s.medio_transporte)         = TRIM(mt.medio_transporte)
+LEFT JOIN dw.dim_canal c             ON TRIM(s.canal)                    = TRIM(c.canal)
+LEFT JOIN dw.dim_unidad_medida um    ON TRIM(s.unidad_medida_estadistica)= TRIM(um.unidad_medida)
+LEFT JOIN dw.dim_acuerdo ac          ON TRIM(s.acuerdo)                  = TRIM(ac.acuerdo)
+LEFT JOIN dw.dim_marca m             ON TRIM(s.marca_item)               = TRIM(m.marca)
+
+-- JOINs de fecha (tipo DATE, sin TRIM)
+LEFT JOIN dw.dim_fecha fo ON s.oficializacion = fo.fecha
+LEFT JOIN dw.dim_fecha fc ON s.cancelacion    = fc.fecha
+
+WHERE s.despacho_cifrado IS NOT NULL AND s.item IS NOT NULL;</pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="step-card">
+        <div class="step-head"><span class="num">2</span> Verificar y analizar el resultado</div>
+        <div class="step-body">
+          <div class="code-wrap">
+            <button class="copy-btn" onclick="copyCode(this)">Copiar</button><span class="code-lang">python</span>
+            <pre">stg  = con.execute("SELECT COUNT(*) FROM dw.stg_aduana").fetchone()[0]
+fact = con.execute("SELECT COUNT(*) FROM dw.fact_aduana_item").fetchone()[0]
+print(f"stg_aduana:        {stg:>8,} filas")
+print(f"fact_aduana_item:  {fact:>8,} filas")
+print(f"Diferencia:        {stg - fact:>8,} filas")
+
+# Consulta analítica de verificación
+con.execute("""
+    SELECT o.operacion,
+           COUNT(*)                 AS cantidad_items,
+           ROUND(SUM(f.fob_dolar),2) AS total_fob_usd
+    FROM dw.fact_aduana_item f
+    JOIN dw.dim_operacion o ON f.id_operacion = o.id_operacion
+    GROUP BY o.operacion
+    ORDER BY total_fob_usd DESC
+""").fetchdf()
+</pre>
+          </div>
+          <div class="box box-ok"><strong>Resultado esperado:</strong> <code>fact_aduana_item</code> ≈ filas de <code>stg_aduana</code> (diferencia mínima por filas sin clave natural).</div>
+          <div class="box box-warn"><strong>Si fact tiene muchas menos filas</strong> que staging: algún JOIN usa INNER en vez de LEFT. Revisar la consulta del NB 04.</div>
+        </div>
+      </div>
+
+      <h3>Checklist Fase 4</h3>
+      <ul class="checklist">
+        <li><input type="checkbox"> Notebook 04 ejecutado sin errores</li>
+        <li><input type="checkbox"> <code>dw.fact_aduana_item</code> ≈ mismas filas que <code>dw.stg_aduana</code></li>
+        <li><input type="checkbox"> Los IDs de dimensiones no son todos NULL</li>
+        <li><input type="checkbox"> <code>id_fecha_oficializacion</code> e <code>id_fecha_cancelacion</code> tienen valores</li>
+        <li><input type="checkbox"> <code>fob_dolar</code>, <code>kilo_neto</code>, <code>total</code> tienen valores numéricos</li>
+      </ul>
+    </section>
+
+    <!-- ══════════ FASE 5 ══════════ -->
+    <section id="fase5" class="section">
+      <div class="phase-strip">
+        <span class="icon">✅</span>
+        <div><h2>Fase 5 — Validar la Integridad del DWH</h2><p>Notebook: <strong>05_Validaciones.ipynb</strong></p></div>
+        <span class="time-badge">⏱️ 10 min</span>
+      </div>
+
+      <div class="box box-info">
+        <strong>¿Qué harás aquí?</strong>
+        Ejecutar las 8 validaciones del script <code>ConsAUX.py</code> para confirmar
+        que el DWH está íntegro y consistente. Es el control de calidad antes de conectar Power BI.
+      </div>
+
+      <h3>Las 8 validaciones del NB 05</h3>
+
+      <div class="step-card">
+        <div class="step-head"><span class="num">V1</span> Tablas existentes en el esquema <code>dw</code></div>
+        <div class="step-body">
+          <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">Copiar</button><span class="code-lang">python</span>
+            <pre>tables = con.execute("""
+    SELECT table_name FROM information_schema.tables
+    WHERE table_schema = 'dw' ORDER BY table_name
+""").fetchall()
+print(f"Tablas en 'dw': {len(tables)}")  # Esperado: 15
+for t in tables:
+    print(f"   - {t[0]}")</pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="step-card">
+        <div class="step-head"><span class="num">V2</span> Conteo de filas por tabla</div>
+        <div class="step-body">
+          <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">Copiar</button><span class="code-lang">python</span>
+            <pre>print(f"{'Tabla':<35} {'Filas':>8}")
+print("-" * 45)
+for t in tables:
+    n = con.execute(f"SELECT COUNT(*) FROM dw.{t[0]}").fetchone()[0]
+    print(f"   {t[0]:<32} {n:>8}")</pre>
+          </div>
+          <div class="box box-info"><strong>Esperado:</strong> staging = filas del Excel | dimensiones &lt;&lt; staging | fact ≈ staging</div>
+        </div>
+      </div>
+
+      <div class="step-card">
+        <div class="step-head"><span class="num">V3</span> Duplicados en la clave natural de la fact table</div>
+        <div class="step-body">
+          <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">Copiar</button><span class="code-lang">python</span>
+            <pre>dup = con.execute("""
+    SELECT COUNT(*) FROM (
+        SELECT despacho_cifrado, item, COUNT(*) c
+        FROM dw.fact_aduana_item
+        GROUP BY despacho_cifrado, item
+        HAVING COUNT(*) > 1
+    ) x
+""").fetchone()[0]
+print(f"Duplicados en fact_aduana_item: {'OK' if dup==0 else f'ALERTA: {dup}'}")</pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="step-card">
+        <div class="step-head"><span class="num">V4</span> NULLs en clave natural</div>
+        <div class="step-body">
+          <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">Copiar</button><span class="code-lang">sql</span>
+            <pre>SELECT
+    SUM(CASE WHEN despacho_cifrado IS NULL THEN 1 ELSE 0 END) AS null_despacho,
+    SUM(CASE WHEN item             IS NULL THEN 1 ELSE 0 END) AS null_item
+FROM dw.fact_aduana_item;</pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="step-card">
+        <div class="step-head"><span class="num">V5</span> Claves foráneas huérfanas (14 FKs)</div>
+        <div class="step-body">
+          <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">Copiar</button><span class="code-lang">python</span>
+            <pre">fks = {
+    "id_operacion"           : ("dim_operacion",        "id_operacion"),
+    "id_destinacion"         : ("dim_destinacion",      "id_destinacion"),
+    "id_regimen"             : ("dim_regimen",          "id_regimen"),
+    "id_aduana"              : ("dim_aduana",           "id_aduana"),
+    "id_pais_origen"         : ("dim_pais",             "id_pais"),
+    "id_pais_destino"        : ("dim_pais",             "id_pais"),
+    "id_producto"            : ("dim_producto",         "id_producto"),
+    "id_medio_transporte"    : ("dim_medio_transporte", "id_medio_transporte"),
+    "id_canal"               : ("dim_canal",            "id_canal"),
+    "id_unidad_medida"       : ("dim_unidad_medida",    "id_unidad_medida"),
+    "id_acuerdo"             : ("dim_acuerdo",          "id_acuerdo"),
+    "id_marca"               : ("dim_marca",            "id_marca"),
+    "id_fecha_oficializacion": ("dim_fecha",            "id_fecha"),
+    "id_fecha_cancelacion"   : ("dim_fecha",            "id_fecha"),
+}
+for fk, (dim, pk) in fks.items():
+    n = con.execute(f"""
+        SELECT COUNT(*) FROM dw.fact_aduana_item f
+        LEFT JOIN dw.{dim} d ON f.{fk} = d.{pk}
+        WHERE f.{fk} IS NOT NULL AND d.{pk} IS NULL
+    """).fetchone()[0]
+    print(f"  {fk:<28} → {dim:<25} huérfanas: {n}")
+</pre>
+          </div>
+          <div class="box box-ok"><strong>Ideal:</strong> todas las FK con 0 huérfanas.</div>
+        </div>
+      </div>
+
+      <div class="step-card">
+        <div class="step-head"><span class="num">V6</span> Duplicados en dimensiones</div>
+        <div class="step-body">
+          <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">Copiar</button><span class="code-lang">python</span>
+            <pre>dim_keys = {
+    "dim_operacion":"operacion", "dim_destinacion":"cod_destinacion",
+    "dim_regimen":"regimen",     "dim_aduana":"aduana",
+    "dim_pais":"codigo_pais",    "dim_medio_transporte":"medio_transporte",
+    "dim_canal":"canal",         "dim_unidad_medida":"unidad_medida",
+    "dim_acuerdo":"acuerdo",     "dim_marca":"marca",
+    "dim_fecha":"fecha",
+}
+for dim, key in dim_keys.items():
+    dup = con.execute(f"""
+        SELECT COUNT(*) FROM (
+            SELECT {key}, COUNT(*) c FROM dw.{dim}
+            GROUP BY {key} HAVING COUNT(*) > 1) x
+    """).fetchone()[0]
+    print(f"  {dim:<30} {'OK' if dup==0 else f'ALERTA: {dup}'}")</pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="step-card">
+        <div class="step-head"><span class="num">V7</span> dim_producto — clave compuesta</div>
+        <div class="step-body">
+          <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">Copiar</button><span class="code-lang">sql</span>
+            <pre>SELECT COUNT(*) FROM (
+    SELECT posicion_ncm, rubro, desc_capitulo,
+           desc_posicion, desc_partida, mercaderia, COUNT(*) c
+    FROM dw.dim_producto
+    GROUP BY posicion_ncm, rubro, desc_capitulo, desc_posicion, desc_partida, mercaderia
+    HAVING COUNT(*) > 1
+) x;  -- Esperado: 0</pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="step-card">
+        <div class="step-head"><span class="num">V8</span> Validación básica del staging</div>
+        <div class="step-body">
+          <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">Copiar</button><span class="code-lang">sql</span>
+            <pre>SELECT
+    COUNT(*)                                                   AS total_filas,
+    SUM(CASE WHEN despacho_cifrado IS NULL THEN 1 ELSE 0 END) AS null_despacho,
+    SUM(CASE WHEN item             IS NULL THEN 1 ELSE 0 END) AS null_item,
+    SUM(CASE WHEN oficializacion   IS NULL THEN 1 ELSE 0 END) AS null_fecha
+FROM dw.stg_aduana;</pre>
+          </div>
+        </div>
+      </div>
+
+      <h3>Tabla de resultados esperados</h3>
+      <table>
+        <tr><th>Validación</th><th>Resultado ideal</th><th>Si falla…</th></tr>
+        <tr><td>Tablas en <code>dw</code></td><td>15</td><td>Reejecutar NB 01</td></tr>
+        <tr><td>Filas staging = Excel</td><td>0 diferencia</td><td>Revisar NB 02</td></tr>
+        <tr><td>Filas fact ≈ staging</td><td>0–5% diferencia</td><td>Cambiar INNER por LEFT en NB 04</td></tr>
+        <tr><td>Duplicados en fact</td><td>0</td><td>Reejecutar con DELETE previo</td></tr>
+        <tr><td>NULLs en clave natural</td><td>0</td><td>Verificar los datos fuente</td></tr>
+        <tr><td>FKs huérfanas</td><td>0 en todas</td><td>Verificar JOIN condition en NB 04</td></tr>
+        <tr><td>Duplicados en dims</td><td>0 en todas</td><td>Reejecutar NB 03</td></tr>
+        <tr><td>dim_producto compuesta</td><td>0</td><td>Reejecutar NB 03</td></tr>
+      </table>
+
+      <h3>Checklist Fase 5</h3>
+      <ul class="checklist">
+        <li><input type="checkbox"> Notebook 05 ejecutado sin errores de Python</li>
+        <li><input type="checkbox"> 15 tablas presentes en el esquema <code>dw</code></li>
+        <li><input type="checkbox"> 0 duplicados en <code>dw.fact_aduana_item</code></li>
+        <li><input type="checkbox"> 0 NULLs en clave natural (<code>despacho_cifrado</code>, <code>item</code>)</li>
+        <li><input type="checkbox"> 0 FKs huérfanas en las 14 relaciones</li>
+        <li><input type="checkbox"> 0 duplicados en todas las dimensiones</li>
+      </ul>
+    </section>
+
+    <!-- ══════════ FASE 6 ══════════ -->
+    <section id="fase6" class="section">
+      <div class="phase-strip">
+        <span class="icon">📊</span>
+        <div><h2>Fase 6 — Conectar Power BI</h2><p>Archivo: <strong>Dash_DWH.pbix</strong></p></div>
+        <span class="time-badge">⏱️ 30 min</span>
+      </div>
+
+      <div class="box box-info">
+        <strong>¿Qué harás aquí?</strong>
+        Conectar Power BI Desktop al archivo <code>aduana.duckdb</code> usando ODBC,
+        crear las relaciones del modelo y construir al menos 3 reportes interactivos.
+      </div>
+
+      <h3>Opción A — Conectar por ODBC (recomendado)</h3>
+      <div class="step-card">
+        <div class="step-head"><span class="num">1</span> Instalar el driver ODBC</div>
+        <div class="step-body">
+          <p>El driver ya viene en la carpeta <code>DUCKDB/</code> del proyecto. Ejecutar como Administrador:</p>
+          <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">Copiar</button><span class="code-lang">powershell</span>
+            <pre>.\DUCKDB\odbc_install.exe</pre>
+          </div>
+        </div>
+      </div>
+      <div class="step-card">
+        <div class="step-head"><span class="num">2</span> Conectar en Power BI</div>
+        <div class="step-body">
+          <ol>
+            <li>Power BI Desktop → <strong>Inicio → Obtener datos → ODBC</strong></li>
+            <li>Cadena de conexión: <code>Database=C:\Información\proyectos\aduana_bi\db\aduana.duckdb</code></li>
+            <li>Seleccionar todas las tablas <code>dim_*</code> y <code>fact_*</code> del esquema <code>dw</code></li>
+          </ol>
+        </div>
+      </div>
+
+      <h3>Opción B — Exportar a CSV (si ODBC falla)</h3>
+      <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">Copiar</button><span class="code-lang">python</span>
+        <pre>import duckdb, os
+con = duckdb.connect(r'C:\Información\proyectos\aduana_bi\db\aduana.duckdb')
+os.makedirs('export_pbi', exist_ok=True)
+
+for t in ['fact_aduana_item','dim_pais','dim_operacion','dim_producto',
+          'dim_fecha','dim_aduana','dim_destinacion','dim_regimen','dim_canal']:
+    con.query(f"SELECT * FROM dw.{t}").to_df().to_csv(f'export_pbi/{t}.csv', index=False)
+    print(f"Exportado: {t}.csv")
+con.close()</pre>
+      </div>
+
+      <h3>Relaciones clave en el modelo Power BI</h3>
+      <table>
+        <tr><th>Tabla origen</th><th>Campo FK</th><th>Tabla destino</th><th>Campo PK</th></tr>
+        <tr><td>fact_aduana_item</td><td>id_operacion</td><td>dim_operacion</td><td>id_operacion</td></tr>
+        <tr><td>fact_aduana_item</td><td>id_pais_origen</td><td>dim_pais</td><td>id_pais</td></tr>
+        <tr><td>fact_aduana_item</td><td>id_pais_destino</td><td>dim_pais</td><td>id_pais</td></tr>
+        <tr><td>fact_aduana_item</td><td>id_producto</td><td>dim_producto</td><td>id_producto</td></tr>
+        <tr><td>fact_aduana_item</td><td>id_aduana</td><td>dim_aduana</td><td>id_aduana</td></tr>
+        <tr><td>fact_aduana_item</td><td>id_fecha_oficializacion</td><td>dim_fecha</td><td>id_fecha</td></tr>
+        <tr><td>fact_aduana_item</td><td>id_fecha_cancelacion</td><td>dim_fecha</td><td>id_fecha</td></tr>
+      </table>
+
+      <h3>Reportes sugeridos</h3>
+      <div class="card-grid">
+        <div class="card"><div class="ci">📈</div><h4>FOB por Operación</h4><p>Importación vs exportación en <code>fob_dolar</code></p><span class="tag">Básico</span></div>
+        <div class="card"><div class="ci">🌍</div><h4>Top 10 Países</h4><p>Por <code>descripcion_pais</code> y <code>fob_dolar</code></p><span class="tag">Básico</span></div>
+        <div class="card gold"><div class="ci">📅</div><h4>Tendencia Mensual</h4><p>Por <code>anio_mes</code> de <code>dim_fecha</code></p><span class="tag">Intermedio</span></div>
+        <div class="card gold"><div class="ci">🏭</div><h4>Por Aduana</h4><p>Ranking de <code>aduana</code> por volumen</p><span class="tag">Intermedio</span></div>
+        <div class="card green"><div class="ci">📦</div><h4>Top NCM</h4><p>Posiciones arancelarias con mayor <code>fob_dolar</code></p><span class="tag">Avanzado</span></div>
+        <div class="card green"><div class="ci">🔴🟢</div><h4>Canal de Control</h4><p>Distribución ROJO / VERDE / AMARILLO</p><span class="tag">Avanzado</span></div>
+      </div>
+
+      <div class="box box-ok"><strong>¡Felicitaciones!</strong> Completaste el Data Warehouse Aduana BI. Tienes un sistema de BI profesional con datos reales de despachos aduaneros, listo para análisis avanzados.</div>
+    </section>
+
+    <!-- ══════════ GLOSARIO ══════════ -->
+    <section id="glosario" class="section">
+      <h2>📖 Glosario de Conceptos Clave</h2>
+      <table>
+        <tr><th>Término</th><th>Definición</th><th>En este proyecto</th></tr>
+        <tr><td><strong>ETL</strong></td><td>Extract, Transform, Load</td><td>Excel → staging → dims → fact</td></tr>
+        <tr><td><strong>Data Warehouse</strong></td><td>BD optimizada para análisis, no operaciones</td><td>El archivo <code>aduana.duckdb</code></td></tr>
+        <tr><td><strong>Esquema (<code>dw</code>)</strong></td><td>Carpeta lógica que agrupa tablas</td><td>Todas las tablas son <code>dw.xxx</code></td></tr>
+        <tr><td><strong>Bronze/Silver/Gold</strong></td><td>Capas de madurez: crudo/limpio/análisis</td><td>Excel / stg_aduana / dim_* + fact_*</td></tr>
+        <tr><td><strong>Staging</strong></td><td>Tabla de paso: datos limpios, aún sin normalizar</td><td><code>dw.stg_aduana</code></td></tr>
+        <tr><td><strong>Dimensión</strong></td><td>Catálogo sin repetición con ID surrogate</td><td><code>dw.dim_pais</code>, <code>dw.dim_producto</code></td></tr>
+        <tr><td><strong>Fact Table</strong></td><td>Tabla central: métricas numéricas + FKs a dimensiones</td><td><code>dw.fact_aduana_item</code></td></tr>
+        <tr><td><strong>Star Schema</strong></td><td>Una fact table central + dimensiones alrededor</td><td>El diagrama Schema.png</td></tr>
+        <tr><td><strong>Surrogate Key</strong></td><td>ID artificial generado con <code>ROW_NUMBER()</code></td><td><code>id_operacion</code>, <code>id_pais</code>…</td></tr>
+        <tr><td><strong>Natural Key</strong></td><td>Identificador propio del negocio</td><td><code>despacho_cifrado</code> + <code>item</code></td></tr>
+        <tr><td><strong>LEFT JOIN</strong></td><td>Conserva todas las filas de la izquierda aunque no haya match</td><td>14 LEFT JOINs en NB 04</td></tr>
+        <tr><td><strong>SPLIT_PART()</strong></td><td>Divide texto por separador y devuelve parte N</td><td><code>SPLIT_PART('ARG - ARGENTINA',' - ',1)</code> → <code>'ARG'</code></td></tr>
+        <tr><td><strong>ROW_NUMBER()</strong></td><td>Función de ventana que numera filas: 1, 2, 3…</td><td>Genera IDs surrogate en cada dimensión</td></tr>
+        <tr><td><strong>COALESCE(x,'')</strong></td><td>Reemplaza NULL por valor por defecto</td><td>JOIN de <code>dim_producto</code> (clave compuesta)</td></tr>
+        <tr><td><strong>DuckDB</strong></td><td>BD SQL embebida en un archivo, sin servidor</td><td><code>aduana.duckdb</code></td></tr>
+        <tr><td><strong>Idempotencia</strong></td><td>Ejecutar N veces da el mismo resultado</td><td><code>DELETE FROM dw.xxx</code> antes de cada INSERT</td></tr>
+      </table>
+    </section>
+
+    <!-- ══════════ TROUBLESHOOTING ══════════ -->
+    <section id="trouble" class="section">
+      <h2>🛠️ Resolución de Problemas</h2>
+
+      <div class="accordion open">
+        <div class="accordion-head" onclick="toggleAcc(this)">❌ "Connection already closed" al ejecutar una celda<span class="accordion-arrow">▼</span></div>
+        <div class="accordion-body">
+          <p><strong>Causa:</strong> <code>con.close()</code> fue llamado y luego se intentó usar <code>con</code>.</p>
+          <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">Copiar</button><pre>con = duckdb.connect(r'C:\Información\proyectos\aduana_bi\db\aduana.duckdb')</pre></div>
+          <p>Regla: no cierres la conexión hasta haber terminado todo el notebook.</p>
+        </div>
+      </div>
+
+      <div class="accordion">
+        <div class="accordion-head" onclick="toggleAcc(this)">❌ "Column not found" o KeyError al renombrar<span class="accordion-arrow">▼</span></div>
+        <div class="accordion-body">
+          <p><strong>Causa:</strong> el nombre exacto en el Excel es diferente (espacios, acentos, mayúsculas).</p>
+          <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">Copiar</button><span class="code-lang">python</span>
+            <pre>print(df.columns.tolist())   # Ver los nombres exactos
+print(repr(df.columns[0]))   # Ver caracteres invisibles</pre>
+          </div>
+          <p>Ajusta el <code>rename()</code> en el NB 02 con los nombres exactos que devuelve el comando anterior.</p>
+        </div>
+      </div>
+
+      <div class="accordion">
+        <div class="accordion-head" onclick="toggleAcc(this)">❌ Las fechas <code>oficializacion</code> quedan 100% NULL<span class="accordion-arrow">▼</span></div>
+        <div class="accordion-body">
+          <p><strong>Causa:</strong> el formato real del Excel no coincide con <code>'%d/%m/%Y'</code>.</p>
+          <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">Copiar</button><span class="code-lang">python</span>
+            <pre>print(df['OFICIALIZACION'].head())        # ver el formato real
+print(type(df['OFICIALIZACION'].iloc[0])) # ver el tipo de dato
+
+# Si el formato es '2024-03-15':
+df['OFICIALIZACION'] = pd.to_datetime(df['OFICIALIZACION'], format='%Y-%m-%d', errors='coerce').dt.date</pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion">
+        <div class="accordion-head" onclick="toggleAcc(this)">❌ <code>fact_aduana_item</code> tiene muchas menos filas que <code>stg_aduana</code><span class="accordion-arrow">▼</span></div>
+        <div class="accordion-body">
+          <p><strong>Causa:</strong> algún JOIN en el NB 04 es INNER JOIN en lugar de LEFT JOIN.</p>
+          <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">Copiar</button><span class="code-lang">python</span>
+            <pre">stg  = con.execute("SELECT COUNT(*) FROM dw.stg_aduana").fetchone()[0]
+fact = con.execute("SELECT COUNT(*) FROM dw.fact_aduana_item").fetchone()[0]
+print(f"Perdiste {stg - fact:,} filas")</pre>
+          </div>
+          <p>Busca en el NB 04 cualquier <code>JOIN</code> o <code>INNER JOIN</code> y cámbialo por <code>LEFT JOIN</code>.</p>
+        </div>
+      </div>
+
+      <div class="accordion">
+        <div class="accordion-head" onclick="toggleAcc(this)">❌ "Duplicate key violation" al ejecutar INSERT<span class="accordion-arrow">▼</span></div>
+        <div class="accordion-body">
+          <p><strong>Causa:</strong> el notebook se ejecutó dos veces sin borrar datos anteriores.</p>
+          <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">Copiar</button><span class="code-lang">python</span>
+            <pre">con.execute("DELETE FROM dw.dim_operacion;")  # ejecutar ANTES del INSERT</pre>
+          </div>
+          <p>Cada notebook tiene celdas de <code>DELETE FROM</code> al inicio — asegúrate de ejecutarlas.</p>
+        </div>
+      </div>
+
+      <div class="accordion">
+        <div class="accordion-head" onclick="toggleAcc(this)">❌ Power BI no detecta las tablas por ODBC<span class="accordion-arrow">▼</span></div>
+        <div class="accordion-body">
+          <p><strong>Causa:</strong> driver ODBC no instalado o el esquema <code>dw</code> no aparece.</p>
+          <p>En la cadena de conexión de Power BI, especificar explícitamente:</p>
+          <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+            <pre">Database=C:\Información\proyectos\aduana_bi\db\aduana.duckdb</pre>
+          </div>
+          <p>Luego seleccionar las tablas bajo el esquema <code>dw</code> en el navegador de tablas.</p>
+          <p>Alternativa: exportar a CSV con el script de la Fase 6.</p>
+        </div>
+      </div>
+
+      <div class="accordion">
+        <div class="accordion-head" onclick="toggleAcc(this)">❌ "File not found: DatosXLSX.xlsx"<span class="accordion-arrow">▼</span></div>
+        <div class="accordion-body">
+          <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">Copiar</button><span class="code-lang">python</span>
+            <pre">import os
+os.chdir(r'C:\Información\proyectos\aduana_bi')  # primera celda del notebook
+print(os.path.exists('data_lake/bronze/DatosXLSX.xlsx'))</pre>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════ GUÍA DOCENTE ══════════ -->
+    <section id="docente" class="section">
+      <h2>👨‍🏫 Guía Docente</h2>
+
+      <div class="box box-info"><strong>Para el profesor:</strong> secuencia de 7 clases para enseñar el proyecto completo, célula por célula en los notebooks.</div>
+
+      <h3>Secuencia de clases</h3>
+      <table>
+        <tr><th>Clase</th><th>Tema</th><th>Hs</th><th>NB</th><th>Objetivo</th></tr>
+        <tr><td>1</td><td>Introducción y arquitectura</td><td>2h</td><td>00</td><td>Entender el problema antes de ver código</td></tr>
+        <tr><td>2</td><td>Diseño del DW — esquema <code>dw</code></td><td>2h</td><td>01</td><td>Por qué separar staging / dims / fact</td></tr>
+        <tr><td>3</td><td>ETL — Excel a Staging</td><td>2h</td><td>02</td><td>Fechas, CAST, idempotencia</td></tr>
+        <tr><td>4</td><td>ETL — Dimensiones</td><td>2h</td><td>03</td><td>ROW_NUMBER, SPLIT_PART, UNION, clave compuesta</td></tr>
+        <tr><td>5</td><td>ETL — Fact Table y JOINs</td><td>2h</td><td>04</td><td>14 LEFT JOINs, alias, <code>fob_dolar</code> y métricas</td></tr>
+        <tr><td>6</td><td>Validación e integridad</td><td>1h</td><td>05</td><td>8 validaciones, claves huérfanas, HAVING</td></tr>
+        <tr><td>7</td><td>Power BI y cierre</td><td>1h</td><td>—</td><td>ODBC, modelo relacional, reportes</td></tr>
+      </table>
+
+      <div class="accordion open">
+        <div class="accordion-head" onclick="toggleAcc(this)">Preguntas para los alumnos<span class="accordion-arrow">▼</span></div>
+        <div class="accordion-body">
+          <h4>Conceptuales</h4>
+          <ol>
+            <li>¿Por qué guardamos <code>id_operacion = 1</code> en la fact table en vez de <code>'IMPORTACION'</code>?</li>
+            <li>¿Qué ventaja tiene el esquema <code>dw</code> para organizar las tablas?</li>
+            <li>¿Por qué <code>dim_pais</code> se usa dos veces en la fact table (<code>id_pais_origen</code> e <code>id_pais_destino</code>)?</li>
+            <li>¿Por qué <code>dim_fecha</code> también se usa dos veces (<code>oficializacion</code> y <code>cancelacion</code>)?</li>
+            <li>¿Qué significa que un proceso sea <em>idempotente</em>?</li>
+          </ol>
+          <h4 style="margin-top:1rem;">Técnicas</h4>
+          <ol>
+            <li>¿Qué devuelve <code>SPLIT_PART('BRA - BRASIL', ' - ', 1)</code>?</li>
+            <li>¿Qué diferencia hay entre <code>DELETE FROM dw.dim_pais</code> y <code>DROP TABLE dw.dim_pais</code>?</li>
+            <li>¿Qué pasa si hay un valor en <code>stg_aduana.operacion</code> que no existe en <code>dim_operacion</code>?</li>
+            <li>¿Por qué el JOIN de <code>dim_producto</code> necesita 6 condiciones AND en vez de 1?</li>
+            <li>¿Por qué se usa <code>COALESCE(campo, '')</code> en la clave compuesta de producto?</li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="accordion">
+        <div class="accordion-head" onclick="toggleAcc(this)">Errores comunes en clase<span class="accordion-arrow">▼</span></div>
+        <div class="accordion-body">
+          <table>
+            <tr><th>Error</th><th>Causa</th><th>Lección</th></tr>
+            <tr><td>Connection closed</td><td><code>con.close()</code> prematuro</td><td>La conexión es un recurso que se abre y cierra una sola vez por notebook</td></tr>
+            <tr><td>Column not found</td><td>Nombre exacto diferente en el Excel</td><td>Los datos reales son sucios — siempre verificar con <code>df.columns</code></td></tr>
+            <tr><td>100% fechas NULL</td><td>Formato <code>'%d/%m/%Y'</code> incorrecto</td><td>Imprimir <code>df['OFICIALIZACION'].head()</code> para ver el formato real</td></tr>
+            <tr><td>fact &lt;&lt; staging</td><td>INNER JOIN en vez de LEFT JOIN</td><td>LEFT JOIN preserva todos los registros aunque haya datos incompletos</td></tr>
+            <tr><td>Duplicate key</td><td>INSERT sin DELETE previo</td><td>Idempotencia: siempre limpiar antes de cargar</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="accordion">
+        <div class="accordion-head" onclick="toggleAcc(this)">Evaluación sugerida<span class="accordion-arrow">▼</span></div>
+        <div class="accordion-body">
+          <table>
+            <tr><th>Componente</th><th>%</th><th>Criterio</th></tr>
+            <tr><td>Entendimiento conceptual</td><td>30%</td><td>Examen escrito sobre ETL, Star Schema, DuckDB</td></tr>
+            <tr><td>Ejecución práctica</td><td>40%</td><td>Los 5 notebooks ejecutados sin errores y todas las validaciones pasando</td></tr>
+            <tr><td>Análisis en Power BI</td><td>20%</td><td>5+ reportes interactivos usando <code>fob_dolar</code>, <code>dim_fecha</code>, etc.</td></tr>
+            <tr><td>Presentación</td><td>10%</td><td>Explicar el modelo a la clase</td></tr>
+          </table>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<footer>
+  <p><strong>Data Warehouse Aduana BI</strong> — Guía del Estudiante</p>
+  <p style="margin-top:.35rem;">
+    Última Actualización: 21 de mayo de 2026 &nbsp;|&nbsp;
+    <a href="https://github.com/RISteven/aduana_bi" target="_blank">GitHub</a>
+    &nbsp;|&nbsp; © Universidad Columbia del Paraguay
+  </p>
+</footer>
+
+<script>
+  const phases = ['fase1','fase2','fase3','fase4','fase5','fase6'];
+
+  function goSection(id) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(a => a.classList.remove('active'));
+    const sec  = document.getElementById(id);
+    const link = document.querySelector(`.nav-item[data-section="${id}"]`);
+    if (sec)  sec.classList.add('active');
+    if (link) link.classList.add('active');
+    updateStepper(id);
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+
+  document.querySelectorAll('.nav-item[data-section]').forEach(a => {
+    a.addEventListener('click', e => { e.preventDefault(); goSection(a.dataset.section); });
+  });
+
+  function updateStepper(id) {
+    const idx = phases.indexOf(id);
+    phases.forEach((p, i) => {
+      const c = document.querySelector(`.step-circle[onclick="goSection('${p}')"]`);
+      if (!c) return;
+      c.classList.remove('done','current');
+      if (i < idx)       c.classList.add('done');
+      else if (i === idx) c.classList.add('current');
+      const conn = document.getElementById(`conn-${i+1}`);
+      if (conn) conn.classList.toggle('done', i < idx);
+    });
+  }
+
+  function copyCode(btn) {
+    const pre = btn.parentElement.querySelector('pre');
+    if (!pre) return;
+    navigator.clipboard.writeText(pre.innerText).then(() => {
+      btn.textContent = '✓ Copiado';
+      btn.classList.add('copied');
+      setTimeout(() => { btn.textContent = 'Copiar'; btn.classList.remove('copied'); }, 1800);
+    });
+  }
+
+  document.querySelectorAll('.checklist li').forEach(li => {
+    const cb = li.querySelector('input[type=checkbox]');
+    if (!cb) return;
+    cb.addEventListener('change', () => li.classList.toggle('checked', cb.checked));
+    li.addEventListener('click', e => {
+      if (e.target !== cb) { cb.checked = !cb.checked; li.classList.toggle('checked', cb.checked); }
+    });
+  });
+
+  function toggleAcc(head) { head.parentElement.classList.toggle('open'); }
+
+  updateStepper('');
+</script>
 </body>
 </html>

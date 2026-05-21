@@ -33,19 +33,9 @@ carpeta_graficos   = Path(__file__).parent / "graficos"
 carpeta_graficos.mkdir(parents=True, exist_ok=True)
 
 
-# ── 3. COLORES Y ESTILO GLOBAL ────────────────────────────────────────────
-# Paleta oficial de Columbia University (https://sps.columbia.edu/visual-identity/color-palette)
-#
-#  Primario   │ Dark Blue    #012169  │ Texto y elementos principales
-#  Secundario │ Medium Blue  #009EFF  │ Destacados y accentos
-#  Secundario │ Light Blue   #6CACE4  │ Infografías y subencabezados
-#  Terciario  │ Magenta      #D4285B  │ Contraste y alertas
-#  Terciario  │ Turquoise    #259B9A  │ Gráficos y botones
-#  Terciario  │ Purple       #7B2A8D  │ Elementos adicionales
-#  Neutro     │ White        #FFFFFF  │ Fondos y texto sobre oscuro
 
-COLOR_EXPORTACION  = "#012169"   # Dark Blue (primario Columbia)
-COLOR_IMPORTACION  = "#D4285B"   # Magenta   (terciario Columbia)
+COLOR_EXPORTACION  = "#016948"   # Dark Blue (primario Columbia)
+COLOR_IMPORTACION  = "#B44365"   # Magenta   (terciario Columbia)
 PALETA_COLORES     = [
     "#012169",   # Dark Blue
     "#D4285B",   # Magenta

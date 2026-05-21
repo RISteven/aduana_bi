@@ -1,0 +1,1148 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Warehouse Aduana BI - Documentación Completa</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333333;
+            background: #f5f5f5;
+        }
+
+        header {
+            background: linear-gradient(135deg, #003366 0%, #1e5f9e 100%);
+            color: white;
+            padding: 2rem 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        header p {
+            font-size: 1.1rem;
+            opacity: 0.95;
+        }
+
+        .container {
+            display: flex;
+            max-width: 1400px;
+            margin: 0 auto;
+            gap: 2rem;
+            padding: 2rem;
+        }
+
+        .sidebar {
+            width: 280px;
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            height: fit-content;
+            position: sticky;
+            top: 20px;
+        }
+
+        .sidebar h3 {
+            color: #003366;
+            margin-bottom: 1.5rem;
+            font-size: 1.2rem;
+            border-bottom: 2px solid #d4af37;
+            padding-bottom: 0.5rem;
+        }
+
+        .sidebar ul {
+            list-style: none;
+        }
+
+        .sidebar li {
+            margin-bottom: 0.8rem;
+        }
+
+        .sidebar a {
+            color: #1e5f9e;
+            text-decoration: none;
+            padding: 0.5rem 0;
+            display: block;
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+            padding-left: 1rem;
+        }
+
+        .sidebar a:hover {
+            color: #d4af37;
+            border-left-color: #d4af37;
+            padding-left: 1.2rem;
+        }
+
+        .sidebar a.active {
+            color: #d4af37;
+            border-left-color: #d4af37;
+            font-weight: bold;
+        }
+
+        .content {
+            flex: 1;
+            background: white;
+            padding: 2.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .section h2 {
+            color: #003366;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            border-bottom: 2px solid #d4af37;
+            padding-bottom: 0.5rem;
+        }
+
+        .section h3 {
+            color: #1e5f9e;
+            margin-top: 1.5rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .section h4 {
+            color: #333333;
+            margin-top: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .section p {
+            margin-bottom: 1rem;
+            text-align: justify;
+        }
+
+        .section ul, .section ol {
+            margin-left: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .section li {
+            margin-bottom: 0.5rem;
+        }
+
+        code {
+            background: #f0f0f0;
+            padding: 0.2rem 0.5rem;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            color: #d63384;
+        }
+
+        pre {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 1.5rem;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin-bottom: 1rem;
+            border-left: 4px solid #d4af37;
+        }
+
+        pre code {
+            background: none;
+            color: #d4d4d4;
+            padding: 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1rem;
+        }
+
+        table th, table td {
+            border: 1px solid #ddd;
+            padding: 0.8rem;
+            text-align: left;
+        }
+
+        table th {
+            background: #003366;
+            color: white;
+        }
+
+        table tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+
+        .highlight-box {
+            background: #f0f8ff;
+            border-left: 4px solid #1e5f9e;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 4px;
+        }
+
+        .info-box {
+            background: #e7f3ff;
+            border-left: 4px solid #d4af37;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 4px;
+            color: #003366;
+        }
+
+        .warning-box {
+            background: #fff8e1;
+            border-left: 4px solid #ff9800;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 4px;
+            color: #e65100;
+        }
+
+        .success-box {
+            background: #e8f5e9;
+            border-left: 4px solid #4caf50;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 4px;
+            color: #1b5e20;
+        }
+
+        .flow-diagram {
+            background: #f5f5f5;
+            border: 1px solid #ddd;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 4px;
+            font-family: monospace;
+            overflow-x: auto;
+            font-size: 0.9rem;
+        }
+
+        footer {
+            background: #003366;
+            color: white;
+            text-align: center;
+            padding: 1.5rem;
+            margin-top: 3rem;
+            border-top: 4px solid #d4af37;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .btn {
+            padding: 0.7rem 1.5rem;
+            background: #1e5f9e;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .btn:hover {
+            background: #003366;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .btn.active {
+            background: #d4af37;
+            color: #003366;
+        }
+
+        @media (max-width: 1024px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                position: static;
+            }
+
+            header h1 {
+                font-size: 1.8rem;
+            }
+        }
+
+        .breadcrumb {
+            color: #999;
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .breadcrumb a {
+            color: #1e5f9e;
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>📚 Data Warehouse Aduana BI</h1>
+        <p>Documentación Completa — Guía del Estudiante</p>
+    </header>
+
+    <div class="container">
+        <aside class="sidebar">
+            <h3>📖 Navegación</h3>
+            <ul>
+                <li><a href="#inicio" class="nav-link active" data-section="inicio">🏠 Inicio</a></li>
+                <li><a href="#paso-a-paso" class="nav-link" data-section="paso-paso">🏗️ Paso a Paso</a></li>
+                <li><a href="#quick-start" class="nav-link" data-section="quick-start">⚡ Quick Start</a></li>
+                <li><a href="#diagramas" class="nav-link" data-section="diagramas">🎨 Diagramas</a></li>
+                <li><a href="#mapa-mental" class="nav-link" data-section="mapa-mental">🗺️ Mapa Mental</a></li>
+                <li><a href="#indice" class="nav-link" data-section="indice">📑 Índice General</a></li>
+                <li><a href="#docente" class="nav-link" data-section="docente">👨‍🏫 Guía Docente</a></li>
+            </ul>
+        </aside>
+
+        <main class="content">
+            <!-- SECCIÓN INICIO -->
+            <div id="inicio" class="section active">
+                <h2>🎯 Bienvenido al Data Warehouse Aduana BI</h2>
+                <p>Esta documentación te guiará paso a paso en la construcción de un Data Warehouse completo, desde los conceptos básicos hasta la conexión final con Power BI.</p>
+
+                <div class="info-box">
+                    <strong>¿Qué aprenderás?</strong><br>
+                    Construirás un Data Warehouse profesional usando Python, DuckDB y Power BI. Aprenderás ETL, diseño de bases de datos, y análisis de datos.
+                </div>
+
+                <h3>⏱️ Tiempo Estimado</h3>
+                <ul>
+                    <li><strong>Lectura completa:</strong> 2-3 horas</li>
+                    <li><strong>Ejecución práctica:</strong> 6-8 horas</li>
+                    <li><strong>Total:</strong> 8-11 horas</li>
+                </ul>
+
+                <h3>📚 Recursos Disponibles</h3>
+                <table>
+                    <tr>
+                        <th>Documento</th>
+                        <th>Descripción</th>
+                        <th>Duración</th>
+                    </tr>
+                    <tr>
+                        <td><strong>Paso a Paso</strong></td>
+                        <td>Guía completa y detallada</td>
+                        <td>2-3 h</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Quick Start</strong></td>
+                        <td>Versión acelerada del flujo</td>
+                        <td>20 min</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Diagramas</strong></td>
+                        <td>Visualización de la arquitectura</td>
+                        <td>30 min</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Mapa Mental</strong></td>
+                        <td>Resumen visual de 1 página</td>
+                        <td>10 min</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Índice General</strong></td>
+                        <td>Navegador maestro y FAQ</td>
+                        <td>Referencia</td>
+                    </tr>
+                </table>
+
+                <h3>🚀 ¿Por dónde empiezo?</h3>
+                <div class="highlight-box">
+                    <p><strong>Si tienes 20 minutos:</strong> Lee el <a href="#" onclick="switchSection('quick-start')">Quick Start</a></p>
+                    <p><strong>Si tienes 2-3 horas:</strong> Lee la <a href="#" onclick="switchSection('paso-paso')">Guía Paso a Paso</a></p>
+                    <p><strong>Si quieres ver diagramas:</strong> Mira los <a href="#" onclick="switchSection('diagramas')">Diagramas</a></p>
+                    <p><strong>Si eres visual:</strong> Consulta el <a href="#" onclick="switchSection('mapa-mental')">Mapa Mental</a></p>
+                </div>
+
+                <h3>✅ Lo que necesitas</h3>
+                <ul>
+                    <li>Python 3.9 o superior</li>
+                    <li>Jupyter Notebook o Jupyter Lab</li>
+                    <li>Power BI Desktop (para la visualización final)</li>
+                    <li>Editor de código (VS Code recomendado)</li>
+                </ul>
+            </div>
+
+            <!-- SECCIÓN PASO A PASO -->
+            <div id="paso-paso" class="section">
+                <h2>🏗️ Armado del Data Warehouse — Guía Paso a Paso</h2>
+                <p><strong>Para:</strong> Analistas, profesores y estudiantes que quieran entender cómo construir un Data Warehouse desde cero</p>
+
+                <div class="info-box">
+                    <strong>Resultado final:</strong> Un Data Warehouse completo listo para conectar a Power BI
+                </div>
+
+                <h3>📋 Tabla de Contenidos</h3>
+                <ol>
+                    <li>Preparación del entorno</li>
+                    <li>Entender el problema y la solución</li>
+                    <li>Crear la estructura de las tablas (Fase 1: Arquitectura)</li>
+                    <li>Cargar y limpiar los datos (Fase 2: Staging)</li>
+                    <li>Crear las dimensiones (Fase 3: Dimensiones)</li>
+                    <li>Crear la tabla de hechos (Fase 4: Fact Table)</li>
+                    <li>Validar la integridad (Fase 5: Validaciones)</li>
+                    <li>Conectar a Power BI (Fase 6: Visualización)</li>
+                </ol>
+
+                <h3>1. Preparación del entorno</h3>
+                <p>Antes de empezar, asegúrate de tener instalado:</p>
+                <ul>
+                    <li><strong>Python 3.9 o superior</strong></li>
+                    <li><strong>Un editor de código</strong> (VS Code recomendado)</li>
+                    <li><strong>Jupyter Notebook o Jupyter Lab</strong> (para ejecutar los notebooks)</li>
+                </ul>
+
+                <h4>Instalar las librerías</h4>
+                <p>Abre tu terminal/PowerShell y ejecuta:</p>
+                <pre><code>pip install duckdb pandas openpyxl jupyterlab</code></pre>
+
+                <h3>2. Entender el problema y la solución</h3>
+                <p><strong>El problema:</strong> Tienes un archivo Excel con 41,342 filas de despachos aduanales que es imposible analizar directamente.</p>
+
+                <div class="warning-box">
+                    <strong>Problemas del Excel original:</strong>
+                    <ul>
+                        <li>❌ Espacios en blanco en nombres de columnas</li>
+                        <li>❌ Fechas escritas como texto</li>
+                        <li>❌ Información repetida (país aparece 10,000 veces)</li>
+                        <li>❌ Lento de procesar</li>
+                    </ul>
+                </div>
+
+                <p><strong>La solución:</strong> Construimos un Data Warehouse: una base de datos especial para análisis.</p>
+
+                <div class="success-box">
+                    <strong>Ventajas del DW:</strong>
+                    <ul>
+                        <li>✅ Datos limpios y organizados</li>
+                        <li>✅ Sin repeticiones innecesarias</li>
+                        <li>✅ Optimizado para análisis</li>
+                        <li>✅ Rápido y confiable</li>
+                    </ul>
+                </div>
+
+                <h3>3. Crear la estructura de las tablas</h3>
+                <p><strong>Notebook a ejecutar:</strong> <code>01_Crear_Estructura_DW.ipynb</code></p>
+                <p>Creamos 15 tablas vacías siguiendo un diseño Star Schema:</p>
+                <ul>
+                    <li>1 tabla de staging</li>
+                    <li>12 tablas de dimensiones</li>
+                    <li>1 tabla de hechos</li>
+                    <li>1 tabla de auditoría</li>
+                </ul>
+
+                <h3>4. Cargar y limpiar los datos</h3>
+                <p><strong>Notebook a ejecutar:</strong> <code>02_Cargar_Staging.ipynb</code></p>
+                <p>Este paso es crucial. Aquí limpiaremos el Excel:</p>
+                <ol>
+                    <li>Quitamos espacios de nombres de columnas</li>
+                    <li>Convertimos fechas de texto a fechas reales</li>
+                    <li>Normalizamos los datos</li>
+                    <li>Guardamos en <code>stg_aduana</code></li>
+                </ol>
+
+                <h3>5. Crear las dimensiones</h3>
+                <p><strong>Notebook a ejecutar:</strong> <code>03_Cargar_Dimensiones.ipynb</code></p>
+                <p>Creamos catálogos únicos (sin repeticiones):</p>
+                <table>
+                    <tr>
+                        <th>Dimensión</th>
+                        <th>Filas aprox.</th>
+                    </tr>
+                    <tr>
+                        <td>dim_operacion</td>
+                        <td>2</td>
+                    </tr>
+                    <tr>
+                        <td>dim_pais</td>
+                        <td>50+</td>
+                    </tr>
+                    <tr>
+                        <td>dim_producto</td>
+                        <td>500+</td>
+                    </tr>
+                    <tr>
+                        <td>dim_fecha</td>
+                        <td>365-730</td>
+                    </tr>
+                </table>
+
+                <h3>6. Crear la tabla de hechos</h3>
+                <p><strong>Notebook a ejecutar:</strong> <code>04_Cargar_Fact_Table.ipynb</code></p>
+                <p>El paso más importante: creamos la tabla central conectando todo mediante 14 JOINs.</p>
+
+                <h3>7. Validar la integridad</h3>
+                <p><strong>Notebook a ejecutar:</strong> <code>05_Validaciones.ipynb</code></p>
+                <p>Asegúrate de que todo está bien:</p>
+                <ul>
+                    <li>✓ No hay claves huérfanas</li>
+                    <li>✓ No hay duplicados</li>
+                    <li>✓ No hay valores negativos absurdos</li>
+                    <li>✓ Las fechas tienen sentido</li>
+                </ul>
+
+                <h3>8. Conectar a Power BI</h3>
+                <p>Finalmente, conectas tu DW a Power BI y creas reportes interactivos.</p>
+
+                <div class="success-box">
+                    <strong>¡Listo!</strong> Tienes un Data Warehouse profesional listo para análisis.
+                </div>
+            </div>
+
+            <!-- SECCIÓN QUICK START -->
+            <div id="quick-start" class="section">
+                <h2>⚡ Quick Start — DWH en 20 minutos</h2>
+                <p><strong>Si no tienes mucho tiempo y quieres entender el flujo rápido...</strong></p>
+
+                <h3>El problema en 30 segundos</h3>
+                <p>Tienes un Excel gigante con datos de aduanas. Quieres analizarlo en Power BI pero está:</p>
+                <ul>
+                    <li>❌ Lleno de espacios y caracteres raros</li>
+                    <li>❌ Datos repetidos (BRASIL aparece 10,000 veces)</li>
+                    <li>❌ Fechas como texto, no como fechas reales</li>
+                    <li>❌ Muy lento de procesar</li>
+                </ul>
+
+                <h3>La solución en 30 segundos</h3>
+                <p>Construimos un <strong>Data Warehouse</strong>: una base de datos especial para análisis donde:</p>
+                <ul>
+                    <li>✅ Todo está limpio y normalizado</li>
+                    <li>✅ No hay repeticiones (BRASIL aparece 1 sola vez)</li>
+                    <li>✅ Las fechas son verdaderas fechas</li>
+                    <li>✅ Es rápido y eficiente</li>
+                </ul>
+
+                <h3>Las 4 fases de construcción</h3>
+                <table>
+                    <tr>
+                        <th>#</th>
+                        <th>Fase</th>
+                        <th>Entrada</th>
+                        <th>Salida</th>
+                        <th>Notebook</th>
+                        <th>Tiempo</th>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>Estructura</td>
+                        <td>Nada</td>
+                        <td>15 tablas vacías</td>
+                        <td>01</td>
+                        <td>15 min</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>Limpieza</td>
+                        <td>Excel</td>
+                        <td>stg_aduana limpio</td>
+                        <td>02</td>
+                        <td>20 min</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>Dimensiones</td>
+                        <td>stg_aduana</td>
+                        <td>12 catálogos</td>
+                        <td>03</td>
+                        <td>15 min</td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>Hechos</td>
+                        <td>stg + dims</td>
+                        <td>fact_aduana_item</td>
+                        <td>04</td>
+                        <td>20 min</td>
+                    </tr>
+                </table>
+
+                <p><strong>Total: ~1:20 h de ejecución</strong></p>
+
+                <h3>Las 3 ideas clave</h3>
+
+                <h4>1️⃣ ETL: Extraer, Transformar, Cargar</h4>
+                <div class="flow-diagram">
+EXTRAER        TRANSFORMAR       CARGAR
+(del Excel)    (limpiar/unir)    (en DuckDB)
+    ↓              ↓                 ↓
+ Lee CSV      Quita espacios    stg_aduana
+              Convierte fechas   dim_*
+              Normaliza          fact_*
+                </div>
+
+                <h4>2️⃣ Star Schema: Una estrella con dimensiones</h4>
+                <div class="flow-diagram">
+              dim_fecha
+              dim_pais
+              dim_producto
+                 │
+         ────────┼────────
+         │                │
+    dim_operacion    fact_aduana_item    dim_aduana
+         │                │
+         ────────┼────────
+                 │
+            dim_regimen
+                </div>
+
+                <h4>3️⃣ Datos sin repetir: IDs en lugar de texto</h4>
+                <div class="highlight-box">
+                    <p><strong>❌ MALO:</strong> "BRASIL" aparece 10,000 veces</p>
+                    <p><strong>✓ BUENO:</strong> El número "5" aparece 10,000 veces</p>
+                    <p>&nbsp;&nbsp;&nbsp;&nbsp;"5" apunta a "BRASIL" en dim_pais</p>
+                </div>
+
+                <h3>Comandos útiles (copiar/pegar)</h3>
+                <pre><code>import duckdb
+
+# Conectar
+con = duckdb.connect('db/aduana.duckdb')
+
+# Ver cuántas filas
+con.query('SELECT COUNT(*) FROM stg_aduana').show()
+con.query('SELECT COUNT(*) FROM fact_aduana_item').show()
+
+# Ver las primeras 5 filas
+con.query('SELECT * FROM dim_pais LIMIT 5').show()
+
+# Análisis rápido
+con.query('''
+SELECT 
+    operacion,
+    COUNT(*) as total,
+    SUM(fob) as total_fob
+FROM fact_aduana_item
+GROUP BY operacion
+''').show()</code></pre>
+
+                <h3>Checklist para saber si funcionó</h3>
+                <ul>
+                    <li>☐ Notebook 01 → Sin errores, 15 tablas creadas</li>
+                    <li>☐ Notebook 02 → Sin errores, 41K filas en stg_aduana</li>
+                    <li>☐ Notebook 03 → Sin errores, 12 tablas con datos</li>
+                    <li>☐ Notebook 04 → Sin errores, 41K filas en fact_aduana_item</li>
+                    <li>☐ Notebook 05 → Todas las pruebas pasaron (✓)</li>
+                    <li>☐ Power BI conectado a DuckDB</li>
+                    <li>☐ 3+ reportes en Power BI</li>
+                </ul>
+            </div>
+
+            <!-- SECCIÓN DIAGRAMAS -->
+            <div id="diagramas" class="section">
+                <h2>🎨 Visualización del DWH — Diagramas y flujos</h2>
+
+                <h3>1. El flujo general (de inicio a fin)</h3>
+                <div class="flow-diagram">
+┌─────────────────────────────────────────────────────────────────┐
+│                        FASE 1: FUENTE                           │
+│  Archivo Excel con datos desordenados (41,342 filas)            │
+│  • Espacios en blanco                                            │
+│  • Fechas como texto                                             │
+│  • Información repetida                                          │
+└────────────────┬────────────────────────────────────────────────┘
+                 │
+                 │ ETL-Cargar-Staging.py (Notebook 02)
+                 ▼
+┌─────────────────────────────────────────────────────────────────┐
+│              FASE 2: LIMPIEZA (STAGING)                         │
+│  Tabla: stg_aduana (41,342 filas × 41 columnas)                 │
+│  • Espacios quitados                                             │
+│  • Fechas convertidas                                            │
+│  • Datos normalizados                                            │
+└────────────────┬────────────────────────────────────────────────┘
+                 │
+                 │ ETL-Dimension.py (Notebook 03)
+                 ▼
+┌─────────────────────────────────────────────────────────────────┐
+│              FASE 3: DIMENSIONES (CATÁLOGOS)                    │
+│  12 tablas de dimensiones sin repeticiones                      │
+│  • dim_operacion, dim_pais, dim_producto, dim_fecha             │
+│  • dim_aduana, dim_regimen, dim_canal, dim_marca                │
+└────────────────┬────────────────────────────────────────────────┘
+                 │
+                 │ ETL-FACT.py (Notebook 04)
+                 │ 14 LEFT JOINs gigantescos
+                 ▼
+┌─────────────────────────────────────────────────────────────────┐
+│            FASE 4: TABLA DE HECHOS (FACT TABLE)                 │
+│  Tabla: fact_aduana_item (41,342 filas × 33 columnas)           │
+│  • Conectada a todas las dimensiones                            │
+│  • Datos limpios y normalizados                                 │
+│  • Optimizada para análisis                                     │
+└────────────────┬────────────────────────────────────────────────┘
+                 │
+                 │ ODBC (Power BI)
+                 ▼
+┌─────────────────────────────────────────────────────────────────┐
+│               FASE 5: VISUALIZACIÓN                             │
+│  Power BI conectado a DuckDB                                    │
+│  • Reportes interactivos                                        │
+│  • Slicers para filtrar                                         │
+│  • Gráficos automáticos                                         │
+└─────────────────────────────────────────────────────────────────┘
+                </div>
+
+                <h3>2. Las 4 capas de datos</h3>
+                <table>
+                    <tr>
+                        <th>Capa</th>
+                        <th>Nombre</th>
+                        <th>Descripción</th>
+                        <th>Uso</th>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td><strong>Bronze</strong></td>
+                        <td>Datos crudos tal como vienen (Excel, CSV)</td>
+                        <td>Auditoría, trazabilidad</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td><strong>Silver</strong></td>
+                        <td>Datos limpios (staging)</td>
+                        <td>Análisis ad-hoc</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td><strong>Gold</strong></td>
+                        <td>Datos listos para análisis (dimensiones + fact)</td>
+                        <td>Reportes, BI, análisis</td>
+                    </tr>
+                </table>
+
+                <h3>3. Star Schema explicado</h3>
+                <p>El diseño central de nuestro DW:</p>
+                <ul>
+                    <li><strong>Una tabla central (Fact):</strong> fact_aduana_item con 41,342 filas</li>
+                    <li><strong>Tablas de referencia (Dimensions):</strong> 12 tablas sin repeticiones</li>
+                    <li><strong>Relaciones (ForeignKeys):</strong> Conectan fact con cada dimensión</li>
+                </ul>
+
+                <div class="info-box">
+                    <strong>Ventajas del Star Schema:</strong><br>
+                    ✓ Menos repeticiones (base de datos pequeña)<br>
+                    ✓ Consultas rápidas<br>
+                    ✓ Fácil mantenimiento<br>
+                    ✓ Ideal para Power BI
+                </div>
+            </div>
+
+            <!-- SECCIÓN MAPA MENTAL -->
+            <div id="mapa-mental" class="section">
+                <h2>🗺️ Mapa Mental — DWH en una página</h2>
+
+                <h3>El viaje de los datos (izquierda a derecha)</h3>
+                <div class="flow-diagram">
+┌──────────────────────────────────────────────────────────────────────────┐
+│                                                                          │
+│  EXCEL              STAGING              DIMENSIONES          FACT      │
+│  CAÓTICO            LIMPIO               ORGANIZADAS          CONECTADA │
+│                                                                          │
+│  ❌ Espacios        ✓ Sin espacios      ✓ Catálogos          ✓ IDs     │
+│  ❌ Fechas texto    ✓ Fechas reales     ✓ Sin repetir        ✓ Rels    │
+│  ❌ Repetido        ✓ Limpio            ✓ Normalizadas       ✓ Métri   │
+│                     ✓ 41K filas         ✓ 12 tablas          ✓ 41K f   │
+│                                                                          │
+└──────────────────────────────────────────────────────────────────────────┘
+                </div>
+
+                <h3>Las 5 fases en 1 minuto</h3>
+                <table>
+                    <tr>
+                        <th>#</th>
+                        <th>Fase</th>
+                        <th>Entrada</th>
+                        <th>Salida</th>
+                        <th>Tiempo</th>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>🏗️ Estructura</td>
+                        <td>Nada</td>
+                        <td>15 tablas vacías</td>
+                        <td>15 min</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>🧹 Limpieza</td>
+                        <td>Excel</td>
+                        <td>stg_aduana limpio</td>
+                        <td>20 min</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>📚 Dimensiones</td>
+                        <td>stg_aduana</td>
+                        <td>12 catálogos</td>
+                        <td>15 min</td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>🔗 Fact Table</td>
+                        <td>stg + dims</td>
+                        <td>fact_aduana_item</td>
+                        <td>20 min</td>
+                    </tr>
+                    <tr>
+                        <td>5</td>
+                        <td>✅ Validación</td>
+                        <td>fact_aduana_item</td>
+                        <td>0 errores</td>
+                        <td>10 min</td>
+                    </tr>
+                </table>
+
+                <p><strong>Total: ~1:20 horas de ejecución</strong></p>
+
+                <h3>Conceptos en 10 líneas</h3>
+                <table>
+                    <tr>
+                        <th>Concepto</th>
+                        <th>En una línea</th>
+                    </tr>
+                    <tr>
+                        <td><strong>ETL</strong></td>
+                        <td>Extraer datos, transformarlos, cargarlos en una BD</td>
+                    </tr>
+                    <tr>
+                        <td><strong>DW</strong></td>
+                        <td>Base de datos especial para análisis, no operaciones</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Staging</strong></td>
+                        <td>Tabla de paso con datos limpios pero sin organizar</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Dimensión</strong></td>
+                        <td>Tabla de referencia (catálogo sin repetir)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Fact</strong></td>
+                        <td>Tabla central con hechos y métricas</td>
+                    </tr>
+                    <tr>
+                        <td><strong>StarSchema</strong></td>
+                        <td>Diseño: tabla central + dimensiones alrededor</td>
+                    </tr>
+                    <tr>
+                        <td><strong>FK</strong></td>
+                        <td>Referencia de una tabla a otra</td>
+                    </tr>
+                    <tr>
+                        <td><strong>JOIN</strong></td>
+                        <td>Unir dos tablas por una clave común</td>
+                    </tr>
+                    <tr>
+                        <td><strong>DuckDB</strong></td>
+                        <td>Base de datos embebida en un archivo</td>
+                    </tr>
+                </table>
+
+                <h3>Regla de oro</h3>
+                <div class="warning-box">
+                    <strong>Recuerda:</strong>
+                    <ul>
+                        <li>✓ No cierres la conexión hasta terminar todo</li>
+                        <li>✓ Ejecuta celda a celda, no todo de una vez</li>
+                        <li>✓ Valida después de cada paso</li>
+                        <li>✓ Documenta cada error que encuentres</li>
+                        <li>✓ Pregunta si algo no tiene sentido</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- SECCIÓN ÍNDICE GENERAL -->
+            <div id="indice" class="section">
+                <h2>📑 Índice General</h2>
+
+                <h3>Documentos disponibles</h3>
+                <table>
+                    <tr>
+                        <th>Documento</th>
+                        <th>Propósito</th>
+                        <th>Extensión</th>
+                        <th>Público</th>
+                    </tr>
+                    <tr>
+                        <td><strong>Paso a Paso</strong></td>
+                        <td>Guía completa humanizada</td>
+                        <td>700 líneas</td>
+                        <td>Todos, principiantes</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Quick Start</strong></td>
+                        <td>Versión rápida del flujo</td>
+                        <td>250 líneas</td>
+                        <td>Usuarios con prisa</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Diagramas</strong></td>
+                        <td>Visualización de flujos</td>
+                        <td>500 líneas</td>
+                        <td>Aprendices visuales</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Mapa Mental</strong></td>
+                        <td>Resumen visual 1 página</td>
+                        <td>250 líneas</td>
+                        <td>Todos</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Índice General</strong></td>
+                        <td>Navegación y FAQ</td>
+                        <td>300 líneas</td>
+                        <td>Todos</td>
+                    </tr>
+                </table>
+
+                <h3>Decididor rápido</h3>
+                <ul>
+                    <li>🏠 <strong>¿Qué es un DW?</strong> → Paso a Paso, sección 2</li>
+                    <li>⏱️ <strong>Tengo 20 minutos:</strong> → Quick Start</li>
+                    <li>🎓 <strong>Soy estudiante:</strong> → Paso a Paso (lectura + práctica)</li>
+                    <li>👨‍🏫 <strong>Soy docente:</strong> → Guía Docente</li>
+                    <li>🎨 <strong>Aprendo viendo:</strong> → Diagramas + Mapa Mental</li>
+                    <li>❓ <strong>Tengo una pregunta:</strong> → Índice General (FAQ)</li>
+                </ul>
+
+                <h3>Tiempo estimado total</h3>
+                <table>
+                    <tr>
+                        <th>Actividad</th>
+                        <th>Tiempo</th>
+                        <th>Dificultad</th>
+                    </tr>
+                    <tr>
+                        <td>Instalar dependencias</td>
+                        <td>5 min</td>
+                        <td>⭐ Fácil</td>
+                    </tr>
+                    <tr>
+                        <td>Leer guía completa</td>
+                        <td>1-1.5 h</td>
+                        <td>⭐ Fácil</td>
+                    </tr>
+                    <tr>
+                        <td>Ejecutar notebooks</td>
+                        <td>1-1.5 h</td>
+                        <td>⭐⭐ Intermedio</td>
+                    </tr>
+                    <tr>
+                        <td>Validaciones</td>
+                        <td>15 min</td>
+                        <td>⭐⭐ Intermedio</td>
+                    </tr>
+                    <tr>
+                        <td>Conectar Power BI</td>
+                        <td>30 min</td>
+                        <td>⭐⭐ Intermedio</td>
+                    </tr>
+                    <tr>
+                        <td><strong>TOTAL</strong></td>
+                        <td><strong>3.5-4.5 h</strong></td>
+                        <td><strong>Mixto</strong></td>
+                    </tr>
+                </table>
+
+                <h3>Preguntas frecuentes</h3>
+                <h4>¿Necesito saber SQL?</h4>
+                <p>No, pero ayuda. Los notebooks tienen SQL comentado. Aprenderás mientras lo ejecutas.</p>
+
+                <h4>¿Puedo modificar los datos?</h4>
+                <p>Sí, totalmente. El proyecto está diseñado para ser extensible.</p>
+
+                <h4>¿Funciona en Windows/Mac/Linux?</h4>
+                <p>Sí. Python y DuckDB funcionan en los tres. Power BI solo en Windows/Web.</p>
+
+                <h4>¿Cuánto espacio ocupa?</h4>
+                <p>El archivo aduana.duckdb ocupa ~20-50 MB. Los CSVs originales dependen del tamaño.</p>
+
+                <h4>¿Qué hago si algo falla?</h4>
+                <p>Consulta la sección "Troubleshooting" en la Guía Paso a Paso o el Índice General.</p>
+            </div>
+
+            <!-- SECCIÓN GUÍA DOCENTE -->
+            <div id="docente" class="section">
+                <h2>👨‍🏫 Guía Docente</h2>
+
+                <div class="info-box">
+                    <strong>Para el profesor:</strong> Cómo enseñar este proyecto paso a paso
+                </div>
+
+                <h3>Estructura de la guía</h3>
+                <ul>
+                    <li>Secuencia de clases sugerida</li>
+                    <li>Conceptos clave por clase</li>
+                    <li>Preguntas para los alumnos</li>
+                    <li>Errores comunes y cómo explicarlos</li>
+                </ul>
+
+                <h3>Secuencia de clases sugerida</h3>
+
+                <h4>Clase 1 — Introducción y arquitectura (2 horas)</h4>
+                <p><strong>Objetivo:</strong> que los alumnos entiendan el problema y la solución antes de ver código.</p>
+                <ol>
+                    <li>Mostrar el archivo Excel original — así llegan los datos</li>
+                    <li>Mostrar un dashboard Power BI — así se ven al final</li>
+                    <li>Preguntar: "¿Cómo pasamos de uno al otro?" → discusión</li>
+                    <li>Explicar el concepto de ETL con ejemplo cotidiano (lavar ropa)</li>
+                    <li>Recorrer el notebook 00 celda por celda</li>
+                    <li>Dibujar el Star Schema en la pizarra</li>
+                </ol>
+
+                <h4>Clase 2 — Diseño del Data Warehouse (2 horas)</h4>
+                <p><strong>Objetivo:</strong> entender por qué se diseñan las tablas así.</p>
+                <ol>
+                    <li>Explicar base de datos operacional vs Data Warehouse</li>
+                    <li>Explicar Staging vs Dimensiones vs Fact Table</li>
+                    <li>Ejecutar notebook 01 celda por celda</li>
+                    <li>Discutir: ¿por qué PRIMARY KEY? ¿por qué UNIQUE?</li>
+                </ol>
+
+                <h4>Clases 3-5 — ETL y Ejecución (6 horas)</h4>
+                <p>Ejecutar notebooks 02, 03, 04 en orden, con discusión después de cada paso.</p>
+
+                <h4>Clase 6 — Validación e integridad (1 hora)</h4>
+                <p>Ejecutar notebook 05 y explicar qué significaría si algo falla.</p>
+
+                <h4>Clase 7 — Power BI y cierre (1 hora)</h4>
+                <p>Conectar a Power BI y crear reportes básicos.</p>
+
+                <h3>Preguntas para los alumnos</h3>
+
+                <h4>Conceptuales</h4>
+                <ol>
+                    <li>¿Por qué no guardamos directamente el texto en la fact table?</li>
+                    <li>¿Qué pasaría si alguien cambia el nombre de una aduana en los datos?</li>
+                    <li>¿Por qué dim_pais se usa dos veces en la fact table?</li>
+                    <li>¿Qué ventaja tiene el modelo Star Schema?</li>
+                </ol>
+
+                <h4>Técnicas</h4>
+                <ol>
+                    <li>¿Qué devuelve `SPLIT_PART('BRA - BRASIL', ' - ', 2)`?</li>
+                    <li>¿Diferencia entre `DELETE FROM` y `DROP TABLE`?</li>
+                    <li>¿Qué pasa si hay un valor que no está en la dimensión?</li>
+                    <li>¿Por qué se usa `COALESCE(campo, '')` en el JOIN?</li>
+                </ol>
+
+                <h3>Errores comunes y cómo explicarlos</h3>
+
+                <h4>"Connection already closed!"</h4>
+                <p><strong>Causa:</strong> se llamó `con.close()` y luego se intentó usar `con` de nuevo.</p>
+                <p><strong>Lección:</strong> la conexión es un recurso que hay que abrir y cerrar una sola vez.</p>
+                <p><strong>Analogía:</strong> es como colgar el teléfono y tratar de seguir hablando.</p>
+
+                <h4>"Column not found"</h4>
+                <p><strong>Causa:</strong> el nombre de la columna no existe (quizás tiene espacios o mayúsculas).</p>
+                <p><strong>Solución:</strong> ejecuta `df.columns` para ver los nombres exactos.</p>
+
+                <h4>FK huérfana</h4>
+                <p><strong>Causa:</strong> hay un valor que no existe en la dimensión correspondiente.</p>
+                <p><strong>Lección:</strong> la integridad referencial es importante.</p>
+
+                <h3>Recursos para la clase</h3>
+                <ul>
+                    <li>Data del Excel original (DatosCSV.csv)</li>
+                    <li>Notebooks ejecutables (6 notebooks)</li>
+                    <li>Script de validación</li>
+                    <li>Este archivo (índice + guía)</li>
+                </ul>
+
+                <h3>Evaluación sugerida</h3>
+                <ul>
+                    <li><strong>Entendimiento conceptual (30%):</strong> Examen escrito sobre ETL, DW, Star Schema</li>
+                    <li><strong>Ejecución práctica (40%):</strong> Ejecutar el proyecto completo sin errores</li>
+                    <li><strong>Análisis en Power BI (20%):</strong> Crear 5+ reportes interactivos</li>
+                    <li><strong>Presentación (10%):</strong> Explicar el proyecto a la clase</li>
+                </ul>
+            </div>
+        </main>
+    </div>
+
+    <footer>
+        <p>📚 <strong>Data Warehouse Aduana BI</strong> — Documentación de Estudiantes</p>
+        <p>Última actualización: 21 de mayo de 2026 | © Universidad Columbia del Paraguay</p>
+        <p style="margin-top: 1rem; font-size: 0.9rem;">Colores inspirados en <a href="https://www.columbia.edu.py" style="color:#d4af37; text-decoration:none;">www.columbia.edu.py</a></p>
+    </footer>
+
+    <script>
+        // Navegación
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const section = this.dataset.section;
+                switchSection(section);
+            });
+        });
+
+        function switchSection(sectionId) {
+            // Ocultar todas las secciones
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+
+            // Ocultar todos los links
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+
+            // Mostrar sección seleccionada
+            const section = document.getElementById(sectionId);
+            if (section) {
+                section.classList.add('active');
+                
+                // Marcar link como activo
+                const activeLink = document.querySelector(`[data-section="${sectionId}"]`);
+                if (activeLink) {
+                    activeLink.classList.add('active');
+                }
+
+                // Scroll al top
+                window.scrollTo(0, 0);
+            }
+        }
+
+        // Permitir navegación con botones internos
+        window.switchSection = switchSection;
+    </script>
+</body>
+</html>
